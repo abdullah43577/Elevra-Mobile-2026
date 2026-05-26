@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 import { TextInput, type TextInputProps } from "react-native";
 
-interface TextAreaProps extends TextInputProps {
+export interface TextAreaProps extends TextInputProps {
   placeholder: string;
   onChangeText: (text: string) => void;
   className?: string;
