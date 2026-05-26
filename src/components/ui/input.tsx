@@ -1,5 +1,5 @@
-import { TextInput, type TextInputProps } from "react-native";
 import { clsx } from "clsx";
+import { TextInput, type TextInputProps } from "react-native";
 
 export interface InputProps extends TextInputProps {
   placeholder: string;
@@ -17,7 +17,7 @@ export const Input = function ({
     <TextInput
       {...rest}
       className={clsx(
-        "w-full rounded-lg border border-neutral-outline-variant bg-white px-4 py-3 text-sm focus:border-primary-main",
+        "focus:border-primary-500 w-full rounded-lg border border-neutral-400 bg-white px-4 py-3 text-sm",
         className,
       )}
       placeholder={placeholder}

@@ -8,5 +8,7 @@ export interface AppViewProps extends ViewProps {
 }
 
 export const AppView = function ({ className, ...rest }: AppViewProps) {
-  return <View {...rest} className={clsx("bg-white", className)} />;
+  return (
+    <View {...rest} className={clsx("bg-primary-foreground", className)} />
+  );
 };

@@ -11,14 +11,15 @@ export interface AppButtonProps extends PressableProps {
 const hapticMap: Partial<
   Record<NonNullable<AppButtonProps["type"]>, () => void>
 > = {
+  default: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
   submit: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
   delete: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
 };
 
 const typeStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
-  default: "bg-primary-main",
-  submit: "bg-secondary-main",
-  delete: "bg-error-main",
+  default: "bg-primary-500",
+  submit: "bg-secondary-500",
+  delete: "bg-error-500",
 };
 
 export const AppButton = function ({

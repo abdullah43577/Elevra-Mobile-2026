@@ -1,24 +1,25 @@
 import { View } from "react-native";
 import { Input, type InputProps } from "../ui/input";
 import { AppText } from "./app-text";
+import { TextArea } from "../ui/text-area";
 
-interface FormInputProps extends Omit<InputProps, "placeholder"> {
+interface FormTextAreaProps extends Omit<InputProps, "placeholder"> {
   label: string;
   placeholder?: string;
 }
 
-export const FormInput = function ({
+export const FormTextArea = function ({
   label,
   placeholder,
   ...rest
-}: FormInputProps) {
+}: FormTextAreaProps) {
   return (
     <View>
       <AppText type="subtitle" className="mb-1">
         {label}
       </AppText>
 
-      <Input placeholder={placeholder ?? "Enter text"} {...rest} />
+      <TextArea placeholder={placeholder ?? "Enter comment"} {...rest} />
     </View>
   );
 };
