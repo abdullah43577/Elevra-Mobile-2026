@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { useAuth } from "@/zustand/Auth";
+// import { useAuth } from "@/zustand/Auth";
 
 interface RefreshResponse {
   success: boolean;
@@ -126,12 +126,12 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const { logout, authenticatedUserType, isAuthenticated } =
-        useAuth.getState();
+      // const { logout, authenticatedUserType, isAuthenticated } =
+      //   useAuth.getState();
       // If user is not a guest, log them out
-      if (authenticatedUserType !== "guest") {
-        logout();
-      }
+      // if (authenticatedUserType !== "guest") {
+      //   logout();
+      // }
     }
 
     return Promise.reject(error);

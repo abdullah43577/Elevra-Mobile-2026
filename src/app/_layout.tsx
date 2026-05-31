@@ -1,10 +1,14 @@
 import "@/global.css";
-import { SplashScreen, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { useSession } from "@/store/session";
+import * as SplashScreen from "expo-splash-screen";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/utils/queryClient";
 
 SplashScreen.preventAutoHideAsync();
+SplashScreen.setOptions({ duration: 3000, fade: true });
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -26,14 +30,16 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Protected guard={!!isAuthenticated}>
-        <Stack.Screen name="(app)" options={{ headerShown: false }} />
-      </Stack.Protected>
+    <QueryClientProvider client={queryClient}>
+      <Stack>
+        <Stack.Protected guard={!!isAuthenticated}>
+          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+        </Stack.Protected>
 
-      <Stack.Protected guard={!isAuthenticated}>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      </Stack.Protected>
-    </Stack>
+        <Stack.Protected guard={!isAuthenticated}>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        </Stack.Protected>
+      </Stack>
+    </QueryClientProvider>
   );
 }

@@ -10,7 +10,7 @@ import {
   type Path,
 } from "react-hook-form";
 import { Pressable, View } from "react-native";
-import { Input, type InputProps } from "../ui/input";
+import { Input, type InputProps } from "../primitives/input";
 import { AppText } from "./app-text";
 
 interface FormInputProps<TFieldValues extends FieldValues> extends Omit<
@@ -84,7 +84,7 @@ export const FormInput = function <TFieldValues extends FieldValues>({
       />
 
       {errorMessage && (
-        <AppText type="subtitle" className="text-error-500 mt-1">
+        <AppText type="subtitle" className="mt-1 text-error-500">
           {errorMessage}
         </AppText>
       )}

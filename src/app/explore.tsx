@@ -4,9 +4,9 @@ import { Platform, Pressable, ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ExternalLink } from "@/components/external-link";
+import { Collapsible } from "@/components/primitives/collapsible";
 import { ThemedText } from "@/components/shared/app-text";
 import { ThemedView } from "@/components/shared/app-view";
-import { Collapsible } from "@/components/ui/collapsible";
 import { WebBadge } from "@/components/web-badge";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";

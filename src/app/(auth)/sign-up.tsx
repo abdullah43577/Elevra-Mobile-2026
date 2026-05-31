@@ -112,7 +112,7 @@ export default function SignUp() {
           <AppText type="subtitle" className="text-neutral-500">
             Already have an account?
           </AppText>
-          <Pressable onPress={() => router.push("/(auth)/sign-in" as any)}>
+          <Pressable onPress={() => router.push("/(auth)/sign-in")}>
             <AppText type="link">Log in</AppText>
           </Pressable>
         </View>

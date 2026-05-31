@@ -13,7 +13,7 @@ export const AppText = function ({
 }: AppTextProps) {
   const styleGuide = {
     default: "text-sm text-primary-500",
-    title: "text-2xl font-semibold",
+    title: "text-xl font-semibold",
     heading: "text-base",
     subtitle: "text-xs tracking-[0.6px]",
     link: "text-sm text-secondary-500",

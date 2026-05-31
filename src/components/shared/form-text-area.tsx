@@ -7,7 +7,7 @@ import {
   type Path,
 } from "react-hook-form";
 import { View } from "react-native";
-import { TextArea, type TextAreaProps } from "../ui/text-area";
+import { TextArea, type TextAreaProps } from "../primitives/text-area";
 import { AppText } from "./app-text";
 
 interface FormTextAreaProps<TFieldValues extends FieldValues> extends Omit<
@@ -52,7 +52,7 @@ export const FormTextArea = function <TFieldValues extends FieldValues>({
       />
 
       {errorMessage && (
-        <AppText type="subtitle" className="text-error-500 mt-1">
+        <AppText type="subtitle" className="mt-1 text-error-500">
           {errorMessage}
         </AppText>
       )}
