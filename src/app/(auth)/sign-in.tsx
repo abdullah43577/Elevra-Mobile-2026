@@ -25,12 +25,13 @@ export default function SignIn() {
   return (
     <KeyboardAwareScrollView
       className="flex-1 bg-white"
+      contentContainerStyle={{ flexGrow: 1 }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
       enableOnAndroid
       extraScrollHeight={20}
     >
-      <View className="px-6 pb-10 pt-16">
+      <View className="flex-1 justify-center px-6 py-10">
         {/* Header */}
         <AppText type="title">Welcome back</AppText>
         <AppText type="subtitle" className="mt-1 text-neutral-500">

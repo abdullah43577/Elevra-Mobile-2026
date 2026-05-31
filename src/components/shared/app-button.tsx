@@ -6,6 +6,7 @@ export interface AppButtonProps extends PressableProps {
   className?: string;
   onPress?: () => void;
   type?: "default" | "submit" | "delete";
+  isLoading?: boolean;
 }
 
 const hapticMap: Partial<
@@ -26,6 +27,7 @@ export const AppButton = function ({
   className,
   onPress,
   type = "default",
+  isLoading = false,
   ...rest
 }: AppButtonProps) {
   const handlePress = () => {

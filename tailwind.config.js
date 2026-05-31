@@ -15,7 +15,7 @@ module.exports = {
         },
         secondary: {
           50: "#eef2ff",
-          500: "#2a62ff",
+          500: "#0058BC",
           900: "#001d63",
           foreground: "#ffffff",
         },

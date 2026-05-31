@@ -33,7 +33,7 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <Stack>
         <Stack.Protected guard={!!isAuthenticated}>
-          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+          <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
         </Stack.Protected>
 
         <Stack.Protected guard={!isAuthenticated}>
