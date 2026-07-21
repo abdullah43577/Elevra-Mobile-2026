@@ -37,7 +37,7 @@ export const AppNavigator = function () {
 
   return (
     <Stack>
-      <Stack.Protected guard={!!isAuthenticated}>
+      <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
       </Stack.Protected>
 
