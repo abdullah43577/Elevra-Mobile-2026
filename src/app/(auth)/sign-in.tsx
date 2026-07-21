@@ -1,26 +1,33 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
+import { useSubmitData } from "@/hooks/use-submit-data";
+import { API_ENDPOINTS } from "@/provider/endpoints";
 import { signInSchema, type SignInFormValues } from "@/schemas/auth/sign-in";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function SignIn() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = async (_data: SignInFormValues) => {
-    // TODO: implement sign-in logic
-  };
+  const { mutate, isPending } = useSubmitData<SignInFormValues, any>({
+    url: API_ENDPOINTS.auth.signin,
+    method: "post",
+    onSuccessMessage: "Login Successful",
+  });
+
+  const onSubmit = async (_data: SignInFormValues) => mutate(_data);
 
   return (
     <KeyboardAwareScrollView
@@ -65,9 +72,7 @@ export default function SignIn() {
           {/* Forgot password */}
           <Pressable
             className="self-end active:opacity-60"
-            onPress={() => {
-              // TODO: navigate to forgot password
-            }}
+            onPress={() => router.push("/(auth)/forgot-password")}
           >
             <AppText type="link">Forgot password?</AppText>
           </Pressable>
@@ -75,11 +80,11 @@ export default function SignIn() {
           {/* Submit */}
           <AppButton
             type="submit"
-            disabled={isSubmitting}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
             <AppText className="font-semibold text-white">
-              {isSubmitting ? "Signing in..." : "Sign in"}
+              {isPending ? "Signing in..." : "Sign in"}
             </AppText>
           </AppButton>
         </View>
@@ -96,9 +101,12 @@ export default function SignIn() {
         {/* OAuth buttons */}
         <View className="gap-3">
           <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
+            <AntDesign name="google" size={18} color="#000" />
             <AppText className="font-semibold">Continue with Google</AppText>
           </Pressable>
+
           <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
+            <AntDesign name="apple" size={18} color="#000" />
             <AppText className="font-semibold">Continue with Apple</AppText>
           </Pressable>
         </View>

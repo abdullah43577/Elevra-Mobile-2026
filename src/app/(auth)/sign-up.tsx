@@ -1,7 +1,10 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
+import { useSubmitData } from "@/hooks/use-submit-data";
+import { API_ENDPOINTS } from "@/provider/endpoints";
 import { signUpSchema, type SignUpFormValues } from "@/schemas/auth/sign-up";
+import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
@@ -12,15 +15,19 @@ export default function SignUp() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { fullName: "", email: "", password: "" },
   });
 
-  const onSubmit = async (_data: SignUpFormValues) => {
-    // TODO: implement sign-up logic
-  };
+  const { mutate, isPending } = useSubmitData<SignUpFormValues, any>({
+    url: API_ENDPOINTS.auth.register,
+    method: "post",
+    onSuccessMessage: "Signup Successful",
+  });
+
+  const onSubmit = async (_data: SignUpFormValues) => mutate(_data);
 
   return (
     <KeyboardAwareScrollView
@@ -80,11 +87,11 @@ export default function SignUp() {
           {/* Submit */}
           <AppButton
             type="submit"
-            disabled={isSubmitting}
+            disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
             <AppText className="font-semibold text-white">
-              {isSubmitting ? "Creating account..." : "Create account"}
+              {isPending ? "Creating account..." : "Create account"}
             </AppText>
           </AppButton>
         </View>
@@ -101,9 +108,12 @@ export default function SignUp() {
         {/* OAuth buttons */}
         <View className="gap-3">
           <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
+            <AntDesign name="google" size={18} color="#000" />
             <AppText className="font-semibold">Continue with Google</AppText>
           </Pressable>
+
           <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
+            <AntDesign name="apple" size={18} color="#000" />
             <AppText className="font-semibold">Continue with Apple</AppText>
           </Pressable>
         </View>

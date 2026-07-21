@@ -1,10 +1,8 @@
-import { useToastStore } from "@/store/toast";
 import { logError } from "@/utils/logger";
+import { showToast } from "@/utils/show-toast";
 import { AxiosError } from "axios";
 
 export function useHandleErrors() {
-  const { showToast } = useToastStore();
-
   const handleErrors = function (error: unknown) {
     logError(error);
 

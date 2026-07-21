@@ -1,4 +1,3 @@
-// Create this in a utils/logger.js file
 export const logError = (error: any) => {
   if (!error) {
     console.log("Null or undefined error received");
