@@ -19,7 +19,7 @@ interface FormInputProps<TFieldValues extends FieldValues> extends Omit<
 > {
   label: string;
   placeholder?: string;
-  type?: "text" | "password" | "email";
+  type?: "text" | "password" | "email" | "numeric";
   control: Control<TFieldValues>;
   name: Path<TFieldValues>;
   errors?: FieldErrors<TFieldValues>;

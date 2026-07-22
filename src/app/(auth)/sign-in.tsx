@@ -10,6 +10,9 @@ import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
+import { User } from "../../../types/auth";
+import { APIResponse } from "../../../types/response";
+import { tokenStorage } from "@/provider/token-storage";
 
 export default function SignIn() {
   const {
@@ -21,10 +24,29 @@ export default function SignIn() {
     defaultValues: { email: "", password: "" },
   });
 
-  const { mutate, isPending } = useSubmitData<SignInFormValues, any>({
+  const { mutate, isPending } = useSubmitData<
+    SignInFormValues,
+    APIResponse<{
+      user: User;
+      token: {
+        tokens: {
+          accessToken: string;
+          refreshToken: string;
+        };
+      };
+    }>
+  >({
     url: API_ENDPOINTS.auth.signin,
     method: "post",
     onSuccessMessage: "Login Successful",
+    onSuccess: async (data) => {
+      await tokenStorage.setTokens(
+        data.data.token.tokens.accessToken,
+        data.data.token.tokens.refreshToken,
+      );
+
+      router.push("/(dashboard)/(tabs)");
+    },
   });
 
   const onSubmit = async (_data: SignInFormValues) => mutate(_data);

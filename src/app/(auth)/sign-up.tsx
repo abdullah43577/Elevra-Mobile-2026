@@ -10,6 +10,8 @@ import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { APIResponse } from "../../../types/response";
+import { User } from "../../../types/auth";
 
 export default function SignUp() {
   const {
@@ -18,16 +20,25 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { fullName: "", email: "", password: "" },
+    defaultValues: { first_name: "", last_name: "", email: "", password: "" },
   });
 
-  const { mutate, isPending } = useSubmitData<SignUpFormValues, any>({
+  const { mutate, isPending } = useSubmitData<
+    SignUpFormValues,
+    APIResponse<User>
+  >({
     url: API_ENDPOINTS.auth.register,
     method: "post",
     onSuccessMessage: "Signup Successful",
+    onSuccess: (data) => {
+      router.push({
+        pathname: "/(auth)/verify-email",
+        params: { email: data.data.email },
+      });
+    },
   });
 
-  const onSubmit = async (_data: SignUpFormValues) => mutate(_data);
+  const onSubmit = async (data: SignUpFormValues) => mutate(data);
 
   return (
     <KeyboardAwareScrollView
@@ -49,9 +60,17 @@ export default function SignUp() {
         <View className="mt-8 gap-4">
           <FormInput<SignUpFormValues>
             control={control}
-            name="fullName"
-            label="Full Name"
-            placeholder="John Doe"
+            name="first_name"
+            label="First Name"
+            placeholder="John"
+            errors={errors}
+          />
+
+          <FormInput<SignUpFormValues>
+            control={control}
+            name="last_name"
+            label="Last Name"
+            placeholder="Doe"
             errors={errors}
           />
 
