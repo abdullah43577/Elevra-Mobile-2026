@@ -1,8 +1,6 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
-import { useSubmitData } from "@/hooks/use-submit-data";
-import { API_ENDPOINTS } from "@/provider/endpoints";
 import { signUpSchema, type SignUpFormValues } from "@/schemas/auth/sign-up";
 import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,8 +8,7 @@ import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { APIResponse } from "../../../types/response";
-import { User } from "../../../types/auth";
+import { useSignup } from "@/hooks/auth/use-register";
 
 export default function SignUp() {
   const {
@@ -23,22 +20,9 @@ export default function SignUp() {
     defaultValues: { first_name: "", last_name: "", email: "", password: "" },
   });
 
-  const { mutate, isPending } = useSubmitData<
-    SignUpFormValues,
-    APIResponse<User>
-  >({
-    url: API_ENDPOINTS.auth.register,
-    method: "post",
-    onSuccessMessage: "Signup Successful",
-    onSuccess: (data) => {
-      router.push({
-        pathname: "/(auth)/verify-email",
-        params: { email: data.data.email },
-      });
-    },
-  });
+  const { signup, isPending } = useSignup();
 
-  const onSubmit = async (data: SignUpFormValues) => mutate(data);
+  const onSubmit = async (data: SignUpFormValues) => signup(data);
 
   return (
     <KeyboardAwareScrollView

@@ -1,8 +1,7 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
-import { useSubmitData } from "@/hooks/use-submit-data";
-import { API_ENDPOINTS } from "@/provider/endpoints";
+import { useForgotPassword } from "@/hooks/auth/use-forgot-password";
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormValues,
@@ -23,14 +22,7 @@ export default function ForgotPassword() {
     defaultValues: { email: "" },
   });
 
-  const { mutate, isPending } = useSubmitData<ForgotPasswordFormValues, any>({
-    url: API_ENDPOINTS.auth.forgotPassword,
-    method: "post",
-    onSuccessMessage: "Reset code sent to your email",
-    onSuccess: () => {
-      router.push("/(auth)/reset-password");
-    },
-  });
+  const { mutate, isPending } = useForgotPassword();
 
   const onSubmit = async (_data: ForgotPasswordFormValues) => mutate(_data);
 

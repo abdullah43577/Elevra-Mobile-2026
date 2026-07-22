@@ -1,8 +1,7 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
-import { useSubmitData } from "@/hooks/use-submit-data";
-import { API_ENDPOINTS } from "@/provider/endpoints";
+import { useResetPassword } from "@/hooks/auth/use-reset-password";
 import {
   resetPasswordSchema,
   type ResetPasswordFormValues,
@@ -23,14 +22,7 @@ export default function ResetPassword() {
     defaultValues: { otp: "", password: "", confirmPassword: "" },
   });
 
-  const { mutate, isPending } = useSubmitData<ResetPasswordFormValues, any>({
-    url: API_ENDPOINTS.auth.resetPassword,
-    method: "post",
-    onSuccessMessage: "Password reset successful",
-    onSuccess: () => {
-      router.replace("/(auth)/sign-in");
-    },
-  });
+  const { mutate, isPending } = useResetPassword();
 
   const onSubmit = async (_data: ResetPasswordFormValues) => mutate(_data);
 

@@ -1,6 +1,13 @@
 export type AuthProvider = "PASSWORD" | "GOOGLE" | "APPLE";
 export type Gender = "MALE" | "FEMALE" | "OTHER";
 export type AccountStatus = "ACTIVE" | "DEACTIVATED";
+export type Theme = "SYSTEM" | "LIGHT" | "DARK";
+
+export interface UserSettings {
+  theme: Theme;
+  notifications: boolean;
+  subscriptionTier: string;
+}
 
 export interface User {
   email: string;
@@ -21,4 +28,5 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   professionId: string | null;
+  settings: UserSettings | null;
 }

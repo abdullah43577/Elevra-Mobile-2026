@@ -8,5 +8,7 @@ export const API_ENDPOINTS = {
     resetPassword: "",
     getProfile: "/auth/profile",
     refreshToken: "/auth/token",
+    updateProfile: "/auth/profile",
+    updateSettings: "/auth/settings",
   },
 };

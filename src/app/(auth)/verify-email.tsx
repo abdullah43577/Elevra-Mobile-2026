@@ -1,19 +1,18 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
-import { useSubmitData } from "@/hooks/use-submit-data";
-import { API_ENDPOINTS } from "@/provider/endpoints";
 import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
 } from "@/schemas/auth/verify-email";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { APIResponse } from "../../../types/response";
+import { useVerifyEmail } from "@/hooks/auth/use-verify-email";
+import { useResendOTP } from "@/hooks/auth/use-resend-otp";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
@@ -30,24 +29,9 @@ export default function VerifyEmail() {
     defaultValues: { email: email ?? "", otp: "" },
   });
 
-  const { mutate, isPending } = useSubmitData<
-    VerifyEmailFormValues,
-    APIResponse<null>
-  >({
-    url: API_ENDPOINTS.auth.verifyEmail,
-    method: "post",
-    onSuccessMessage: "Email verified successfully",
-    onSuccess: () => router.replace("/(auth)/sign-in"),
-  });
+  const { mutate, isPending } = useVerifyEmail();
 
-  const { mutate: resendOtp, isPending: isResending } = useSubmitData<
-    { email: string },
-    APIResponse<null>
-  >({
-    url: API_ENDPOINTS.auth.resendVerificationOtp,
-    method: "post",
-    onSuccessMessage: "Verification code resent",
-  });
+  const { resendOtp, isResending } = useResendOTP();
 
   useEffect(() => {
     if (cooldown <= 0) return;

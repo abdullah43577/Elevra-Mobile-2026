@@ -1,8 +1,6 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
-import { useSubmitData } from "@/hooks/use-submit-data";
-import { API_ENDPOINTS } from "@/provider/endpoints";
 import { signInSchema, type SignInFormValues } from "@/schemas/auth/sign-in";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
@@ -10,9 +8,7 @@ import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
-import { User } from "../../../types/auth";
-import { APIResponse } from "../../../types/response";
-import { tokenStorage } from "@/provider/token-storage";
+import { useLogin } from "@/hooks/auth/use-login";
 
 export default function SignIn() {
   const {
@@ -23,33 +19,9 @@ export default function SignIn() {
     resolver: zodResolver(signInSchema),
     defaultValues: { email: "", password: "" },
   });
+  const { login, isPending } = useLogin();
 
-  const { mutate, isPending } = useSubmitData<
-    SignInFormValues,
-    APIResponse<{
-      user: User;
-      token: {
-        tokens: {
-          accessToken: string;
-          refreshToken: string;
-        };
-      };
-    }>
-  >({
-    url: API_ENDPOINTS.auth.signin,
-    method: "post",
-    onSuccessMessage: "Login Successful",
-    onSuccess: async (data) => {
-      await tokenStorage.setTokens(
-        data.data.token.tokens.accessToken,
-        data.data.token.tokens.refreshToken,
-      );
-
-      router.push("/(dashboard)/(tabs)");
-    },
-  });
-
-  const onSubmit = async (_data: SignInFormValues) => mutate(_data);
+  const onSubmit = async (_data: SignInFormValues) => login(_data);
 
   return (
     <KeyboardAwareScrollView
