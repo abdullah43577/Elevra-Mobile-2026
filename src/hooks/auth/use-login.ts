@@ -28,6 +28,7 @@ export const useLogin = function () {
         data.data.token.tokens.refreshToken,
       );
 
+      console.log("redirecting...");
       router.push("/(dashboard)/(tabs)");
     },
   });

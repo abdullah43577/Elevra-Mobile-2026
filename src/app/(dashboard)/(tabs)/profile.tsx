@@ -7,20 +7,31 @@ import { useGetProfile } from "@/hooks/use-get-profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert, Image, ScrollView, View } from "react-native";
-import { z } from "zod";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  View,
+} from "react-native";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { useUpdateProfile } from "@/hooks/profile/use-update-profile";
 import { useUpdateSettings } from "@/hooks/profile/use-update-settings";
-
-const profileSchema = z.object({
-  first_name: z.string().min(1, "First name is required"),
-  last_name: z.string().min(1, "Last name is required"),
-});
-type ProfileFormValues = z.infer<typeof profileSchema>;
+import { ProfileFormValues, profileSchema } from "@/schemas/settings/profile";
+import { useImagePicker } from "@/hooks/use-image-picker";
+import { ProfessionPicker } from "@/components/shared/profession-picker";
 
 export default function Profile() {
   const { profile, isFetchingProfile, logout } = useGetProfile();
   const [isEditing, setIsEditing] = useState(false);
+  const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
+  const [professionPickerVisible, setProfessionPickerVisible] = useState(false);
+  const [selectedProfessionId, setSelectedProfessionId] = useState<
+    string | null
+  >(null);
+  const [selectedProfessionName, setSelectedProfessionName] = useState<
+    string | null
+  >(null);
 
   const {
     control,
@@ -38,6 +49,9 @@ export default function Profile() {
         first_name: profile.first_name ?? "",
         last_name: profile.last_name ?? "",
       });
+
+      setSelectedProfessionId(profile.professionId);
+      setSelectedProfessionName(profile.profession?.name ?? null);
     }
   }, [profile]);
 
@@ -47,7 +61,17 @@ export default function Profile() {
 
   const { updateSettings, isUpdatingSettings } = useUpdateSettings();
 
-  const onSubmit = (values: ProfileFormValues) => updateProfile(values);
+  const [previewUri, setPreviewUri] = useState("");
+  const { pickImage } = useImagePicker();
+
+  const professionChanged = selectedProfessionId !== profile?.professionId;
+  const canSave = (isDirty || professionChanged) && !isUpdatingProfile;
+
+  const onSubmit = (values: ProfileFormValues) =>
+    updateProfile({
+      ...values,
+      professionId: selectedProfessionId ?? undefined,
+    });
 
   const handleThemeChange = (theme: "SYSTEM" | "LIGHT" | "DARK") =>
     updateSettings({ theme });
@@ -55,11 +79,23 @@ export default function Profile() {
   const handleNotificationsToggle = (notifications: boolean) =>
     updateSettings({ notifications });
 
-  const handleLogout = () => {
-    Alert.alert("Log out", "Are you sure you want to log out?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Log out", style: "destructive", onPress: () => logout() },
-    ]);
+  const handleChangePicture = async () => {
+    const image = await pickImage();
+    if (!image) return;
+    setPreviewUri(image.uri);
+
+    const form = new FormData();
+    form.append("profile_pic", {
+      uri: image.uri,
+      name: image.name,
+      type: image.type,
+    } as any);
+    updateProfile(form);
+  };
+
+  const handleLogout = function () {
+    setLogoutDialogVisible(false);
+    logout();
   };
 
   if (isFetchingProfile || !profile) {
@@ -74,6 +110,8 @@ export default function Profile() {
     `${profile.first_name?.[0] ?? ""}${profile.last_name?.[0] ?? ""}`.toUpperCase() ||
     "?";
 
+  const displayUri = previewUri || profile.profile_pic;
+
   return (
     <ScrollView
       className="flex-1 bg-white px-6 pt-16"
@@ -85,16 +123,29 @@ export default function Profile() {
 
       {/* Avatar + identity */}
       <View className="mb-8 items-center">
-        {profile.profile_pic ? (
-          <Image
-            source={{ uri: profile.profile_pic }}
-            className="mb-3 h-20 w-20 rounded-full"
-          />
-        ) : (
-          <View className="bg-primary-100 mb-3 h-20 w-20 items-center justify-center rounded-full">
-            <AppText type="title">{initials}</AppText>
-          </View>
-        )}
+        <Pressable onPress={handleChangePicture} className="mb-3">
+          {displayUri ? (
+            <Image
+              source={{ uri: displayUri }}
+              className="h-20 w-20 rounded-full"
+            />
+          ) : (
+            <View className="h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+              <AppText type="title">{initials}</AppText>
+            </View>
+          )}
+
+          {isUpdatingProfile && !isEditing && (
+            <View className="absolute inset-0 items-center justify-center rounded-full bg-black/40">
+              <ActivityIndicator color="white" />
+            </View>
+          )}
+        </Pressable>
+
+        <AppText type="link" onPress={handleChangePicture} className="mb-3">
+          Change photo
+        </AppText>
+
         <AppText type="default" className="font-semibold">
           {profile.first_name} {profile.last_name}
         </AppText>
@@ -130,10 +181,25 @@ export default function Profile() {
               name="last_name"
               errors={errors}
             />
+
+            <View>
+              <AppText type="subtitle" className="mb-1">
+                Profession
+              </AppText>
+              <Pressable
+                className="border-primary-200 rounded-lg border px-3 py-3"
+                onPress={() => setProfessionPickerVisible(true)}
+              >
+                <AppText type="default">
+                  {selectedProfessionName ?? "Select a profession"}
+                </AppText>
+              </Pressable>
+            </View>
+
             <AppButton
               type="submit"
               isLoading={isUpdatingProfile}
-              disabled={!isDirty || isUpdatingProfile}
+              disabled={!canSave}
               onPress={handleSubmit(onSubmit)}
             >
               <AppText type="default" className="text-white">
@@ -144,10 +210,8 @@ export default function Profile() {
         ) : (
           <View className="gap-2">
             <AppText type="default">
-              Profession: {profile.professionId ? "Set" : "Not set"}
+              Profession: {profile.profession?.name ?? "Not set"}
             </AppText>
-            {/* TODO: swap for profession name once a professions-list
-                endpoint exists and can be joined/looked up here */}
           </View>
         )}
       </View>
@@ -190,11 +254,31 @@ export default function Profile() {
       </View>
 
       {/* Danger zone */}
-      <AppButton type="delete" onPress={handleLogout}>
+      <AppButton type="delete" onPress={() => setLogoutDialogVisible(true)}>
         <AppText type="default" className="text-white">
           Log out
         </AppText>
       </AppButton>
+
+      <ProfessionPicker
+        visible={professionPickerVisible}
+        selectedId={selectedProfessionId}
+        onSelect={(id, name) => {
+          setSelectedProfessionId(id);
+          setSelectedProfessionName(name);
+        }}
+        onClose={() => setProfessionPickerVisible(false)}
+      />
+
+      <ConfirmDialog
+        visible={logoutDialogVisible}
+        title="Log out"
+        message="Are you sure you want to log out of your account?"
+        confirmLabel="Log out"
+        variant="delete"
+        onConfirm={handleLogout}
+        onCancel={() => setLogoutDialogVisible(false)}
+      />
     </ScrollView>
   );
 }

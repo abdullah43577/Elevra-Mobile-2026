@@ -11,4 +11,8 @@ export const API_ENDPOINTS = {
     updateProfile: "/auth/profile",
     updateSettings: "/auth/settings",
   },
+
+  professions: {
+    list: "/professions",
+  },
 };

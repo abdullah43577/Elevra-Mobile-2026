@@ -3,11 +3,14 @@ import { API_ENDPOINTS } from "@/provider/endpoints";
 import { APIResponse } from "../../../types/response";
 import { User } from "../../../types/auth";
 
-interface UpdateProfilePayload {
+interface UpdateProfileFields {
   first_name?: string;
   last_name?: string;
   gender?: User["gender"];
+  professionId?: string;
 }
+
+export type UpdateProfilePayload = UpdateProfileFields | FormData;
 
 interface UseUpdateProfileOptions {
   onSuccess?: (user: User) => void;

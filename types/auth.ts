@@ -9,6 +9,12 @@ export interface UserSettings {
   subscriptionTier: string;
 }
 
+export interface Profession {
+  id: string;
+  name: string;
+  category: string | null;
+}
+
 export interface User {
   email: string;
   id: string;
@@ -28,5 +34,6 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
   professionId: string | null;
+  profession: Profession | null;
   settings: UserSettings | null;
 }

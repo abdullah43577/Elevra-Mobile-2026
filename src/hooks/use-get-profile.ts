@@ -14,7 +14,7 @@ export const useGetProfile = function () {
 
   const { data, isFetching, error, refetch } = useGetData<APIResponse<User>>({
     url: API_ENDPOINTS.auth.getProfile,
-    shouldFetch: !!hasToken,
+    // shouldFetch: !!hasToken,
   });
 
   // Clears tokens and flips hasToken -> false, which drops `profile` to
@@ -26,7 +26,7 @@ export const useGetProfile = function () {
 
   return {
     profile: data?.data,
-    isFetchingProfile: hasToken === null || isFetching,
+    isFetchingProfile: isFetching,
     errorProfile: error,
     refetch,
     logout,
