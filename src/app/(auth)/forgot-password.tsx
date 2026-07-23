@@ -59,8 +59,7 @@ export default function ForgotPassword() {
           <AppButton
             type="submit"
             disabled={isPending}
-            // onPress={handleSubmit(onSubmit)}
-            onPress={() => router.push("/(auth)/reset-password")}
+            onPress={handleSubmit(onSubmit)}
           >
             <AppText className="font-semibold text-white">
               {isPending ? "Sending..." : "Send reset code"}
