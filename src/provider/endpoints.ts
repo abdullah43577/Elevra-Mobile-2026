@@ -9,7 +9,7 @@ export const API_ENDPOINTS = {
     getProfile: "/auth/profile",
     refreshToken: "/auth/token",
     updateProfile: "/auth/profile",
-    updateSettings: "/auth/settings",
+    updateSettings: "/auth/profile/settings",
   },
 
   professions: {

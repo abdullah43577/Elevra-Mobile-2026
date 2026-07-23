@@ -53,7 +53,7 @@ const handleGetNewToken = async (): Promise<string | null> => {
     if (!refreshToken) return null;
 
     const refreshApi = axios.create({
-      baseURL: process.env.EXPO_PUBLIC_API_URL,
+      baseURL: getBaseUrl(),
       timeout: CONFIG.REQUESTS.TIMEOUT,
     });
 

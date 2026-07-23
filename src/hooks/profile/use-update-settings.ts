@@ -13,7 +13,7 @@ export const useUpdateSettings = function () {
     APIResponse<UserSettings>
   >({
     url: API_ENDPOINTS.auth.updateSettings,
-    method: "patch",
+    method: "post",
     onSuccessMessage: "Preferences updated",
     additionalQueryKeys: [[API_ENDPOINTS.auth.getProfile]],
   });

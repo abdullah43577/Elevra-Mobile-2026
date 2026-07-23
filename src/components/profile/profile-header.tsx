@@ -4,7 +4,7 @@ import { useGetProfile } from "@/hooks/use-get-profile";
 
 interface Props {
   onChangePicture: () => void;
-  displayUri: string | null;
+  displayUri: string | null | undefined;
   isUpdatingProfile: boolean;
   isEditing: boolean;
 }

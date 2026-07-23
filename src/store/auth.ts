@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { tokenStorage } from "@/provider/token-storage";
 
 interface AuthState {
-  hasToken: boolean | null; // null = not checked yet (splash/loading state)
+  hasToken: boolean | null;
   checkAuthStatus: () => Promise<void>;
   setAuthenticated: (value: boolean) => void;
 }

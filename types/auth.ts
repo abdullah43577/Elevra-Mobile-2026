@@ -4,6 +4,8 @@ export type AccountStatus = "ACTIVE" | "DEACTIVATED";
 export type Theme = "SYSTEM" | "LIGHT" | "DARK";
 
 export interface UserSettings {
+  id: string;
+  userId: string;
   theme: Theme;
   notifications: boolean;
   subscriptionTier: string;
