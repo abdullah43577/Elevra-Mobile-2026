@@ -9,6 +9,11 @@ export default function WorkspacesHub() {
   const router = useRouter();
 
   const handlePress = (item: WorkspaceItem) => {
+    if (item.locked) {
+      // show coming soon modal
+      return;
+    }
+
     router.push(`/(dashboard)/(tabs)/workspaces/${item.route}` as any);
   };
 

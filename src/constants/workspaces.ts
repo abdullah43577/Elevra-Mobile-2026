@@ -44,7 +44,7 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     icon: StickyNote,
     comingSoonIcon: "document-outline",
     route: "/smart-notes",
-    locked: true,
+    locked: false,
   },
   {
     id: "ai-rewriter",
