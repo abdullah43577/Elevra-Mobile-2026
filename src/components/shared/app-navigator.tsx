@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useOnboardingStore } from "@/store/onboarding";
 import { useGetProfile } from "@/hooks/use-get-profile";
+import { useAuthStore } from "@/store/auth";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
@@ -12,6 +13,7 @@ export const AppNavigator = function () {
     "Roboto-Bold": require("../../../assets/fonts/Roboto-Bold.ttf"),
     "Roboto-SemiBold": require("../../../assets/fonts/Roboto-SemiBold.ttf"),
   });
+  const { checkAuthStatus } = useAuthStore();
   const { isFetchingProfile, profile } = useGetProfile();
   const isAuthenticated = !!profile;
 
@@ -22,6 +24,7 @@ export const AppNavigator = function () {
   } = useOnboardingStore();
 
   useEffect(() => {
+    checkAuthStatus();
     checkOnboardingStatus();
   }, []);
 

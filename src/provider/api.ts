@@ -2,6 +2,8 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { API_ENDPOINTS } from "./endpoints";
 import { getBaseUrl } from "./client";
 import { tokenStorage } from "./token-storage";
+import { router } from "expo-router";
+import { queryClient } from "@/utils/queryClient";
 import { APIResponse } from "../../types/response";
 
 const CONFIG = {
@@ -11,7 +13,41 @@ const CONFIG = {
   },
 } as const;
 
-const handleGetNewToken = async () => {
+export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  skipAuth?: boolean;
+  _retry?: boolean;
+}
+
+const api = axios.create({
+  baseURL: getBaseUrl(),
+  timeout: CONFIG.REQUESTS.TIMEOUT,
+  withCredentials: false,
+});
+
+// Shared refresh-in-flight state, so concurrent requests hitting an
+// expiring/expired token don't each kick off their own refresh call.
+let globalRetryCount = 0;
+let isRefreshing = false;
+let refreshSubscribers: Array<(token: string | null) => void> = [];
+
+function subscribeTokenRefresh(cb: (token: string | null) => void) {
+  refreshSubscribers.push(cb);
+}
+
+function onRefreshed(token: string | null) {
+  refreshSubscribers.forEach((cb) => cb(token));
+  refreshSubscribers = [];
+}
+
+const handleSessionExpired = async () => {
+  await tokenStorage.clearTokens();
+  queryClient.clear();
+  router.replace("/(auth)/sign-in");
+};
+
+// Actually calls the refresh endpoint. Only ever invoked by
+// refreshAccessToken() below, which guards against concurrent calls.
+const handleGetNewToken = async (): Promise<string | null> => {
   try {
     const refreshToken = await tokenStorage.getRefreshToken();
     if (!refreshToken) return null;
@@ -35,8 +71,48 @@ const handleGetNewToken = async () => {
     return data.data.accessToken;
   } catch (error) {
     console.error("Error refreshing token:", error);
-    await tokenStorage.clearTokens();
     throw error;
+  }
+};
+
+// Shared entry point for refreshing — used by both the proactive
+// (pre-request, expiring-soon) path and the reactive (401) path.
+// Concurrent callers all subscribe to the same in-flight refresh
+// instead of racing each other, and a cap prevents infinite retry
+// loops if the refresh token itself is bad.
+const refreshAccessToken = async (): Promise<string | null> => {
+  if (isRefreshing) {
+    return new Promise((resolve) => {
+      subscribeTokenRefresh((token) => resolve(token));
+    });
+  }
+
+  if (globalRetryCount >= CONFIG.REQUESTS.RETRIES) {
+    await handleSessionExpired();
+    onRefreshed(null);
+    return null;
+  }
+
+  isRefreshing = true;
+  globalRetryCount++;
+
+  try {
+    const newToken = await handleGetNewToken();
+    if (!newToken) {
+      await handleSessionExpired();
+      onRefreshed(null);
+      return null;
+    }
+
+    globalRetryCount = 0;
+    onRefreshed(newToken);
+    return newToken;
+  } catch (error) {
+    await handleSessionExpired();
+    onRefreshed(null);
+    return null;
+  } finally {
+    isRefreshing = false;
   }
 };
 
@@ -54,8 +130,7 @@ const getToken = async function () {
     const isExpiringSoon = expiresAt - now <= 2 * 60 * 1000;
 
     if (isExpiringSoon) {
-      const newToken = await handleGetNewToken();
-      return newToken;
+      return await refreshAccessToken();
     }
 
     return token;
@@ -63,17 +138,6 @@ const getToken = async function () {
     throw error;
   }
 };
-
-export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  skipAuth?: boolean;
-  _retry?: boolean;
-}
-
-const api = axios.create({
-  baseURL: getBaseUrl(),
-  timeout: CONFIG.REQUESTS.TIMEOUT,
-  withCredentials: false,
-});
 
 api.interceptors.request.use(
   async (config: CustomAxiosRequestConfig) => {
@@ -97,10 +161,20 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
 
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      await tokenStorage.clearTokens();
-      // TODO: trigger global logout / redirect to sign-in once auth store is wired
+
+      const newToken = await refreshAccessToken();
+      if (newToken) {
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return api(originalRequest);
+      }
+
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);

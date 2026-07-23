@@ -74,6 +74,7 @@ export default function SignIn() {
           {/* Submit */}
           <AppButton
             type="submit"
+            isLoading={isPending}
             disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >

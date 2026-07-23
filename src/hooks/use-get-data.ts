@@ -53,7 +53,7 @@ export const useGetData = function <T>({
 
   //   handle errors outside of the render cycle
   useEffect(() => {
-    if (error) console.log("handle errors");
+    if (error) console.log("errors", error);
   }, [error]);
 
   return { isFetching, data, refetch, error };

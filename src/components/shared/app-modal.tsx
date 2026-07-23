@@ -91,7 +91,7 @@ export const AppModal = function ({
         {/* Header row */}
         {title != null && (
           <View className="mb-4 flex-row items-center justify-between">
-            <AppText type="heading">{title}</AppText>
+            <AppText type="title">{title}</AppText>
             <Pressable
               onPress={onClose}
               className="rounded-full p-1 active:opacity-60"

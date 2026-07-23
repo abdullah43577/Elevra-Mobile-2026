@@ -4,9 +4,12 @@ import { APIResponse } from "../../../types/response";
 import { User } from "../../../types/auth";
 import { API_ENDPOINTS } from "@/provider/endpoints";
 import { tokenStorage } from "@/provider/token-storage";
-import { router } from "expo-router";
+// import { router } from "expo-router";
+import { useAuthStore } from "@/store/auth";
 
 export const useLogin = function () {
+  const { setAuthenticated } = useAuthStore();
+
   const { mutate, isPending } = useSubmitData<
     SignInFormValues,
     APIResponse<{
@@ -28,8 +31,8 @@ export const useLogin = function () {
         data.data.token.tokens.refreshToken,
       );
 
-      console.log("redirecting...");
-      router.push("/(dashboard)/(tabs)");
+      setAuthenticated(true);
+      // router.push("/(dashboard)/(tabs)");
     },
   });
 

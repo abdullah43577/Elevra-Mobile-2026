@@ -1,6 +1,5 @@
 import { AppText } from "@/components/shared/app-text";
 import { AppButton } from "@/components/shared/app-button";
-import { FormInput } from "@/components/shared/form-input";
 import { SegmentedControl } from "@/components/shared/segmented-control";
 import { ToggleSwitch } from "@/components/shared/toggle-switch";
 import { useGetProfile } from "@/hooks/use-get-profile";
@@ -9,8 +8,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
-  Image,
   Pressable,
+  RefreshControl,
   ScrollView,
   View,
 } from "react-native";
@@ -20,9 +19,13 @@ import { useUpdateSettings } from "@/hooks/profile/use-update-settings";
 import { ProfileFormValues, profileSchema } from "@/schemas/settings/profile";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { ProfessionPicker } from "@/components/shared/profession-picker";
+import { AccountDetailsEdit } from "@/components/profile/account-details-edit";
+import { ProfileHeader } from "@/components/profile/profile-header";
+import { AccountDetailsView } from "@/components/profile/account-details-view";
+import { AccountPreferencesCard } from "@/components/profile/account-preferences-card";
 
 export default function Profile() {
-  const { profile, isFetchingProfile, logout } = useGetProfile();
+  const { profile, isFetchingProfile, refetch, logout } = useGetProfile();
   const [isEditing, setIsEditing] = useState(false);
   const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
   const [professionPickerVisible, setProfessionPickerVisible] = useState(false);
@@ -40,7 +43,7 @@ export default function Profile() {
     formState: { errors, isDirty },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: { first_name: "", last_name: "" },
+    defaultValues: { first_name: "", last_name: "", gender: undefined },
   });
 
   useEffect(() => {
@@ -48,6 +51,7 @@ export default function Profile() {
       reset({
         first_name: profile.first_name ?? "",
         last_name: profile.last_name ?? "",
+        gender: profile.gender ?? undefined,
       });
 
       setSelectedProfessionId(profile.professionId);
@@ -101,7 +105,7 @@ export default function Profile() {
   if (isFetchingProfile || !profile) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <AppText type="subtitle">Loading profile…</AppText>
+        <ActivityIndicator color="#121212" />
       </View>
     );
   }
@@ -114,151 +118,120 @@ export default function Profile() {
 
   return (
     <ScrollView
-      className="flex-1 bg-white px-6 pt-16"
+      className="flex-1 bg-neutral-50"
       contentContainerClassName="pb-12"
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={isFetchingProfile}
+          onRefresh={() => refetch}
+        />
+      }
     >
-      <AppText type="title" className="mb-6">
-        Profile
-      </AppText>
+      {/* Header */}
+      <ProfileHeader
+        onChangePicture={handleChangePicture}
+        displayUri={displayUri}
+        isUpdatingProfile={isUpdatingProfile}
+        isEditing={isEditing}
+      />
 
-      {/* Avatar + identity */}
-      <View className="mb-8 items-center">
-        <Pressable onPress={handleChangePicture} className="mb-3">
-          {displayUri ? (
-            <Image
-              source={{ uri: displayUri }}
-              className="h-20 w-20 rounded-full"
+      <View className="gap-4 px-6 pt-4">
+        {/* Account details card */}
+        <View className="rounded-2xl bg-white p-5">
+          <View className="mb-4 flex-row items-center justify-between">
+            <AppText type="subtitle">Account details</AppText>
+            <Pressable
+              onPress={() => setIsEditing((prev) => !prev)}
+              hitSlop={8}
+            >
+              <AppText type="link" className="font-medium text-primary-500">
+                {isEditing ? "Cancel" : "Edit"}
+              </AppText>
+            </Pressable>
+          </View>
+
+          {isEditing ? (
+            <AccountDetailsEdit
+              control={control}
+              errors={errors}
+              selectedProfessionName={selectedProfessionName}
+              onOpenProfessionPicker={() => setProfessionPickerVisible(true)}
+              isUpdatingProfile={isUpdatingProfile}
+              canSave={canSave}
+              onSubmit={() => handleSubmit(onSubmit)}
             />
           ) : (
-            <View className="h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-              <AppText type="title">{initials}</AppText>
-            </View>
+            <AccountDetailsView />
           )}
-
-          {isUpdatingProfile && !isEditing && (
-            <View className="absolute inset-0 items-center justify-center rounded-full bg-black/40">
-              <ActivityIndicator color="white" />
-            </View>
-          )}
-        </Pressable>
-
-        <AppText type="link" onPress={handleChangePicture} className="mb-3">
-          Change photo
-        </AppText>
-
-        <AppText type="default" className="font-semibold">
-          {profile.first_name} {profile.last_name}
-        </AppText>
-        <AppText type="link" className="text-primary-400">
-          {profile.email}
-        </AppText>
-      </View>
-
-      {/* Editable fields */}
-      <View className="mb-8">
-        <View className="mb-3 flex-row items-center justify-between">
-          <AppText type="subtitle">Account details</AppText>
-          <AppButton
-            type="default"
-            className="bg-transparent px-2 py-1"
-            onPress={() => setIsEditing((prev) => !prev)}
-          >
-            <AppText type="link">{isEditing ? "Cancel" : "Edit"}</AppText>
-          </AppButton>
         </View>
 
-        {isEditing ? (
-          <View className="gap-4">
-            <FormInput
-              label="First name"
-              control={control}
-              name="first_name"
-              errors={errors}
-            />
-            <FormInput
-              label="Last name"
-              control={control}
-              name="last_name"
-              errors={errors}
-            />
+        {/* Preferences card */}
+        <View className="rounded-2xl bg-white p-5">
+          <AppText type="subtitle" className="mb-4">
+            Preferences
+          </AppText>
 
+          <View className="gap-5">
             <View>
-              <AppText type="subtitle" className="mb-1">
-                Profession
-              </AppText>
-              <Pressable
-                className="border-primary-200 rounded-lg border px-3 py-3"
-                onPress={() => setProfessionPickerVisible(true)}
+              <AppText
+                type="default"
+                className="mb-2 text-sm font-medium text-neutral-700"
               >
-                <AppText type="default">
-                  {selectedProfessionName ?? "Select a profession"}
-                </AppText>
-              </Pressable>
+                Theme
+              </AppText>
+              <SegmentedControl
+                options={[
+                  { label: "System", value: "SYSTEM" },
+                  { label: "Light", value: "LIGHT" },
+                  { label: "Dark", value: "DARK" },
+                ]}
+                value={profile.settings?.theme ?? "SYSTEM"}
+                onChange={handleThemeChange}
+                disabled={isUpdatingSettings}
+              />
             </View>
 
-            <AppButton
-              type="submit"
-              isLoading={isUpdatingProfile}
-              disabled={!canSave}
-              onPress={handleSubmit(onSubmit)}
-            >
-              <AppText type="default" className="text-white">
-                {isUpdatingProfile ? "Saving…" : "Save changes"}
-              </AppText>
-            </AppButton>
+            <View className="flex-row items-center justify-between border-t border-neutral-100 pt-4">
+              <AppText type="default">Push notifications</AppText>
+              <ToggleSwitch
+                value={profile.settings?.notifications ?? true}
+                onValueChange={handleNotificationsToggle}
+                disabled={isUpdatingSettings}
+              />
+            </View>
+
+            <View className="flex-row items-center justify-between border-t border-neutral-100 pt-4">
+              <AppText type="default">Subscription</AppText>
+              <View className="rounded-full bg-primary-50 px-3 py-1">
+                <AppText
+                  type="default"
+                  className="text-xs font-semibold capitalize text-primary-500"
+                >
+                  {profile.settings?.subscriptionTier ?? "free"}
+                </AppText>
+              </View>
+            </View>
           </View>
-        ) : (
-          <View className="gap-2">
-            <AppText type="default">
-              Profession: {profile.profession?.name ?? "Not set"}
-            </AppText>
-          </View>
-        )}
-      </View>
+        </View>
 
-      {/* Settings */}
-      <View className="mb-8 gap-5">
-        <AppText type="subtitle">Preferences</AppText>
+        <AccountPreferencesCard
+          onThemeChange={handleThemeChange}
+          isUpdatingSettings={isUpdatingSettings}
+          onNotificationsToggle={handleNotificationsToggle}
+        />
 
-        <View>
-          <AppText type="default" className="mb-2">
-            Theme
+        {/* Danger zone */}
+        <AppButton
+          type="delete"
+          onPress={() => setLogoutDialogVisible(true)}
+          className="mt-2"
+        >
+          <AppText type="default" className="font-semibold text-white">
+            Log out
           </AppText>
-          <SegmentedControl
-            options={[
-              { label: "System", value: "SYSTEM" },
-              { label: "Light", value: "LIGHT" },
-              { label: "Dark", value: "DARK" },
-            ]}
-            value={profile.settings?.theme ?? "SYSTEM"}
-            onChange={handleThemeChange}
-            disabled={isUpdatingSettings}
-          />
-        </View>
-
-        <View className="flex-row items-center justify-between">
-          <AppText type="default">Push notifications</AppText>
-          <ToggleSwitch
-            value={profile.settings?.notifications ?? true}
-            onValueChange={handleNotificationsToggle}
-            disabled={isUpdatingSettings}
-          />
-        </View>
-
-        <View className="flex-row items-center justify-between">
-          <AppText type="default">Subscription</AppText>
-          <AppText type="link" className="capitalize">
-            {profile.settings?.subscriptionTier ?? "free"}
-          </AppText>
-        </View>
+        </AppButton>
       </View>
-
-      {/* Danger zone */}
-      <AppButton type="delete" onPress={() => setLogoutDialogVisible(true)}>
-        <AppText type="default" className="text-white">
-          Log out
-        </AppText>
-      </AppButton>
 
       <ProfessionPicker
         visible={professionPickerVisible}
