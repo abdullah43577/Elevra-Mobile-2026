@@ -11,25 +11,23 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
 import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
-import { useDeleteNote } from "@/hooks/smart-notes/use-delete-note";
-import { useToggleArchive } from "@/hooks/smart-notes/use-toggle-archive";
-import { useTogglePin } from "@/hooks/smart-notes/use-toggle-pin";
 import { SkeletonCard } from "@/components/smart-notes/skeleton-card";
 import { FilterChips } from "@/components/smart-notes/filter-chips";
-import { NoteCard } from "@/components/smart-notes/note-card";
 import { EmptyState } from "@/components/smart-notes/empty-state";
 import { NoteItem } from "@/components/smart-notes/note-item";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export default function SmartNotes() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 1000);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   // Fetch notes with filters
   const { notes, isFetchingNotes, refetchNotes } = useGetNotes({
     folderId: selectedFolder || undefined,
-    search: searchQuery || undefined,
+    search: debouncedSearch || undefined,
   });
 
   // Fetch folders for filter chips
