@@ -13,9 +13,9 @@ export const AppNavigator = function () {
     "Roboto-Bold": require("../../../assets/fonts/Roboto-Bold.ttf"),
     "Roboto-SemiBold": require("../../../assets/fonts/Roboto-SemiBold.ttf"),
   });
-  const { checkAuthStatus } = useAuthStore();
+  const { hasToken, isLoading: authLoading, checkAuthStatus } = useAuthStore();
   const { isFetchingProfile, profile } = useGetProfile();
-  const isAuthenticated = !!profile;
+  const isAuthenticated = !!profile && hasToken === true;
 
   const {
     hasOnboarded,
@@ -29,12 +29,12 @@ export const AppNavigator = function () {
   }, []);
 
   useEffect(() => {
-    if (loaded || (!isFetchingProfile && !onboardingLoading)) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, isFetchingProfile, onboardingLoading]);
+    const isReady =
+      loaded && !authLoading && !onboardingLoading && !isFetchingProfile;
+    if (isReady) SplashScreen.hideAsync();
+  }, [loaded, authLoading, isFetchingProfile, onboardingLoading]);
 
-  if (!loaded) {
+  if (!loaded || authLoading || onboardingLoading) {
     return null;
   }
 

@@ -15,6 +15,7 @@ import { useGetTags } from "@/hooks/smart-notes/use-get-tags";
 import { showToast } from "@/utils/show-toast";
 import { useSaveNote } from "@/hooks/smart-notes/use-save-notes";
 import { RichTextEditor } from "@/components/smart-notes/rich-text-editor";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function NoteEditor() {
   const router = useRouter();
@@ -50,7 +51,8 @@ export default function NoteEditor() {
       setContent(note.content || "");
       setSelectedFolderId(note.folderId || null);
       if (note.tags) {
-        setSelectedTags(note.tags.map((tag: any) => tag.name));
+        console.log(note.tags, "note tags here");
+        setSelectedTags(note.tags.map((tagItem) => tagItem.tag.name));
       }
     }
   }, [note]);
@@ -127,7 +129,7 @@ export default function NoteEditor() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
         <TouchableOpacity onPress={handleBack} className="p-1">
@@ -304,6 +306,6 @@ export default function NoteEditor() {
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

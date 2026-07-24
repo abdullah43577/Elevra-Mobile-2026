@@ -23,11 +23,11 @@ export function FilterChips({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      className="px-4 py-2"
+      className="max-h-10 flex-shrink-0 px-4 py-1"
     >
       <TouchableOpacity
         onPress={onClearFilter}
-        className={`mr-2 rounded-full px-4 py-2 ${
+        className={`mr-2 self-center rounded-full px-4 py-1.5 ${
           !selectedFolder ? "bg-blue-500" : "bg-gray-200"
         }`}
       >
@@ -40,7 +40,7 @@ export function FilterChips({
         <TouchableOpacity
           key={folder.id}
           onPress={() => onSelectFolder(folder.id)}
-          className={`mr-2 flex-row items-center rounded-full px-4 py-2 ${
+          className={`mr-2 flex-row items-center self-center rounded-full px-4 py-1.5 ${
             selectedFolder === folder.id ? "bg-blue-500" : "bg-gray-200"
           }`}
         >

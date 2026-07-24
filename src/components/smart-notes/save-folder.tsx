@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "../shared/app-text";
-import { COLORS } from "@/app/(dashboard)/(tabs)/workspaces/smart-notes/folders";
+import { COLORS } from "@/constants/colors";
 
 interface Props {
   isModalVisible: boolean;

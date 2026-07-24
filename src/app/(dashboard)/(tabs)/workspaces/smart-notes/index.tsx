@@ -18,6 +18,7 @@ import { SkeletonCard } from "@/components/smart-notes/skeleton-card";
 import { FilterChips } from "@/components/smart-notes/filter-chips";
 import { NoteCard } from "@/components/smart-notes/note-card";
 import { EmptyState } from "@/components/smart-notes/empty-state";
+import { NoteItem } from "@/components/smart-notes/note-item";
 
 export default function SmartNotes() {
   const router = useRouter();
@@ -36,13 +37,6 @@ export default function SmartNotes() {
 
   const handleRefresh = function () {
     refetchNotes();
-  };
-
-  const handleNotePress = function (noteId: string) {
-    router.push({
-      pathname: "/(dashboard)/(tabs)/workspaces/smart-notes/note-editor",
-      params: { id: noteId },
-    });
   };
 
   const handleCreateNote = function () {
@@ -156,33 +150,7 @@ export default function SmartNotes() {
             tintColor="#3B82F6"
           />
         }
-        renderItem={({ item }) => {
-          // Each note gets its own hook instance with its specific noteId
-          const { deleteNote, isDeleting } = useDeleteNote({
-            noteId: item.id,
-          });
-
-          const { toggleArchive, isTogglingArchive } = useToggleArchive({
-            noteId: item.id,
-          });
-
-          const { togglePin, isTogglingPin } = useTogglePin({
-            noteId: item.id,
-          });
-
-          return (
-            <NoteCard
-              note={item}
-              onPress={() => handleNotePress(item.id)}
-              onDelete={() => deleteNote(null)}
-              onArchive={() => toggleArchive(null)}
-              onPin={() => togglePin(null)}
-              isDeleting={isDeleting}
-              isTogglingArchive={isTogglingArchive}
-              isTogglingPin={isTogglingPin}
-            />
-          );
-        }}
+        renderItem={({ item }) => <NoteItem item={item} />}
         ListEmptyComponent={() => (
           <EmptyState
             icon="document-text-outline"

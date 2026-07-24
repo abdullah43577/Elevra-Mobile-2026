@@ -2,7 +2,11 @@ import { Stack } from "expo-router";
 
 export default function WorkspacesLayout() {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false, // Hide header for all workspace screens
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{

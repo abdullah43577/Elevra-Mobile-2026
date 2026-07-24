@@ -21,6 +21,27 @@ interface NoteCardProps {
   isTogglingPin?: boolean;
 }
 
+// Helper function to strip HTML tags and decode HTML entities
+const stripHtml = function (html: string) {
+  if (!html) return "";
+
+  // Remove HTML tags
+  let text = html.replace(/<[^>]*>/g, " ");
+
+  // Decode common HTML entities
+  text = text.replace(/&nbsp;/g, " ");
+  text = text.replace(/&amp;/g, "&");
+  text = text.replace(/&lt;/g, "<");
+  text = text.replace(/&gt;/g, ">");
+  text = text.replace(/&quot;/g, '"');
+  text = text.replace(/&#39;/g, "'");
+
+  // Remove extra whitespace
+  text = text.replace(/\s+/g, " ").trim();
+
+  return text;
+};
+
 export function NoteCard({
   note,
   onPress,
@@ -31,6 +52,13 @@ export function NoteCard({
   isTogglingArchive = false,
   isTogglingPin = false,
 }: NoteCardProps) {
+  // Get plain text preview (max 100 characters)
+  const contentPreview = note.content ? stripHtml(note.content) : "";
+  const truncatedContent =
+    contentPreview.length > 100
+      ? contentPreview.slice(0, 100) + "..."
+      : contentPreview;
+
   return (
     <Pressable
       onPress={onPress}
@@ -51,9 +79,10 @@ export function NoteCard({
             </Text>
           </View>
 
-          {note.content && (
+          {/* Content Preview - Plain text only, no HTML tags */}
+          {truncatedContent && (
             <Text numberOfLines={2} className="mt-1 text-sm text-gray-600">
-              {note.content}
+              {truncatedContent}
             </Text>
           )}
 
@@ -71,12 +100,14 @@ export function NoteCard({
               </View>
             )}
 
-            {note.tags?.slice(0, 3).map((tag) => (
+            {note.tags?.slice(0, 3).map((tagItem) => (
               <View
-                key={tag.id}
+                key={tagItem.id}
                 className="rounded-full bg-blue-100 px-2 py-0.5"
               >
-                <Text className="text-xs text-blue-700">#{tag.name}</Text>
+                <Text className="text-xs text-blue-700">
+                  #{tagItem.tag.name}
+                </Text>
               </View>
             ))}
 
@@ -132,7 +163,7 @@ export function NoteCard({
             {isDeleting ? (
               <ActivityIndicator size="small" color="#EF4444" />
             ) : (
-              <Ionicons name="close-outline" size={18} color="#EF4444" />
+              <Ionicons name="trash-outline" size={18} color="#EF4444" />
             )}
           </TouchableOpacity>
         </View>

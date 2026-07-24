@@ -3,13 +3,14 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Filter() {
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState("all");
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
         <TouchableOpacity onPress={() => router.back()} className="p-1">
           <Ionicons name="close" size={24} color="#6B7280" />
@@ -65,6 +66,6 @@ export default function Filter() {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -41,8 +41,7 @@ export interface Note {
   userId: string;
   folderId?: string | null;
   folder?: Folder | null;
-  noteTags?: NoteTag[];
-  tags?: Tag[];
+  tags?: NoteTag[];
   aiSummary?: string | null;
   summaryGeneratedAt?: string | null;
   createdAt: string;

@@ -2,7 +2,11 @@ import { Stack } from "expo-router";
 
 export default function SmartNotesLayout() {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false, // Hide the stack header globally
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{
@@ -19,6 +23,7 @@ export default function SmartNotesLayout() {
           presentation: "modal",
         }}
       />
+
       <Stack.Screen
         name="folders"
         options={{

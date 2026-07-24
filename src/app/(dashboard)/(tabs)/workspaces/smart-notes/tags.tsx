@@ -15,6 +15,8 @@ import { useCreateTag } from "@/hooks/smart-notes/use-create-tag";
 import { useDeleteTag } from "@/hooks/smart-notes/use-delete-tag";
 import { EmptyState } from "@/components/smart-notes/empty-state";
 import { showToast } from "@/utils/show-toast";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { TagItem } from "@/components/smart-notes/tag-item";
 
 export default function Tags() {
   const router = useRouter();
@@ -50,7 +52,7 @@ export default function Tags() {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
         <TouchableOpacity onPress={handleBack} className="p-1">
@@ -68,33 +70,7 @@ export default function Tags() {
         keyExtractor={(item) => item.id}
         refreshing={isFetchingTags}
         onRefresh={refetchTags}
-        renderItem={({ item }) => {
-          const { deleteTag: deleteThisTag, isDeleting: isDeletingThis } =
-            useDeleteTag({
-              tagId: item.id,
-            });
-
-          return (
-            <View className="flex-row items-center justify-between border-b border-gray-50 px-4 py-3">
-              <Text className="text-base text-gray-900">#{item.name}</Text>
-              <View className="flex-row items-center gap-3">
-                <Text className="text-sm text-gray-400">
-                  {item._count?.notes || 0} notes
-                </Text>
-                <TouchableOpacity
-                  onPress={() => deleteThisTag(null)}
-                  disabled={isDeletingThis}
-                >
-                  {isDeletingThis ? (
-                    <ActivityIndicator size="small" color="#EF4444" />
-                  ) : (
-                    <Ionicons name="trash-outline" size={20} color="#EF4444" />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          );
-        }}
+        renderItem={({ item }) => <TagItem item={item} />}
         ListEmptyComponent={() => (
           <EmptyState
             icon="pricetag-outline"
@@ -150,6 +126,6 @@ export default function Tags() {
           </View>
         </View>
       </AppModal>
-    </View>
+    </SafeAreaView>
   );
 }

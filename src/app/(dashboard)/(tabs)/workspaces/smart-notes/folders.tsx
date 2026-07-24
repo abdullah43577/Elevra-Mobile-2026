@@ -14,17 +14,9 @@ import { useDeleteFolder } from "@/hooks/smart-notes/use-delete-folder";
 import { EmptyState } from "@/components/smart-notes/empty-state";
 import { SaveFolder } from "@/components/smart-notes/save-folder";
 import { showToast } from "@/utils/show-toast";
-
-export const COLORS = [
-  "#3B82F6", // Blue
-  "#10B981", // Green
-  "#F59E0B", // Yellow
-  "#EF4444", // Red
-  "#8B5CF6", // Purple
-  "#EC4899", // Pink
-  "#14B8A6", // Teal
-  "#F97316", // Orange
-];
+import { COLORS } from "@/constants/colors";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { FolderItem } from "@/components/smart-notes/folder-item";
 
 export default function Folders() {
   const router = useRouter();
@@ -41,10 +33,8 @@ export default function Folders() {
   });
 
   const handleSave = function () {
-    if (!folderName.trim()) {
-      showToast("error", "Please enter a folder name");
-      return;
-    }
+    if (!folderName.trim())
+      return showToast("error", "Please enter a folder name");
 
     saveFolder({
       name: folderName.trim(),
@@ -77,7 +67,7 @@ export default function Folders() {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
         <TouchableOpacity onPress={handleBack} className="p-1">
@@ -95,42 +85,9 @@ export default function Folders() {
         keyExtractor={(item) => item.id}
         refreshing={isFetchingFolders}
         onRefresh={refetchFolders}
-        renderItem={({ item }) => {
-          // Each folder gets its own delete hook
-          const { deleteFolder, isDeleting } = useDeleteFolder({
-            folderId: item.id,
-          });
-
-          return (
-            <TouchableOpacity
-              onPress={() => openEditModal(item)}
-              className="flex-row items-center justify-between border-b border-gray-50 px-4 py-3"
-            >
-              <View className="flex-row items-center gap-3">
-                <View
-                  className="h-4 w-4 rounded-full"
-                  style={{ backgroundColor: item.color || "#6B7280" }}
-                />
-                <Text className="text-base text-gray-900">{item.name}</Text>
-              </View>
-              <View className="flex-row items-center gap-3">
-                <Text className="text-sm text-gray-400">
-                  {item._count?.notes || 0} notes
-                </Text>
-                <TouchableOpacity
-                  onPress={() => deleteFolder(null)}
-                  disabled={isDeleting}
-                >
-                  {isDeleting ? (
-                    <ActivityIndicator size="small" color="#EF4444" />
-                  ) : (
-                    <Ionicons name="trash-outline" size={20} color="#EF4444" />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
+        renderItem={({ item }) => (
+          <FolderItem item={item} openEditModal={openEditModal} />
+        )}
         ListEmptyComponent={() => (
           <EmptyState
             icon="folder-outline"
@@ -154,6 +111,6 @@ export default function Folders() {
         setSelectedColor={setSelectedColor}
         handleSave={handleSave}
       />
-    </View>
+    </SafeAreaView>
   );
 }

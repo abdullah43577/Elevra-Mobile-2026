@@ -4,7 +4,7 @@ import { Note } from "../../../types/notes";
 import { useSubmitData } from "../use-submit-data";
 
 export const useTogglePin = function ({ noteId }: { noteId: string }) {
-  const { mutate, isPending } = useSubmitData<null, APIResponse<Note>>({
+  const { mutate, isPending } = useSubmitData<void, APIResponse<Note>>({
     url: API_ENDPOINTS.notes.togglePin(noteId),
     method: "post",
     onSuccessMessage: "Pin toggled successfully",
