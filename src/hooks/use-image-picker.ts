@@ -1,14 +1,8 @@
 import { showToast } from "@/utils/show-toast";
 import * as ImagePicker from "expo-image-picker";
 
-export interface PickedImage {
-  uri: string;
-  name: string;
-  type: string;
-}
-
 export const useImagePicker = function () {
-  const pickImage = async (): Promise<PickedImage | null> => {
+  const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {

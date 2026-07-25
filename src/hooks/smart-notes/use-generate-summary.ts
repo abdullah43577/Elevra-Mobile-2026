@@ -1,44 +1,59 @@
+import { useState, useCallback } from "react";
 import { API_ENDPOINTS } from "@/provider/endpoints";
-import { APIResponse } from "../../../types/response";
-import { useSubmitData } from "../use-submit-data";
+import { useSSE } from "../use-sse";
 
-interface GenerateSummaryResponse {
-  summary: string;
-  noteId: string;
-  generatedAt: string;
-}
+export const useGenerateSummary = function ({ noteId }: { noteId: string }) {
+  const [summary, setSummary] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-interface UseGenerateSummaryOptions {
-  onSuccess?: (data: GenerateSummaryResponse) => void;
-  onError?: (error: any) => void;
-}
+  const { connect, disconnect, isLoading } = useSSE();
 
-export const useGenerateSummary = function ({
-  options,
-  noteId,
-}: {
-  options?: UseGenerateSummaryOptions;
-  noteId: string;
-}) {
-  const { onSuccess, onError } = options || {};
+  const generateSummary = useCallback(
+    function (
+      onComplete?: (summary: string) => void,
+      onError?: (error: string) => void,
+    ) {
+      if (!noteId) {
+        const errorMsg = "Please save the note first";
+        setError(errorMsg);
+        if (onError) onError(errorMsg);
+        return;
+      }
 
-  const { mutate, isPending } = useSubmitData<
-    null,
-    APIResponse<GenerateSummaryResponse>
-  >({
-    url: API_ENDPOINTS.notes.generateSummary(noteId),
-    method: "post",
-    onSuccessMessage: "Summary generated successfully",
-    onSuccess: (data) => {
-      if (onSuccess) onSuccess(data.data);
+      setSummary("");
+      setError(null);
+
+      connect(API_ENDPOINTS.notes.generateSummaryStream(noteId), {
+        onChunk: (chunk: string, full: string) => {
+          setSummary(full);
+        },
+        onComplete: (data: any) => {
+          setSummary(data.summary);
+          if (onComplete) onComplete(data.summary);
+        },
+        onError: (errorMsg: string) => {
+          setError(errorMsg);
+          if (onError) onError(errorMsg);
+        },
+      });
     },
-    onError: (error) => {
-      if (onError) onError(error);
+    [noteId, connect],
+  );
+
+  const resetSummary = useCallback(
+    function () {
+      setSummary("");
+      setError(null);
+      disconnect();
     },
-  });
+    [disconnect],
+  );
 
   return {
-    generateSummary: mutate,
-    isGenerating: isPending,
+    generateSummary,
+    summary,
+    isLoading,
+    error,
+    resetSummary,
   };
 };

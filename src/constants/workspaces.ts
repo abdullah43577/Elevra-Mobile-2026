@@ -35,7 +35,7 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     icon: Mic,
     comingSoonIcon: "mic-outline",
     route: "/voice-notes",
-    locked: true,
+    locked: false,
   },
   {
     id: "smart-notes",
