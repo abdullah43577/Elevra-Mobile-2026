@@ -52,4 +52,19 @@ export const API_ENDPOINTS = {
     delete: (id: string) => `/voice-notes/${id}`,
     transcribe: (id: string) => `/voice-notes/${id}/transcribe`,
   },
+
+  resume: {
+    // Templates
+    templatesList: "/resume/templates",
+    templateDetail: (id: string) => `/resume/templates/${id}`,
+    uploadThumbnail: (id: string) => `/resume/templates/${id}/thumbnail`,
+
+    // Resumes
+    list: "/resume",
+    detail: (id: string) => `/resume/${id}`,
+    create: "/resume",
+    update: (id: string) => `/resume/${id}`,
+    delete: (id: string) => `/resume/${id}`,
+    export: (id: string) => `/resume/${id}/export`,
+  },
 };

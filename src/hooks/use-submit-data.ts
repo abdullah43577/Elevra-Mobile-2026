@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
+import { useRef } from "react";
 import { useHandleErrors } from "./use-handle-errors";
 import api, { CustomAxiosRequestConfig } from "@/provider/api";
 import { queryClient } from "@/utils/queryClient";
@@ -7,7 +8,8 @@ import { router } from "expo-router";
 import { showToast } from "@/utils/show-toast";
 
 interface UseSubmitDataOptions<TData, TResponse> {
-  url: string;
+  url: string | ((data: TData) => string);
+  getBody?: (data: TData) => unknown;
   method?: "post" | "put" | "patch" | "delete";
   additionalQueryKeys?: string[][];
   onSuccessMessage?: string;
@@ -23,6 +25,7 @@ export function useSubmitData<TData = unknown, TResponse = unknown>(
 ) {
   const {
     url,
+    getBody,
     method = "post",
     additionalQueryKeys,
     onSuccessMessage = "Operation successful",
@@ -34,6 +37,7 @@ export function useSubmitData<TData = unknown, TResponse = unknown>(
   } = options;
 
   const handleErrors = useHandleErrors();
+  const lastResolvedUrl = useRef<string>("");
 
   const mutation = useMutation<
     TResponse,
@@ -43,10 +47,15 @@ export function useSubmitData<TData = unknown, TResponse = unknown>(
     mutationFn: async (data: TData) => {
       if (onLoadingMessage) showToast("loading", onLoadingMessage);
 
+      const resolvedUrl = typeof url === "function" ? url(data) : url;
+      lastResolvedUrl.current = resolvedUrl;
+
+      const body = getBody ? getBody(data) : data;
+
       const config: Partial<CustomAxiosRequestConfig> = {};
       if (skipAuth) config.skipAuth = true;
 
-      const response = await api[method]<TResponse>(url, data, config);
+      const response = await api[method]<TResponse>(resolvedUrl, body, config);
 
       return response.data;
     },
@@ -54,7 +63,7 @@ export function useSubmitData<TData = unknown, TResponse = unknown>(
     onSuccess: (data) => {
       showToast("success", onSuccessMessage);
 
-      queryClient.refetchQueries({ queryKey: [url] });
+      queryClient.refetchQueries({ queryKey: [lastResolvedUrl.current] });
 
       additionalQueryKeys?.forEach((key) => {
         queryClient.refetchQueries({ queryKey: key });
