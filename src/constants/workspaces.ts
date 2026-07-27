@@ -26,7 +26,7 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     icon: FileText,
     comingSoonIcon: "document-text-outline",
     route: "/resume-studio",
-    locked: true,
+    locked: false,
   },
   {
     id: "voice-notes",

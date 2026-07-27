@@ -58,30 +58,37 @@ export default function ResumeBuilder() {
   const { template, isFetchingTemplate } = useGetTemplateById({ templateId });
   const { saveResume, isSaving } = useSaveResume();
 
-  const { control, handleSubmit, watch, setValue, getValues, formState } =
-    useForm<ResumeBuilderFormValues>({
-      resolver: zodResolver(resumeBuilderSchema),
-      defaultValues: {
-        personalInfo: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          location: "",
-          title: "",
-          summary: "",
-        },
-        experience: [DEFAULT_EXPERIENCE],
-        education: [DEFAULT_EDUCATION],
-        skills: [DEFAULT_SKILL],
-        languages: [DEFAULT_LANGUAGE],
-        certifications: [DEFAULT_CERTIFICATION],
-        projects: [DEFAULT_PROJECT],
-        references: [DEFAULT_REFERENCE],
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<ResumeBuilderFormValues>({
+    resolver: zodResolver(resumeBuilderSchema),
+    defaultValues: {
+      personalInfo: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        location: "",
+        title: "",
+        summary: "",
       },
-    });
+      experience: [DEFAULT_EXPERIENCE],
+      education: [DEFAULT_EDUCATION],
+      skills: [DEFAULT_SKILL],
+      languages: [DEFAULT_LANGUAGE],
+      certifications: [DEFAULT_CERTIFICATION],
+      projects: [DEFAULT_PROJECT],
+      references: [DEFAULT_REFERENCE],
+    },
+  });
 
   const watchValues = watch();
+  console.log(errors, "errors here");
 
   // Field arrays
   const experience = useFieldArray({ control, name: "experience" });
@@ -207,19 +214,18 @@ export default function ResumeBuilder() {
               </View>
             </View>
           ) : (
-            // Form Mode
             <View>
               <AppText className="mb-1 text-xl font-bold text-gray-900">
                 {currentSection.label}
               </AppText>
 
               {activeSection === 0 && (
-                <PersonalInfo control={control} errors={formState.errors} />
+                <PersonalInfo control={control} errors={errors} />
               )}
               {activeSection === 1 && (
                 <Experience
                   control={control}
-                  errors={formState.errors}
+                  errors={errors}
                   fields={experience.fields}
                   append={experience.append}
                   remove={experience.remove}
@@ -228,7 +234,7 @@ export default function ResumeBuilder() {
               {activeSection === 2 && (
                 <Education
                   control={control}
-                  errors={formState.errors}
+                  errors={errors}
                   fields={education.fields}
                   append={education.append}
                   remove={education.remove}
@@ -237,7 +243,7 @@ export default function ResumeBuilder() {
               {activeSection === 3 && (
                 <Skills
                   control={control}
-                  errors={formState.errors}
+                  errors={errors}
                   fields={skills.fields}
                   append={skills.append}
                   remove={skills.remove}
@@ -246,7 +252,7 @@ export default function ResumeBuilder() {
               {activeSection === 4 && (
                 <Languages
                   control={control}
-                  errors={formState.errors}
+                  errors={errors}
                   fields={languages.fields}
                   append={languages.append}
                   remove={languages.remove}
@@ -255,7 +261,7 @@ export default function ResumeBuilder() {
               {activeSection === 5 && (
                 <Certifications
                   control={control}
-                  errors={formState.errors}
+                  errors={errors}
                   fields={certifications.fields}
                   append={certifications.append}
                   remove={certifications.remove}
@@ -264,7 +270,7 @@ export default function ResumeBuilder() {
               {activeSection === 6 && (
                 <Projects
                   control={control}
-                  errors={formState.errors}
+                  errors={errors}
                   fields={projects.fields}
                   append={projects.append}
                   remove={projects.remove}
@@ -273,7 +279,7 @@ export default function ResumeBuilder() {
               {activeSection === 7 && (
                 <References
                   control={control}
-                  errors={formState.errors}
+                  errors={errors}
                   fields={references.fields}
                   append={references.append}
                   remove={references.remove}

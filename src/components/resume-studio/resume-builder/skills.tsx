@@ -43,7 +43,7 @@ export function Skills({
           >
             <FormInput<ResumeBuilderFormValues>
               control={control}
-              label="Skills"
+              label=""
               name={`skills.${index}.name`}
               placeholder="Skill name"
               className="min-w-[80px] py-0 text-sm"

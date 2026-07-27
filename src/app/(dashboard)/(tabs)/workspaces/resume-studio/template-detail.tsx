@@ -21,7 +21,6 @@ export default function TemplateDetail() {
   });
 
   const handleUseTemplate = function () {
-    // Navigate to resume builder with this template
     router.push({
       pathname: "/(dashboard)/(tabs)/workspaces/resume-studio/resume-builder",
       params: { templateId },

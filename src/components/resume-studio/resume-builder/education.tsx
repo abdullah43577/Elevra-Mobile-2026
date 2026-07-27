@@ -30,7 +30,7 @@ export function Education({
   remove,
 }: EducationProps) {
   return (
-    <View className="mt-4">
+    <View className="mt-4 gap-4">
       {fields.map((field, index) => (
         <View
           key={field.id}
