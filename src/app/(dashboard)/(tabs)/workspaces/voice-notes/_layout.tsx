@@ -17,7 +17,7 @@ export default function VoiceNotesLayout() {
         name="recorder"
         options={{
           title: "Record",
-          headerShown: true,
+          headerShown: false,
           headerBackTitle: "Back",
           presentation: "modal",
         }}
@@ -26,7 +26,7 @@ export default function VoiceNotesLayout() {
         name="playback"
         options={{
           title: "Playback",
-          headerShown: true,
+          headerShown: false,
           headerBackTitle: "Back",
         }}
       />

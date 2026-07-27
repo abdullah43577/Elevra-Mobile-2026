@@ -4,22 +4,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { VoiceRecording } from "../../../types/voice-notes";
 import { AppText } from "../shared/app-text";
+import { useDeleteRecording } from "@/hooks/voice-notes/use-delete-recording";
 
 interface RecordingCardProps {
   recording: VoiceRecording;
   onPress: () => void;
-  onDelete: () => void;
   onPlayback: () => void;
-  isDeleting?: boolean;
 }
 
 export function RecordingCard({
   recording,
   onPress,
-  onDelete,
   onPlayback,
-  isDeleting = false,
 }: RecordingCardProps) {
+  const { deleteRecording, isDeleting } = useDeleteRecording({
+    recordingId: recording.id,
+  });
+
   const formatDuration = function (seconds: number) {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -74,7 +75,7 @@ export function RecordingCard({
             <Ionicons name="play-circle-outline" size={24} color="#3B82F6" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={onDelete}
+            onPress={() => deleteRecording()}
             className="p-1"
             disabled={isDeleting}
           >

@@ -11,18 +11,19 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGetRecordings } from "@/hooks/voice-notes/use-get-recordings";
-import { useDeleteRecording } from "@/hooks/voice-notes/use-delete-recording";
 import { RecordingCard } from "@/components/voice-notes/recording-card";
 import { EmptyState } from "@/components/smart-notes/empty-state";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export default function VoiceNotes() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 1000);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const { recordings, isFetchingRecordings, refetchRecordings } =
     useGetRecordings({
-      search: searchQuery || undefined,
+      search: debouncedSearch || undefined,
     });
 
   const handleRefresh = function () {
@@ -108,17 +109,11 @@ export default function VoiceNotes() {
           />
         }
         renderItem={({ item }) => {
-          const { deleteRecording, isDeleting } = useDeleteRecording({
-            recordingId: item.id,
-          });
-
           return (
             <RecordingCard
               recording={item}
               onPress={() => handleRecordingPress(item.id)}
               onPlayback={() => handlePlayback(item.id)}
-              onDelete={() => deleteRecording()}
-              isDeleting={isDeleting}
             />
           );
         }}

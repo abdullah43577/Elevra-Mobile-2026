@@ -1,18 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  ScrollView,
-} from "react-native";
+import { useState, useEffect } from "react";
+import { View, ActivityIndicator } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAudioPlayer } from "expo-audio";
 import { useGetRecordingById } from "@/hooks/voice-notes/use-get-recording-by-id";
-import { formatDistanceToNow } from "date-fns";
 import { AppText } from "@/components/shared/app-text";
+import { PlaybackHeader } from "@/components/voice-notes/playback/playback-header";
+import { PlaybackInfo } from "@/components/voice-notes/playback/playback-info";
+import { PlaybackTranscription } from "@/components/voice-notes/playback/playback-transcription";
+import { PlaybackControls } from "@/components/voice-notes/playback/playback-controls";
 
 export default function Playback() {
   const router = useRouter();
@@ -29,14 +25,12 @@ export default function Playback() {
 
   const player = useAudioPlayer(recording?.fileUrl || "");
 
-  // Track playback state
   useEffect(() => {
     if (player) {
       setIsPlaying(player.playing);
     }
   }, [player?.playing]);
 
-  // Update progress
   useEffect(() => {
     if (player) {
       const interval = setInterval(() => {
@@ -57,17 +51,21 @@ export default function Playback() {
     setIsPlaying(!isPlaying);
   };
 
+  const handleSeekBackward = function () {
+    player.seekTo(Math.max((player.currentTime || 0) - 10, 0));
+  };
+
+  const handleSeekForward = function () {
+    player.seekTo(
+      Math.min((player.currentTime || 0) + 10, player.duration || 0),
+    );
+  };
+
   const handleBack = function () {
     if (isPlaying) {
       player.pause();
     }
     router.back();
-  };
-
-  const formatDuration = function (seconds: number) {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   if (isFetchingRecording) {
@@ -88,116 +86,30 @@ export default function Playback() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
-        <TouchableOpacity onPress={handleBack} className="p-1">
-          <Ionicons name="arrow-back" size={24} color="#6B7280" />
-        </TouchableOpacity>
-        <AppText className="text-lg font-semibold text-gray-900">
-          Playback
-        </AppText>
-        <View className="w-10" />
+      <PlaybackHeader onBack={handleBack} />
+
+      <View className="flex-1 px-6 pt-8">
+        <PlaybackInfo
+          title={recording.title}
+          duration={recording.duration}
+          createdAt={recording.createdAt}
+        />
+
+        <PlaybackTranscription
+          isTranscribed={recording.isTranscribed}
+          transcription={recording.transcription}
+        />
+
+        <PlaybackControls
+          isPlaying={isPlaying}
+          progress={progress}
+          currentTime={player.currentTime || 0}
+          duration={player.duration || 0}
+          onPlayPause={handlePlayPause}
+          onSeekBackward={handleSeekBackward}
+          onSeekForward={handleSeekForward}
+        />
       </View>
-
-      <ScrollView className="flex-1 px-6 pt-8">
-        {/* Title */}
-        <AppText className="mb-2 text-2xl font-bold text-gray-900">
-          {recording.title}
-        </AppText>
-
-        {/* Metadata */}
-        <View className="mb-6 flex-row items-center gap-4">
-          <View className="flex-row items-center gap-1">
-            <Ionicons name="time-outline" size={16} color="#6B7280" />
-            <AppText className="text-sm text-gray-500">
-              {formatDuration(recording.duration)}
-            </AppText>
-          </View>
-          <View className="flex-row items-center gap-1">
-            <Ionicons name="calendar-outline" size={16} color="#6B7280" />
-            <AppText className="text-sm text-gray-500">
-              {formatDistanceToNow(new Date(recording.createdAt), {
-                addSuffix: true,
-              })}
-            </AppText>
-          </View>
-        </View>
-
-        {/* Transcription Status */}
-        {recording.isTranscribed && recording.transcription ? (
-          <View className="mb-6 rounded-xl bg-blue-50 p-4">
-            <AppText className="mb-1 text-xs font-medium text-blue-700">
-              Transcription
-            </AppText>
-            <AppText className="text-sm text-gray-700">
-              {recording.transcription}
-            </AppText>
-          </View>
-        ) : (
-          <View className="mb-6 rounded-xl bg-gray-50 p-4">
-            <AppText className="text-sm text-gray-500">
-              Transcription coming soon. AI processing will be available after
-              the initial setup.
-            </AppText>
-          </View>
-        )}
-
-        {/* Audio Player */}
-        <View className="items-center rounded-xl bg-gray-50 p-6">
-          {/* Progress Bar */}
-          <View className="relative h-1 w-full rounded-full bg-gray-300">
-            <View
-              className="absolute h-1 rounded-full bg-blue-500"
-              style={{ width: `${progress}%` }}
-            />
-          </View>
-
-          {/* Time Labels */}
-          <View className="mt-2 w-full flex-row justify-between">
-            <AppText className="text-xs text-gray-500">
-              {formatDuration(player.currentTime || 0)}
-            </AppText>
-            <AppText className="text-xs text-gray-500">
-              {formatDuration(player.duration || 0)}
-            </AppText>
-          </View>
-
-          {/* Play/Pause Button */}
-          <TouchableOpacity
-            onPress={handlePlayPause}
-            className="mt-6 h-20 w-20 items-center justify-center rounded-full bg-blue-500"
-          >
-            <Ionicons
-              name={isPlaying ? "pause" : "play"}
-              size={40}
-              color="white"
-            />
-          </TouchableOpacity>
-
-          {/* Seek Controls */}
-          <View className="mt-4 flex-row gap-6">
-            <TouchableOpacity
-              onPress={() =>
-                player.seekTo(Math.max((player.currentTime || 0) - 10, 0))
-              }
-            >
-              <Ionicons name="play-back-outline" size={28} color="#6B7280" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                player.seekTo(
-                  Math.min(
-                    (player.currentTime || 0) + 10,
-                    player.duration || 0,
-                  ),
-                )
-              }
-            >
-              <Ionicons name="play-forward-outline" size={28} color="#6B7280" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
     </SafeAreaView>
   );
 }
