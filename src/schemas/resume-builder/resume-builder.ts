@@ -138,3 +138,26 @@ export const DEFAULT_REFERENCE = {
   email: "",
   phone: "",
 };
+
+export const EDUCATIONAL_DEGREES = [
+  { label: "High School Diploma", value: "high_school_diploma" },
+  { label: "Associate Degree", value: "associate_degree" },
+  { label: "Bachelor's Degree", value: "bachelor_degree" },
+  { label: "Master's Degree", value: "master_degree" },
+  { label: "Doctorate", value: "doctorate" },
+  { label: "Other", value: "other" },
+];
+
+export const EDUCATIONAL_FIELDS = [
+  { label: "Computer Science", value: "computer_science" },
+  { label: "Engineering", value: "engineering" },
+  { label: "Business Administration", value: "business_administration" },
+  { label: "Marketing", value: "marketing" },
+  { label: "Finance", value: "finance" },
+  { label: "Design", value: "design" },
+  { label: "Education", value: "education" },
+  { label: "Healthcare", value: "healthcare" },
+  { label: "Law", value: "law" },
+  { label: "Arts", value: "arts" },
+  { label: "Other", value: "other" },
+];

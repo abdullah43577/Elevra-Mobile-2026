@@ -30,11 +30,11 @@ export function Certifications({
   remove,
 }: CertificationsProps) {
   return (
-    <View className="mt-4 gap-4">
+    <View className="mt-4">
       {fields.map((field, index) => (
         <View
           key={field.id}
-          className="mb-4 rounded-xl border border-gray-200 p-4"
+          className="mb-4 gap-4 rounded-xl border border-gray-200 p-4"
         >
           <View className="mb-3 flex-row items-center justify-between">
             <AppText className="text-sm font-medium text-gray-700">

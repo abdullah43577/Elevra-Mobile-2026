@@ -88,7 +88,6 @@ export default function ResumeBuilder() {
   });
 
   const watchValues = watch();
-  console.log(errors, "errors here");
 
   // Field arrays
   const experience = useFieldArray({ control, name: "experience" });
@@ -238,6 +237,7 @@ export default function ResumeBuilder() {
                   fields={education.fields}
                   append={education.append}
                   remove={education.remove}
+                  setValue={setValue}
                 />
               )}
               {activeSection === 3 && (
@@ -256,6 +256,7 @@ export default function ResumeBuilder() {
                   fields={languages.fields}
                   append={languages.append}
                   remove={languages.remove}
+                  setValue={setValue}
                 />
               )}
               {activeSection === 5 && (

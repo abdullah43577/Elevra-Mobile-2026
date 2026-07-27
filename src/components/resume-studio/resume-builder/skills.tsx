@@ -1,4 +1,5 @@
-import { View, TouchableOpacity } from "react-native";
+import { useState } from "react";
+import { View, TouchableOpacity, TextInput } from "react-native";
 import {
   Control,
   FieldErrors,
@@ -7,12 +8,12 @@ import {
   UseFieldArrayRemove,
 } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
-import { FormInput } from "@/components/shared/form-input";
 import { AppText } from "@/components/shared/app-text";
 import {
   DEFAULT_SKILL,
   ResumeBuilderFormValues,
 } from "@/schemas/resume-builder/resume-builder";
+import { showToast } from "@/utils/show-toast";
 
 interface SkillsProps {
   control: Control<ResumeBuilderFormValues>;
@@ -29,42 +30,82 @@ export function Skills({
   append,
   remove,
 }: SkillsProps) {
+  const [skillInput, setSkillInput] = useState("");
+
+  const handleAddSkill = function () {
+    const trimmed = skillInput.trim();
+    if (!trimmed) {
+      showToast("error", "Please enter a skill name");
+      return;
+    }
+
+    // Check for duplicates
+    const exists = fields.some(
+      (field) => field.name.toLowerCase() === trimmed.toLowerCase(),
+    );
+    if (exists) {
+      showToast("error", "Skill already added");
+      return;
+    }
+
+    append({ name: trimmed, level: undefined });
+    setSkillInput("");
+  };
+
+  const handleRemoveSkill = function (index: number) {
+    remove(index);
+  };
+
   return (
-    <View className="mt-4">
-      <AppText className="mb-2 text-sm text-gray-500">
+    <View className="mt-4 gap-4">
+      <AppText className="text-sm text-gray-500">
         Add your professional skills
       </AppText>
 
+      {/* Input Row */}
+      <View className="flex-row items-center gap-2">
+        <View className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-2">
+          <TextInput
+            className="text-base text-gray-900"
+            placeholder="Type a skill and press +"
+            value={skillInput}
+            onChangeText={setSkillInput}
+            onSubmitEditing={handleAddSkill}
+            placeholderTextColor="#9CA3AF"
+            returnKeyType="done"
+          />
+        </View>
+        <TouchableOpacity
+          onPress={handleAddSkill}
+          className="h-12 w-12 items-center justify-center rounded-xl bg-blue-500"
+        >
+          <Ionicons name="add" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Skill Chips */}
       <View className="flex-row flex-wrap gap-2">
         {fields.map((field, index) => (
           <View
             key={field.id}
-            className="flex-row items-center rounded-full bg-gray-100 px-3 py-1"
+            className="flex-row items-center rounded-full bg-blue-50 px-3 py-2"
           >
-            <FormInput<ResumeBuilderFormValues>
-              control={control}
-              label=""
-              name={`skills.${index}.name`}
-              placeholder="Skill name"
-              className="min-w-[80px] py-0 text-sm"
-              errors={errors}
-            />
-            {fields.length > 1 && (
-              <TouchableOpacity onPress={() => remove(index)} className="ml-1">
-                <Ionicons name="close" size={16} color="#9CA3AF" />
-              </TouchableOpacity>
-            )}
+            <AppText className="text-sm text-blue-700">{field.name}</AppText>
+            <TouchableOpacity
+              onPress={() => handleRemoveSkill(index)}
+              className="ml-1"
+            >
+              <Ionicons name="close" size={16} color="#3B82F6" />
+            </TouchableOpacity>
           </View>
         ))}
       </View>
 
-      <TouchableOpacity
-        onPress={() => append(DEFAULT_SKILL)}
-        className="mt-3 flex-row items-center gap-2 py-2"
-      >
-        <Ionicons name="add-circle-outline" size={24} color="#3B82F6" />
-        <AppText className="text-blue-500">Add Skill</AppText>
-      </TouchableOpacity>
+      {fields.length === 0 && (
+        <AppText className="text-sm text-gray-400">
+          No skills added yet. Type a skill and press + to add.
+        </AppText>
+      )}
     </View>
   );
 }
