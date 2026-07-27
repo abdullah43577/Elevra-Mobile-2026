@@ -40,6 +40,7 @@ export const AppNavigator = function () {
 
   return (
     <Stack screenOptions={{ contentStyle: { backgroundColor: "#ffffff" } }}>
+      {/* <Stack.Screen name="(dev)/generate-thumnails" /> */}
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
       </Stack.Protected>
