@@ -40,10 +40,10 @@ export default function ResumeStudio() {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header with Tab Switcher */}
       <View className="px-4 pb-2 pt-4">
-        <AppText className="text-2xl font-bold text-gray-900">
+        <AppText type="title" className="font-bold text-gray-900">
           Resume Studio
         </AppText>
-        <AppText className="text-sm text-gray-500">
+        <AppText type="subtitle" className="text-gray-500">
           Create and manage your resumes
         </AppText>
 

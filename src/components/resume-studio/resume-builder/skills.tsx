@@ -58,7 +58,7 @@ export function Skills({
 
   return (
     <View className="mt-4 gap-4">
-      <AppText className="text-sm text-gray-500">
+      <AppText type="subtitle" className="text-gray-500">
         Add your professional skills
       </AppText>
 

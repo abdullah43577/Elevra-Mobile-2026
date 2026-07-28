@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { AppText } from "../shared/app-text";
 
 interface EmptyStateProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -19,10 +20,12 @@ export function EmptyState({
   return (
     <View className="flex-1 items-center justify-center py-16">
       <Ionicons name={icon} size={64} color="#D1D5DB" />
-      <Text className="mt-4 text-xl font-semibold text-gray-700">{title}</Text>
-      <Text className="mt-1 px-8 text-center text-sm text-gray-400">
+      <AppText type="title" className="mt-4 font-semibold text-gray-700">
+        {title}
+      </AppText>
+      <AppText type="subtitle" className="mt-1 px-8 text-center text-gray-400">
         {subtitle}
-      </Text>
+      </AppText>
       {buttonText && onButtonPress && (
         <TouchableOpacity
           onPress={onButtonPress}

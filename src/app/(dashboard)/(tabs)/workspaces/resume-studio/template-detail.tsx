@@ -42,7 +42,7 @@ export default function TemplateDetail() {
         <TouchableOpacity onPress={() => router.back()} className="p-1">
           <Ionicons name="arrow-back" size={24} color="#6B7280" />
         </TouchableOpacity>
-        <AppText className="text-lg font-semibold text-gray-900">
+        <AppText type="title" className="font-semibold text-gray-900">
           Template Preview
         </AppText>
         <View className="w-10" />
@@ -65,7 +65,7 @@ export default function TemplateDetail() {
           <AppText className="text-xl font-bold text-gray-900">
             {template.name}
           </AppText>
-          <AppText className="mt-1 text-sm text-gray-500">
+          <AppText type="subtitle" className="mt-1 text-gray-500">
             {template.description}
           </AppText>
           <View className="mt-2 flex-row items-center gap-2">

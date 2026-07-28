@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AppText } from "@/components/shared/app-text";
 import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
+import { useGetResumeById } from "@/hooks/resume/use-get-resume-by-id";
 import { useSaveResume } from "@/hooks/resume/use-save-resume";
 import { TemplateRenderer } from "@/components/resume/template-renderer";
 import { showToast } from "@/utils/show-toast";
@@ -49,14 +50,28 @@ const SECTIONS = [
 
 export default function ResumeBuilder() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ templateId: string }>();
+  const params = useLocalSearchParams<{
+    templateId?: string;
+    resumeId?: string;
+  }>();
   const templateId = params.templateId;
+  const resumeId = params.resumeId;
 
   const [activeSection, setActiveSection] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
+  const isEditing = !!resumeId;
 
-  const { template, isFetchingTemplate } = useGetTemplateById({ templateId });
-  const { saveResume, isSaving } = useSaveResume();
+  // Fetch template
+  const { template, isFetchingTemplate } = useGetTemplateById({
+    templateId: templateId || "",
+  });
+
+  // Fetch resume if editing
+  const { resume, isFetchingResume } = useGetResumeById({
+    resumeId: resumeId || "",
+  });
+
+  const { saveResume, isSaving } = useSaveResume({ resumeId });
 
   const {
     control,
@@ -64,6 +79,7 @@ export default function ResumeBuilder() {
     watch,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<ResumeBuilderFormValues>({
     resolver: zodResolver(resumeBuilderSchema),
@@ -88,6 +104,51 @@ export default function ResumeBuilder() {
   });
 
   const watchValues = watch();
+
+  // Pre-fill form with resume data when editing
+  useEffect(() => {
+    if (resume && isEditing && resume) {
+      reset({
+        personalInfo: {
+          firstName: resume.personalInfo?.firstName || "",
+          lastName: resume.personalInfo?.lastName || "",
+          email: resume.personalInfo?.email || "",
+          phone: resume.personalInfo?.phone || "",
+          location: resume.personalInfo?.location || "",
+          title: resume.personalInfo?.title || "",
+          summary: resume.personalInfo?.summary || "",
+        },
+        experience:
+          resume.experience && resume.experience.length > 0
+            ? resume.experience
+            : [DEFAULT_EXPERIENCE],
+        education:
+          resume.education && resume.education.length > 0
+            ? resume.education
+            : [DEFAULT_EDUCATION],
+        skills:
+          resume.skills && resume.skills.length > 0
+            ? resume.skills
+            : [DEFAULT_SKILL],
+        languages:
+          resume.languages && resume.languages.length > 0
+            ? resume.languages
+            : [DEFAULT_LANGUAGE],
+        certifications:
+          resume.certifications && resume.certifications.length > 0
+            ? resume.certifications
+            : [DEFAULT_CERTIFICATION],
+        projects:
+          resume.projects && resume.projects.length > 0
+            ? resume.projects
+            : [DEFAULT_PROJECT],
+        references:
+          resume.references && resume.references.length > 0
+            ? resume.references
+            : [DEFAULT_REFERENCE],
+      });
+    }
+  }, [resume, isEditing]);
 
   // Field arrays
   const experience = useFieldArray({ control, name: "experience" });
@@ -116,8 +177,15 @@ export default function ResumeBuilder() {
       return;
     }
 
+    const title = isEditing
+      ? data.personalInfo?.firstName
+        ? `${data.personalInfo.firstName} ${data.personalInfo.lastName || ""}'s Resume`.trim()
+        : "My Resume"
+      : `${data.personalInfo?.firstName || ""} ${data.personalInfo?.lastName || ""}'s Resume`.trim() ||
+        "My Resume";
+
     saveResume({
-      title: `${data.personalInfo?.firstName} ${data.personalInfo?.lastName}'s Resume`,
+      title,
       templateId,
       personalInfo: data.personalInfo,
       experience: data.experience,
@@ -130,10 +198,19 @@ export default function ResumeBuilder() {
     });
   };
 
-  if (isFetchingTemplate || !template) {
+  // Loading state
+  if (isFetchingTemplate || (isEditing && isFetchingResume)) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#3B82F6" />
+      </View>
+    );
+  }
+
+  if (!template) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <AppText className="text-gray-500">Template not found</AppText>
       </View>
     );
   }
@@ -148,8 +225,8 @@ export default function ResumeBuilder() {
         <TouchableOpacity onPress={() => router.back()} className="p-1">
           <Ionicons name="arrow-back" size={24} color="#6B7280" />
         </TouchableOpacity>
-        <AppText className="text-lg font-semibold text-gray-900">
-          Build Resume
+        <AppText type="title" className="font-semibold text-gray-900">
+          {isEditing ? "Edit Resume" : "Build Resume"}
         </AppText>
         <TouchableOpacity
           onPress={() => setShowPreview(!showPreview)}
@@ -192,7 +269,10 @@ export default function ResumeBuilder() {
           {showPreview ? (
             // Preview Mode
             <View className="flex-1">
-              <AppText className="mb-2 text-sm font-medium text-gray-700">
+              <AppText
+                type="subtitle"
+                className="mb-2 text-sm font-medium text-gray-700"
+              >
                 Resume Preview
               </AppText>
               <View className="overflow-hidden rounded-xl border border-gray-200">
@@ -313,7 +393,7 @@ export default function ResumeBuilder() {
               <ActivityIndicator size="small" color="white" />
             ) : (
               <AppText className="font-semibold text-white">
-                Create Resume
+                {isEditing ? "Update Resume" : "Create Resume"}
               </AppText>
             )}
           </TouchableOpacity>

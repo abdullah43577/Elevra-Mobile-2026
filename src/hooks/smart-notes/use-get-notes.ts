@@ -6,11 +6,10 @@ import { API_ENDPOINTS } from "@/provider/endpoints";
 interface UseGetNotesOptions {
   folderId?: string;
   search?: string;
-  shouldFetch?: boolean;
 }
 
 export const useGetNotes = function (options?: UseGetNotesOptions) {
-  const { folderId, search, shouldFetch = true } = options || {};
+  const { folderId, search } = options || {};
 
   // Build query params
   const queryParams = new URLSearchParams();
@@ -23,7 +22,6 @@ export const useGetNotes = function (options?: UseGetNotesOptions) {
 
   const { data, isFetching, error, refetch } = useGetData<APIResponse<Note[]>>({
     url,
-    shouldFetch,
   });
 
   return {

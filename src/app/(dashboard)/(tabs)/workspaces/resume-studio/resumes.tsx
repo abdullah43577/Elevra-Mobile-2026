@@ -68,7 +68,7 @@ export default function Resumes() {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
-        <AppText className="text-2xl font-bold text-gray-900">
+        <AppText type="title" className="font-bold text-gray-900">
           My Resumes
         </AppText>
         <TouchableOpacity

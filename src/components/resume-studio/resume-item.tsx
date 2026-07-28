@@ -31,7 +31,7 @@ export function ResumeItem({
   return (
     <View className="mx-4 mb-4 rounded-xl border border-gray-200 bg-white p-4">
       {/* Title */}
-      <AppText className="text-lg font-semibold text-gray-900">
+      <AppText type="subtitle" className="font-semibold text-gray-900">
         {resume.title}
       </AppText>
 

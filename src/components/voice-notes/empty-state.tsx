@@ -21,10 +21,10 @@ export function EmptyState({
   return (
     <View className="flex-1 items-center justify-center py-16">
       <Ionicons name={icon} size={64} color="#D1D5DB" />
-      <AppText className="mt-4 text-xl font-semibold text-gray-700">
+      <AppText type="title" className="mt-4 font-semibold text-gray-700">
         {title}
       </AppText>
-      <AppText className="mt-1 px-8 text-center text-sm text-gray-400">
+      <AppText type="subtitle" className="mt-1 px-8 text-center text-gray-400">
         {subtitle}
       </AppText>
       {buttonText && onButtonPress && (

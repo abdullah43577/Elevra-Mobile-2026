@@ -66,7 +66,7 @@ export function Education({
             className="mb-6 gap-4 rounded-xl border border-gray-200 p-5"
           >
             <View className="mb-4 flex-row items-center justify-between">
-              <AppText className="text-base font-medium text-gray-700">
+              <AppText type="subtitle" className="font-medium text-gray-700">
                 Education {index + 1}
               </AppText>
               {fields.length > 1 && (

@@ -37,7 +37,7 @@ export function Projects({
           className="mb-4 gap-4 rounded-xl border border-gray-200 p-4"
         >
           <View className="mb-3 flex-row items-center justify-between">
-            <AppText className="text-sm font-medium text-gray-700">
+            <AppText type="subtitle" className="font-medium text-gray-700">
               Project {index + 1}
             </AppText>
             {fields.length > 1 && (
