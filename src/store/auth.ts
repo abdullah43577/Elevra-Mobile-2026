@@ -6,6 +6,8 @@ interface AuthState {
   isLoading: boolean;
   checkAuthStatus: () => Promise<void>;
   setAuthenticated: (value: boolean) => void;
+  expoPushToken: string | null;
+  setExpoPushToken: (value: string) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -16,4 +18,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ hasToken: !!token, isLoading: false });
   },
   setAuthenticated: (value) => set({ hasToken: value }),
+  expoPushToken: null,
+  setExpoPushToken: (value) => set({ expoPushToken: value }),
 }));

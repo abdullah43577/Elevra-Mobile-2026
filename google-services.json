@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "624604852794",
+    "project_id": "elevra-1d1e3",
+    "storage_bucket": "elevra-1d1e3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624604852794:android:02be0663c83017d434fb03",
+        "android_client_info": {
+          "package_name": "com.reactmode.elevra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBysG35jndR_js54fJZFmz_A_PCv8LxZyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

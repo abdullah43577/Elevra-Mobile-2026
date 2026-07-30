@@ -24,7 +24,7 @@ export default function WorkspacesHub() {
         contentContainerClassName="px-6 pb-12 pt-4"
         showsVerticalScrollIndicator={false}
       >
-        <AppText type="subtitle" className="mb-1">
+        <AppText type="title" className="mb-1">
           Workspaces
         </AppText>
         <AppText type="default" className="mb-6 text-neutral-500">

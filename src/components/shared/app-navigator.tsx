@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useOnboardingStore } from "@/store/onboarding";
 import { useGetProfile } from "@/hooks/use-get-profile";
 import { useAuthStore } from "@/store/auth";
+import { ErrorBoundary } from "./error-boundary";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
@@ -13,9 +14,16 @@ export const AppNavigator = function () {
     "Roboto-Bold": require("../../../assets/fonts/Roboto-Bold.ttf"),
     "Roboto-SemiBold": require("../../../assets/fonts/Roboto-SemiBold.ttf"),
   });
-  const { hasToken, isLoading: authLoading, checkAuthStatus } = useAuthStore();
+  const {
+    hasToken,
+    isLoading: authLoading,
+    checkAuthStatus,
+    expoPushToken,
+  } = useAuthStore();
   const { isFetchingProfile, profile } = useGetProfile();
   const isAuthenticated = !!profile && hasToken === true;
+
+  console.log(expoPushToken, "expo push token");
 
   const {
     hasOnboarded,
@@ -39,19 +47,21 @@ export const AppNavigator = function () {
   }
 
   return (
-    <Stack screenOptions={{ contentStyle: { backgroundColor: "#ffffff" } }}>
-      {/* <Stack.Screen name="(dev)/generate-thumnails" /> */}
-      <Stack.Protected guard={isAuthenticated}>
-        <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
-      </Stack.Protected>
+    <ErrorBoundary>
+      <Stack screenOptions={{ contentStyle: { backgroundColor: "#ffffff" } }}>
+        {/* <Stack.Screen name="(dev)/generate-thumnails" /> */}
+        <Stack.Protected guard={isAuthenticated}>
+          <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
+        </Stack.Protected>
 
-      <Stack.Protected guard={!isAuthenticated && hasOnboarded}>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      </Stack.Protected>
+        <Stack.Protected guard={!isAuthenticated && hasOnboarded}>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        </Stack.Protected>
 
-      <Stack.Protected guard={!isAuthenticated && !hasOnboarded}>
-        <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-      </Stack.Protected>
-    </Stack>
+        <Stack.Protected guard={!isAuthenticated && !hasOnboarded}>
+          <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+        </Stack.Protected>
+      </Stack>
+    </ErrorBoundary>
   );
 };
