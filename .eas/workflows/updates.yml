@@ -1,0 +1,12 @@
+name: Elevra Workflow Update
+
+on:
+  push:
+    branches: ["dev", "master"]
+
+jobs:
+  send_updates:
+    name: Send updates to mobile app
+    type: update
+    params:
+      channel: ${{ github.ref == 'refs/heads/master' && 'production' || 'preview' }}

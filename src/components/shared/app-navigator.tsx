@@ -6,6 +6,7 @@ import { useOnboardingStore } from "@/store/onboarding";
 import { useGetProfile } from "@/hooks/use-get-profile";
 import { useAuthStore } from "@/store/auth";
 import { ErrorBoundary } from "./error-boundary";
+import useNotifications from "@/hooks/use-notification";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
@@ -14,12 +15,8 @@ export const AppNavigator = function () {
     "Roboto-Bold": require("../../../assets/fonts/Roboto-Bold.ttf"),
     "Roboto-SemiBold": require("../../../assets/fonts/Roboto-SemiBold.ttf"),
   });
-  const {
-    hasToken,
-    isLoading: authLoading,
-    checkAuthStatus,
-    expoPushToken,
-  } = useAuthStore();
+  const { hasToken, isLoading: authLoading, checkAuthStatus } = useAuthStore();
+  const { expoPushToken } = useNotifications();
   const { isFetchingProfile, profile } = useGetProfile();
   const isAuthenticated = !!profile && hasToken === true;
 
