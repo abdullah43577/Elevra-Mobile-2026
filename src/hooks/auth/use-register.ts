@@ -7,7 +7,7 @@ import { router } from "expo-router";
 
 export const useSignup = function () {
   const { mutate, isPending } = useSubmitData<
-    SignUpFormValues,
+    SignUpFormValues & { deviceToken: string; deviceType: string },
     APIResponse<User>
   >({
     url: API_ENDPOINTS.auth.register,

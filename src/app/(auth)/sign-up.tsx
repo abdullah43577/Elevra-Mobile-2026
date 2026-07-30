@@ -6,9 +6,10 @@ import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
-import { Pressable, View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSignup } from "@/hooks/auth/use-register";
+import { useAuthStore } from "@/store/auth";
 
 export default function SignUp() {
   const {
@@ -21,8 +22,14 @@ export default function SignUp() {
   });
 
   const { signup, isPending } = useSignup();
+  const { expoPushToken } = useAuthStore();
 
-  const onSubmit = async (data: SignUpFormValues) => signup(data);
+  const onSubmit = async (data: SignUpFormValues) =>
+    signup({
+      ...data,
+      deviceToken: expoPushToken ?? "",
+      deviceType: Platform.OS,
+    });
 
   return (
     <KeyboardAwareScrollView
