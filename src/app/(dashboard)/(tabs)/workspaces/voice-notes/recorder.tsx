@@ -34,21 +34,17 @@ export default function Recorder() {
     size: number;
     mimeType?: string;
   } | null>(null);
-  // The URI actually bound to the player. Kept separate from
-  // audioRecorder.uri because that value can be set as soon as
-  // prepareToRecordAsync() runs (pointing at an empty/in-progress file),
-  // long before the finished recording exists.
+
   const [playableUri, setPlayableUri] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
+  const [playbackTime, setPlaybackTime] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
 
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder);
   const { saveRecording, isSaving } = useSaveRecording();
   const { pickAudio, isPicking } = useAudioPicker();
 
-  // Hooks must be called unconditionally at the top level of the component,
-  // never inside useEffect/callbacks. `playableUri` only changes when we
-  // explicitly know there's a finished, playable file.
   const player = useAudioPlayer(playableUri);
 
   // Request permissions on mount
@@ -75,11 +71,9 @@ export default function Recorder() {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+
       try {
         player.pause();
-        // Don't call player.remove() — useAudioPlayer releases the native
-        // object automatically. Calling remove() ourselves races with that
-        // and throws "shared object already released".
       } catch {
         // Player may already be released by the hook itself; safe to ignore.
       }
@@ -99,36 +93,58 @@ export default function Recorder() {
     setIsRecording(recorderState.isRecording);
 
     if (recorderState.isRecording) {
-      timerRef.current = setInterval(() => {
-        setElapsedTime((prev) => prev + 1);
-      }, 1000);
+      // Only start a new interval if one isn't already running
+      if (!timerRef.current) {
+        timerRef.current = setInterval(() => {
+          setElapsedTime((prev) => prev + 1);
+        }, 1000);
+      }
     } else {
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
       }
+      if (recorderState.durationMillis) {
+        const durationInSeconds = Math.floor(
+          recorderState.durationMillis / 1000,
+        );
+        setTotalDuration(durationInSeconds);
+        setElapsedTime(durationInSeconds);
+      }
     }
-  }, [recorderState.isRecording]);
+  }, [recorderState.isRecording, recorderState.durationMillis]);
 
-  // Keep isPlaying in sync with the player's actual status, including
-  // when playback finishes on its own. This is the single source of
-  // truth for isPlaying — handlePlayPause no longer sets it optimistically.
+  // Keep isPlaying in sync with the player's actual status
   useEffect(() => {
     const subscription = player.addListener(
       "playbackStatusUpdate",
       (status: any) => {
         if (status?.didJustFinish) {
           setIsPlaying(false);
-        } else if (typeof status?.playing === "boolean") {
+          setPlaybackTime(totalDuration);
+          return;
+        }
+
+        if (typeof status?.playing === "boolean") {
           setIsPlaying(status.playing);
+        }
+
+        if (typeof status?.currentTime === "number") {
+          setPlaybackTime(Math.floor(status.currentTime));
+        }
+
+        if (status?.duration && status.duration > 0) {
+          const duration = Math.floor(status.duration);
+          setTotalDuration(duration);
+          if (!selectedFile) {
+            setElapsedTime(duration);
+          }
         }
       },
     );
 
-    return () => {
-      subscription?.remove?.();
-    };
-  }, [player]);
+    return () => subscription?.remove?.();
+  }, [player, selectedFile, totalDuration]);
 
   const handleRecord = async function () {
     if (!recorderState.isRecording) {
@@ -140,6 +156,9 @@ export default function Recorder() {
         // Clear out any previous playable source before starting a new take.
         setPlayableUri(null);
         setIsPlaying(false);
+        setPlaybackTime(0);
+        setTotalDuration(0);
+        setElapsedTime(0);
         await audioRecorder.prepareToRecordAsync();
         audioRecorder.record();
       } catch (error) {
@@ -157,27 +176,32 @@ export default function Recorder() {
         allowsRecording: false,
         playsInSilentMode: true,
       });
-      // Only now bind the player to the finished file. The query-string
-      // suffix forces a fresh load even if the underlying path is reused.
-      setPlayableUri(
-        audioRecorder.uri ? `${audioRecorder.uri}?t=${Date.now()}` : null,
-      );
+      // Wait a moment for the file to be ready
+      setTimeout(() => {
+        // Only now bind the player to the finished file. The query-string
+        // suffix forces a fresh load even if the underlying path is reused.
+        setPlayableUri(
+          audioRecorder.uri ? `${audioRecorder.uri}?t=${Date.now()}` : null,
+        );
+      }, 100);
     } catch (error) {
       console.error("Failed to stop recording:", error);
       showToast("error", "Something went wrong stopping the recording.");
     }
   };
 
-  const handlePlayPause = function () {
+  const handlePlayPause = async function () {
     if (!player) return;
 
     if (isPlaying) {
       player.pause();
     } else {
+      if (playbackTime >= totalDuration && totalDuration > 0) {
+        await player.seekTo(0);
+        setPlaybackTime(0);
+      }
       player.play();
     }
-    // isPlaying is intentionally not set here — the playbackStatusUpdate
-    // listener above is the single source of truth for playback state.
   };
 
   const handlePickAudio = async function () {
@@ -190,6 +214,8 @@ export default function Recorder() {
         mimeType: audio.mimeType,
       });
       setPlayableUri(audio.uri);
+      setPlaybackTime(0);
+      setTotalDuration(0);
       if (!title.trim()) {
         const fileName = audio.name.replace(/\.[^/.]+$/, "");
         setTitle(fileName);
@@ -208,14 +234,19 @@ export default function Recorder() {
     let fileSize: number | undefined;
     let fileName: string | undefined;
     let mimeType: string = "audio/m4a";
+    let durationInSeconds = 0;
 
     if (selectedFile) {
       fileUri = selectedFile.uri;
       fileSize = selectedFile.size;
       fileName = selectedFile.name;
       mimeType = selectedFile.mimeType || "audio/mpeg";
+      // Use the duration from the player if available
+      durationInSeconds =
+        totalDuration > 0 ? totalDuration : Math.floor(player.duration || 0);
     } else if (audioRecorder.uri) {
       fileUri = audioRecorder.uri;
+      // Get file size
       try {
         const file = new File(fileUri);
         if (file.exists) {
@@ -225,6 +256,15 @@ export default function Recorder() {
         console.error("Failed to get file info:", error);
       }
       fileName = `${title.trim()}.m4a`;
+      // Use the duration from recorderState
+      durationInSeconds = Math.floor(
+        (recorderState.durationMillis || 0) / 1000,
+      );
+
+      // If duration is 0, try to get it from the player
+      if (durationInSeconds === 0 && player.duration) {
+        durationInSeconds = Math.floor(player.duration);
+      }
     } else {
       showToast("error", "No recording or file to save");
       return;
@@ -235,9 +275,11 @@ export default function Recorder() {
       return;
     }
 
-    const durationInSeconds = selectedFile
-      ? Math.floor(player.duration || 0)
-      : Math.floor((recorderState.durationMillis || 0) / 1000);
+    // Ensure duration is at least 1 second
+    if (durationInSeconds === 0) {
+      durationInSeconds = 1;
+      showToast("warning", "Recording duration was 0, set to 1 second");
+    }
 
     const formData = new FormData();
     formData.append("title", title.trim());
@@ -278,6 +320,8 @@ export default function Recorder() {
     setSelectedFile(null);
     setPlayableUri(null);
     setIsPlaying(false);
+    setPlaybackTime(0);
+    setTotalDuration(0);
   };
 
   const hasFile = !!selectedFile || !!audioRecorder.uri;
@@ -314,7 +358,7 @@ export default function Recorder() {
 
         {/* Timer */}
         <RecorderTimer
-          elapsedTime={elapsedTime}
+          elapsedTime={isPlaying ? playbackTime : elapsedTime}
           isRecording={isRecording}
           isUploadedFile={isUploadedFile}
         />
@@ -324,7 +368,9 @@ export default function Recorder() {
           <RecorderPlayback
             isPlaying={isPlaying}
             onPlayPause={handlePlayPause}
-            duration={elapsedTime}
+            duration={totalDuration}
+            currentTime={playbackTime}
+            totalDuration={totalDuration}
           />
         )}
 

@@ -1,8 +1,7 @@
-import React from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { StreamingText } from "@/components/shared/streaming-text";
 import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
-import { StreamingText } from "@/components/shared/streaming-text";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 interface AIActionsProps {
   noteId?: string;

@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import { AppText } from "@/components/shared/app-text";
+import { formatTime } from "@/provider/utils";
 
 interface RecorderTimerProps {
   elapsedTime: number;
@@ -12,12 +13,6 @@ export function RecorderTimer({
   isRecording,
   isUploadedFile,
 }: RecorderTimerProps) {
-  const formatTime = function (seconds: number) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
   // Don't show timer for uploaded files
   if (isUploadedFile) {
     return null;

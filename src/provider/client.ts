@@ -3,9 +3,10 @@ import * as Device from "expo-device";
 
 export const getBaseUrl = function () {
   if (__DEV__) {
-    return Platform.OS === "android" && !Device.isDevice
-      ? "http://10.0.2.2:8888/v1" // Android emulator
-      : "http://192.168.0.183:8888/v1"; // physical device / iOS simulator
+    if (Platform.OS === "android" && !Device.isDevice) {
+      return "http://10.0.2.2:8888/v1"; // Android emulator
+    }
+    return `${process.env.EXPO_PUBLIC_API_URL}/v1`; // physical device / iOS simulator
   }
-  return "https://api.elevra.com/v1"; // production
+  return "https://api.elevra.com/v1"; // Production
 };

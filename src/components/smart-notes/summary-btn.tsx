@@ -1,6 +1,5 @@
-import React from "react";
-import { TouchableOpacity, Text, ActivityIndicator, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { AppText } from "../shared/app-text";
 
 interface SummaryButtonProps {

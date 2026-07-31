@@ -26,20 +26,19 @@ export default function Playback() {
   const player = useAudioPlayer(recording?.fileUrl || "");
 
   useEffect(() => {
-    if (player) {
-      setIsPlaying(player.playing);
-    }
-  }, [player?.playing]);
-
-  useEffect(() => {
-    if (player) {
-      const interval = setInterval(() => {
-        if (player.currentTime !== undefined && player.duration) {
-          setProgress((player.currentTime / player.duration) * 100);
+    const subscription = player.addListener(
+      "playbackStatusUpdate",
+      (status: any) => {
+        if (typeof status?.playing === "boolean") {
+          setIsPlaying(status.playing);
         }
-      }, 100);
-      return () => clearInterval(interval);
-    }
+        if (typeof status?.currentTime === "number" && status?.duration) {
+          setProgress((status.currentTime / status.duration) * 100);
+        }
+      },
+    );
+
+    return () => subscription?.remove?.();
   }, [player]);
 
   const handlePlayPause = function () {
@@ -48,7 +47,7 @@ export default function Playback() {
     } else {
       player.play();
     }
-    setIsPlaying(!isPlaying);
+    // no manual setIsPlaying — let the listener be the single source of truth
   };
 
   const handleSeekBackward = function () {

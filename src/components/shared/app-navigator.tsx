@@ -7,6 +7,7 @@ import { useGetProfile } from "@/hooks/use-get-profile";
 import { useAuthStore } from "@/store/auth";
 import { ErrorBoundary } from "./error-boundary";
 import useNotifications from "@/hooks/use-notification";
+import { StatusBar } from "expo-status-bar";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
@@ -45,6 +46,8 @@ export const AppNavigator = function () {
 
   return (
     <ErrorBoundary>
+      <StatusBar style="dark" />
+
       <Stack screenOptions={{ contentStyle: { backgroundColor: "#ffffff" } }}>
         {/* <Stack.Screen name="(dev)/generate-thumnails" /> */}
         <Stack.Protected guard={isAuthenticated}>
