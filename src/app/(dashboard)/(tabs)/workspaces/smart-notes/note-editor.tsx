@@ -25,13 +25,11 @@ export default function NoteEditor() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [summaryComplete, setSummaryComplete] = useState(false);
 
-  // Fetch note if editing
   const { note, isFetchingNote } = useGetNoteById({
     noteId: noteId || "",
     shouldFetch: !!noteId,
   });
 
-  // Fetch folders and tags for selection
   const { folders } = useGetFolders();
   const { tags: allTags } = useGetTags();
 
@@ -49,7 +47,6 @@ export default function NoteEditor() {
     noteId: noteId || "",
   });
 
-  // Load note data when editing
   useEffect(() => {
     if (note) {
       setTitle(note.title);
@@ -119,11 +116,10 @@ export default function NoteEditor() {
     setSelectedTags(selectedTags.filter((t) => t !== tagName));
   };
 
-  // Loading state
   if (isFetchingNote) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color="#5B47E8" />
       </View>
     );
   }
@@ -141,19 +137,17 @@ export default function NoteEditor() {
       />
 
       <ScrollView className="flex-1 px-4 pt-4">
-        {/* Title */}
         <TextInput
-          className="text-2xl font-bold text-gray-900"
+          className="font-roboto text-2xl font-bold text-primary-500"
           placeholder="Note title..."
           value={title}
           onChangeText={setTitle}
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#B4B4BF"
           editable={!isSaving}
         />
 
-        <View className="my-4 h-px bg-gray-200" />
+        <View className="my-4 h-px bg-neutral-200" />
 
-        {/* Rich Text Editor */}
         <View className="min-h-[200px]">
           <RichTextEditor
             onChange={handleContentChange}
@@ -161,9 +155,8 @@ export default function NoteEditor() {
           />
         </View>
 
-        <View className="my-4 h-px bg-gray-200" />
+        <View className="my-4 h-px bg-neutral-200" />
 
-        {/* Folder Picker */}
         <FolderPicker
           folders={folders}
           selectedFolderId={selectedFolderId}
@@ -171,7 +164,6 @@ export default function NoteEditor() {
           disabled={isSaving}
         />
 
-        {/* Tag Manager */}
         <TagManager
           selectedTags={selectedTags}
           allTags={allTags}
@@ -180,7 +172,6 @@ export default function NoteEditor() {
           disabled={isSaving}
         />
 
-        {/* AI Actions */}
         <AIActions
           noteId={noteId}
           content={content}

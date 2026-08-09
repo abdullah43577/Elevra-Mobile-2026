@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   View,
-  Text,
   FlatList,
   TouchableOpacity,
   TextInput,
@@ -9,6 +8,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { AppText } from "@/components/shared/app-text";
 import { AppModal } from "@/components/shared/app-modal";
 import { useGetTags } from "@/hooks/smart-notes/use-get-tags";
 import { useCreateTag } from "@/hooks/smart-notes/use-create-tag";
@@ -25,7 +25,12 @@ export default function Tags() {
 
   const { tags, isFetchingTags, refetchTags } = useGetTags();
   const { createTag, isCreating } = useCreateTag();
-  const { deleteTag, isDeleting } = useDeleteTag({ tagId: "" });
+
+  // NOTE: deleteTag/isDeleting were previously set up here with a hardcoded
+  // empty tagId and never used. If TagItem needs delete functionality,
+  // it likely needs its own useDeleteTag call per row (with the real id),
+  // not one shared instance at the screen level. Left uninstantiated here
+  // until that's confirmed.
 
   const handleCreate = function () {
     if (!tagName.trim()) {
@@ -54,13 +59,15 @@ export default function Tags() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
+      <View className="flex-row items-center justify-between border-b border-neutral-100 px-4 py-3">
         <TouchableOpacity onPress={handleBack} className="p-1">
-          <Ionicons name="arrow-back" size={24} color="#6B7280" />
+          <Ionicons name="arrow-back" size={24} color="#7D7D8A" />
         </TouchableOpacity>
-        <Text className="text-lg font-semibold text-gray-900">Tags</Text>
+        <AppText type="label" className="text-[16px]">
+          Tags
+        </AppText>
         <TouchableOpacity onPress={handleOpenModal} className="p-1">
-          <Ionicons name="add" size={24} color="#3B82F6" />
+          <Ionicons name="add" size={24} color="#5B47E8" />
         </TouchableOpacity>
       </View>
 
@@ -92,35 +99,35 @@ export default function Tags() {
       >
         <View className="mt-2">
           <TextInput
-            className="mb-4 rounded-xl bg-gray-50 px-4 py-3 text-base text-gray-900"
+            className="mb-4 rounded-2xl bg-neutral-50 px-4 py-3 font-roboto text-base text-primary-500"
             placeholder="Tag name..."
             value={tagName}
             onChangeText={setTagName}
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#B4B4BF"
             editable={!isCreating}
           />
 
           <View className="flex-row gap-3">
             <TouchableOpacity
               onPress={handleCloseModal}
-              className="flex-1 rounded-lg bg-gray-100 py-3"
+              className="flex-1 items-center rounded-2xl bg-neutral-100 py-3"
               disabled={isCreating}
             >
-              <Text className="text-center font-semibold text-gray-700">
+              <AppText type="body" className="font-semibold text-neutral-600">
                 Cancel
-              </Text>
+              </AppText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleCreate}
-              className="flex-1 rounded-lg bg-blue-500 py-3"
+              className="flex-1 items-center rounded-2xl bg-secondary-500 py-3"
               disabled={isCreating}
             >
               {isCreating ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
-                <Text className="text-center font-semibold text-white">
+                <AppText type="body" className="font-semibold text-white">
                   Create
-                </Text>
+                </AppText>
               )}
             </TouchableOpacity>
           </View>

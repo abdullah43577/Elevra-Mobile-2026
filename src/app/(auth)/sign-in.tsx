@@ -33,9 +33,14 @@ export default function SignIn() {
       extraScrollHeight={20}
     >
       <View className="flex-1 justify-center px-6 py-10">
+        {/* Mark */}
+        <View className="mb-6 h-10 w-10 items-center justify-center rounded-xl bg-primary-500">
+          <AppText className="font-bold text-white">E</AppText>
+        </View>
+
         {/* Header */}
-        <AppText type="title">Welcome back</AppText>
-        <AppText type="subtitle" className="mt-1 text-neutral-500">
+        <AppText type="display">Welcome back</AppText>
+        <AppText type="subtitle" className="mt-1.5">
           Sign in to your Elevra account
         </AppText>
 
@@ -44,7 +49,7 @@ export default function SignIn() {
           <FormInput<SignInFormValues>
             control={control}
             name="email"
-            label="Email Address"
+            label="Email address"
             placeholder="you@example.com"
             type="email"
             autoCapitalize="none"
@@ -63,7 +68,6 @@ export default function SignIn() {
             errors={errors}
           />
 
-          {/* Forgot password */}
           <Pressable
             className="self-end active:opacity-60"
             onPress={() => router.push("/(auth)/forgot-password")}
@@ -71,12 +75,12 @@ export default function SignIn() {
             <AppText type="link">Forgot password?</AppText>
           </Pressable>
 
-          {/* Submit */}
           <AppButton
             type="submit"
             isLoading={isPending}
             disabled={isPending}
             onPress={handleSubmit(onSubmit)}
+            className="mt-1"
           >
             <AppText className="font-semibold text-white">
               {isPending ? "Signing in..." : "Sign in"}
@@ -85,41 +89,38 @@ export default function SignIn() {
         </View>
 
         {/* OR divider */}
-        <View className="my-6 flex-row items-center gap-3">
+        <View className="my-7 flex-row items-center gap-3">
           <View className="h-px flex-1 bg-neutral-200" />
-          <AppText type="subtitle" className="text-neutral-500">
-            OR continue with
+          <AppText type="caption" className="tracking-[0.4px]">
+            OR CONTINUE WITH
           </AppText>
           <View className="h-px flex-1 bg-neutral-200" />
         </View>
 
-        {/* OAuth buttons */}
-        <View className="gap-3">
-          <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
-            <AntDesign name="google" size={18} color="#000" />
-            <AppText className="font-semibold">Continue with Google</AppText>
+        {/* OAuth buttons — side by side, not stacked */}
+        <View className="flex-row gap-3">
+          <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-neutral-50 active:opacity-70">
+            <AntDesign name="google" size={16} color="#17171C" />
+            <AppText type="body" className="text-[13px] font-semibold">
+              Google
+            </AppText>
           </Pressable>
 
-          <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
-            <AntDesign name="apple" size={18} color="#000" />
-            <AppText className="font-semibold">Continue with Apple</AppText>
+          <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-neutral-50 active:opacity-70">
+            <AntDesign name="apple" size={16} color="#17171C" />
+            <AppText type="body" className="text-[13px] font-semibold">
+              Apple
+            </AppText>
           </Pressable>
         </View>
 
         {/* Sign up link */}
         <View className="mt-8 flex-row justify-center gap-1">
-          <AppText type="subtitle" className="text-neutral-500">
-            Don't have an account?
-          </AppText>
+          <AppText type="subtitle">Don't have an account?</AppText>
           <Pressable onPress={() => router.push("/(auth)/sign-up")}>
             <AppText type="link">Sign up</AppText>
           </Pressable>
         </View>
-
-        {/* Footer */}
-        <AppText type="subtitle" className="mt-6 text-center text-neutral-400">
-          Elevra Workspace Environment V1.0
-        </AppText>
       </View>
     </KeyboardAwareScrollView>
   );

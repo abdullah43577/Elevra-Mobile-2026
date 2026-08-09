@@ -1,16 +1,10 @@
 import { useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, FlatList, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { AppText } from "@/components/shared/app-text";
 import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
 import { useSaveFolder } from "@/hooks/smart-notes/use-save-folder";
-import { useDeleteFolder } from "@/hooks/smart-notes/use-delete-folder";
 import { EmptyState } from "@/components/smart-notes/empty-state";
 import { SaveFolder } from "@/components/smart-notes/save-folder";
 import { showToast } from "@/utils/show-toast";
@@ -27,7 +21,6 @@ export default function Folders() {
 
   const { folders, isFetchingFolders, refetchFolders } = useGetFolders();
 
-  // Save folder hook - passes folderId only when editing
   const { saveFolder, isSaving } = useSaveFolder({
     folderId: editingFolder?.id,
   });
@@ -68,18 +61,18 @@ export default function Folders() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
+      <View className="flex-row items-center justify-between border-b border-neutral-100 px-4 py-3">
         <TouchableOpacity onPress={handleBack} className="p-1">
-          <Ionicons name="arrow-back" size={24} color="#6B7280" />
+          <Ionicons name="arrow-back" size={24} color="#7D7D8A" />
         </TouchableOpacity>
-        <Text className="text-lg font-semibold text-gray-900">Folders</Text>
+        <AppText type="label" className="text-[16px]">
+          Folders
+        </AppText>
         <TouchableOpacity onPress={openCreateModal} className="p-1">
-          <Ionicons name="add" size={24} color="#3B82F6" />
+          <Ionicons name="add" size={24} color="#5B47E8" />
         </TouchableOpacity>
       </View>
 
-      {/* Folders List */}
       <FlatList
         data={folders}
         keyExtractor={(item) => item.id}
@@ -99,7 +92,6 @@ export default function Folders() {
         )}
       />
 
-      {/* Create/Edit Modal */}
       <SaveFolder
         isModalVisible={isModalVisible}
         closeModal={closeModal}

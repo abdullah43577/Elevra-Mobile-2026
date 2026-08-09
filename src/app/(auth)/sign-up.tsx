@@ -41,34 +41,45 @@ export default function SignUp() {
       extraScrollHeight={20}
     >
       <View className="flex-1 justify-center px-6 py-10">
+        {/* Mark */}
+        <View className="mb-6 h-10 w-10 items-center justify-center rounded-xl bg-primary-500">
+          <AppText className="font-bold text-white">E</AppText>
+        </View>
+
         {/* Header */}
-        <AppText type="title">Create your account</AppText>
-        <AppText type="subtitle" className="mt-1 text-neutral-500">
+        <AppText type="display">Create your account</AppText>
+        <AppText type="subtitle" className="mt-1.5">
           Join Elevra today
         </AppText>
 
         {/* Form */}
         <View className="mt-8 gap-4">
-          <FormInput<SignUpFormValues>
-            control={control}
-            name="first_name"
-            label="First Name"
-            placeholder="John"
-            errors={errors}
-          />
+          <View className="flex-row gap-3">
+            <View className="flex-1">
+              <FormInput<SignUpFormValues>
+                control={control}
+                name="first_name"
+                label="First name"
+                placeholder="John"
+                errors={errors}
+              />
+            </View>
 
-          <FormInput<SignUpFormValues>
-            control={control}
-            name="last_name"
-            label="Last Name"
-            placeholder="Doe"
-            errors={errors}
-          />
+            <View className="flex-1">
+              <FormInput<SignUpFormValues>
+                control={control}
+                name="last_name"
+                label="Last name"
+                placeholder="Doe"
+                errors={errors}
+              />
+            </View>
+          </View>
 
           <FormInput<SignUpFormValues>
             control={control}
             name="email"
-            label="Email Address"
+            label="Email address"
             placeholder="you@example.com"
             type="email"
             autoCapitalize="none"
@@ -88,17 +99,25 @@ export default function SignUp() {
           />
 
           {/* Terms */}
-          <AppText type="subtitle" className="text-neutral-500">
+          <AppText type="caption" className="leading-[18px]">
             By creating an account, you agree to our{" "}
-            <AppText type="link">Terms and Conditions</AppText> and{" "}
-            <AppText type="link">Privacy Policy</AppText>.
+            <AppText type="link" className="text-xs">
+              Terms and Conditions
+            </AppText>{" "}
+            and{" "}
+            <AppText type="link" className="text-xs">
+              Privacy Policy
+            </AppText>
+            .
           </AppText>
 
           {/* Submit */}
           <AppButton
             type="submit"
+            isLoading={isPending}
             disabled={isPending}
             onPress={handleSubmit(onSubmit)}
+            className="mt-1"
           >
             <AppText className="font-semibold text-white">
               {isPending ? "Creating account..." : "Create account"}
@@ -107,41 +126,38 @@ export default function SignUp() {
         </View>
 
         {/* OR divider */}
-        <View className="my-6 flex-row items-center gap-3">
+        <View className="my-7 flex-row items-center gap-3">
           <View className="h-px flex-1 bg-neutral-200" />
-          <AppText type="subtitle" className="text-neutral-500">
-            OR continue with
+          <AppText type="caption" className="tracking-[0.4px]">
+            OR CONTINUE WITH
           </AppText>
           <View className="h-px flex-1 bg-neutral-200" />
         </View>
 
-        {/* OAuth buttons */}
-        <View className="gap-3">
-          <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
-            <AntDesign name="google" size={18} color="#000" />
-            <AppText className="font-semibold">Continue with Google</AppText>
+        {/* OAuth buttons — side by side, not stacked */}
+        <View className="flex-row gap-3">
+          <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-neutral-50 active:opacity-70">
+            <AntDesign name="google" size={16} color="#17171C" />
+            <AppText type="body" className="text-[13px] font-semibold">
+              Google
+            </AppText>
           </Pressable>
 
-          <Pressable className="flex-row items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 active:opacity-75">
-            <AntDesign name="apple" size={18} color="#000" />
-            <AppText className="font-semibold">Continue with Apple</AppText>
+          <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-neutral-50 active:opacity-70">
+            <AntDesign name="apple" size={16} color="#17171C" />
+            <AppText type="body" className="text-[13px] font-semibold">
+              Apple
+            </AppText>
           </Pressable>
         </View>
 
         {/* Sign in link */}
         <View className="mt-8 flex-row justify-center gap-1">
-          <AppText type="subtitle" className="text-neutral-500">
-            Already have an account?
-          </AppText>
+          <AppText type="subtitle">Already have an account?</AppText>
           <Pressable onPress={() => router.push("/(auth)/sign-in")}>
             <AppText type="link">Log in</AppText>
           </Pressable>
         </View>
-
-        {/* Footer */}
-        <AppText type="subtitle" className="mt-6 text-center text-neutral-400">
-          Elevra Workspace Environment V1.0
-        </AppText>
       </View>
     </KeyboardAwareScrollView>
   );

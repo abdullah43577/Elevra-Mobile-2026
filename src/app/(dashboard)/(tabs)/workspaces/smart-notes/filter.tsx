@@ -1,69 +1,90 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const STATUS_OPTIONS = ["All", "Pinned", "Archived"];
+const SORT_OPTIONS = ["Last updated", "Date created", "Alphabetical"];
+
 export default function Filter() {
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [selectedSort, setSelectedSort] = useState("last updated");
+
+  const handleReset = function () {
+    setSelectedFilter("all");
+    setSelectedSort("last updated");
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
+      <View className="flex-row items-center justify-between border-b border-neutral-100 px-4 py-3">
         <TouchableOpacity onPress={() => router.back()} className="p-1">
-          <Ionicons name="close" size={24} color="#6B7280" />
+          <Ionicons name="close" size={24} color="#7D7D8A" />
         </TouchableOpacity>
-        <Text className="text-lg font-semibold">Filter Notes</Text>
-        <TouchableOpacity className="p-1">
-          <Text className="font-semibold text-blue-500">Reset</Text>
+        <AppText type="label" className="text-[16px]">
+          Filter notes
+        </AppText>
+        <TouchableOpacity onPress={handleReset} className="p-1">
+          <AppText type="link">Reset</AppText>
         </TouchableOpacity>
       </View>
 
       <ScrollView className="flex-1 px-4 pt-4">
-        <Text className="mb-3 text-sm font-semibold text-gray-700">Status</Text>
-        <View className="space-y-2">
-          {["All", "Pinned", "Archived"].map((option) => (
+        <AppText type="label" className="mb-3">
+          Status
+        </AppText>
+        <View className="gap-1">
+          {STATUS_OPTIONS.map((option) => (
             <TouchableOpacity
               key={option}
               onPress={() => setSelectedFilter(option.toLowerCase())}
-              className="flex-row items-center justify-between border-b border-gray-50 py-3"
+              className="flex-row items-center justify-between border-b border-neutral-50 py-3"
             >
-              <Text className="text-base text-gray-900">{option}</Text>
+              <AppText type="body">{option}</AppText>
               {selectedFilter === option.toLowerCase() && (
-                <Ionicons name="checkmark-circle" size={24} color="#3B82F6" />
+                <Ionicons name="checkmark-circle" size={24} color="#5B47E8" />
               )}
             </TouchableOpacity>
           ))}
         </View>
 
-        <View className="my-4 h-px bg-gray-200" />
+        <View className="my-4 h-px bg-neutral-200" />
 
-        <AppText className="mb-3 text-sm font-semibold text-gray-700">
-          Sort By
+        <AppText type="label" className="mb-3">
+          Sort by
         </AppText>
-        <View className="space-y-2">
-          {["Last updated", "Date created", "Alphabetical"].map((option) => (
-            <TouchableOpacity
-              key={option}
-              className="flex-row items-center justify-between border-b border-gray-50 py-3"
-            >
-              <Text className="text-base text-gray-900">{option}</Text>
-              <Ionicons name="radio-button-off" size={24} color="#D1D5DB" />
-            </TouchableOpacity>
-          ))}
+        <View className="gap-1">
+          {SORT_OPTIONS.map((option) => {
+            const isSelected = selectedSort === option.toLowerCase();
+            return (
+              <TouchableOpacity
+                key={option}
+                onPress={() => setSelectedSort(option.toLowerCase())}
+                className="flex-row items-center justify-between border-b border-neutral-50 py-3"
+              >
+                <AppText type="body">{option}</AppText>
+                <Ionicons
+                  name={isSelected ? "radio-button-on" : "radio-button-off"}
+                  size={24}
+                  color={isSelected ? "#5B47E8" : "#D5D5DE"}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </ScrollView>
 
-      <View className="border-t border-gray-100 px-4 py-4">
+      <View className="border-t border-neutral-100 px-4 py-4">
         <TouchableOpacity
           onPress={() => router.back()}
-          className="rounded-lg bg-blue-500 py-3"
+          className="items-center rounded-2xl bg-secondary-500 py-3"
         >
-          <Text className="text-center font-semibold text-white">
-            Apply Filters
-          </Text>
+          <AppText type="body" className="font-semibold text-white">
+            Apply filters
+          </AppText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

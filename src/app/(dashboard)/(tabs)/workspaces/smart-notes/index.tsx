@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   View,
-  Text,
   FlatList,
   TouchableOpacity,
   RefreshControl,
@@ -9,6 +8,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { AppText } from "@/components/shared/app-text";
 import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
 import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
 import { SkeletonCard } from "@/components/smart-notes/skeleton-card";
@@ -24,13 +24,11 @@ export default function SmartNotes() {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  // Fetch notes with filters
   const { notes, isFetchingNotes, refetchNotes } = useGetNotes({
     folderId: selectedFolder || undefined,
     search: debouncedSearch || undefined,
   });
 
-  // Fetch folders for filter chips
   const { folders, isFetchingFolders } = useGetFolders();
 
   const handleRefresh = function () {
@@ -66,12 +64,11 @@ export default function SmartNotes() {
     setSearchQuery("");
   };
 
-  // Loading state
   if (isFetchingNotes && notes.length === 0) {
     return (
       <View className="flex-1 bg-white px-4 pt-4">
         <View className="mb-4 flex-row items-center justify-between">
-          <Text className="text-2xl font-bold text-gray-900">Smart Notes</Text>
+          <AppText type="title">Smart Notes</AppText>
         </View>
         {[1, 2, 3].map((i) => (
           <SkeletonCard key={i} />
@@ -84,23 +81,23 @@ export default function SmartNotes() {
     <View className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 pb-4 pt-2">
-        <Text className="text-2xl font-bold text-gray-900">Smart Notes</Text>
+        <AppText type="title">Smart Notes</AppText>
         <View className="flex-row items-center gap-2">
           <TouchableOpacity onPress={handleToggleSearch} className="p-2">
             <Ionicons
               name={isSearchVisible ? "close-outline" : "search-outline"}
               size={24}
-              color="#6B7280"
+              color="#7D7D8A"
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNavigateToFolders} className="p-2">
-            <Ionicons name="folder-outline" size={24} color="#6B7280" />
+            <Ionicons name="folder-outline" size={24} color="#7D7D8A" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNavigateToTags} className="p-2">
-            <Ionicons name="pricetag-outline" size={24} color="#6B7280" />
+            <Ionicons name="pricetag-outline" size={24} color="#7D7D8A" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNavigateToFilter} className="p-2">
-            <Ionicons name="filter-outline" size={24} color="#6B7280" />
+            <Ionicons name="filter-outline" size={24} color="#7D7D8A" />
           </TouchableOpacity>
         </View>
       </View>
@@ -108,19 +105,19 @@ export default function SmartNotes() {
       {/* Search Bar */}
       {isSearchVisible && (
         <View className="px-4 pb-3">
-          <View className="flex-row items-center rounded-xl bg-gray-100 px-4 py-2">
-            <Ionicons name="search-outline" size={20} color="#9CA3AF" />
+          <View className="flex-row items-center rounded-2xl bg-neutral-100 px-4 py-2">
+            <Ionicons name="search-outline" size={20} color="#B4B4BF" />
             <TextInput
-              className="ml-2 flex-1 text-base text-gray-900"
+              className="ml-2 flex-1 font-roboto text-base text-primary-500"
               placeholder="Search notes..."
               value={searchQuery}
               onChangeText={setSearchQuery}
               autoFocus
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#B4B4BF"
             />
             {searchQuery.length > 0 && (
               <TouchableOpacity onPress={handleClearSearch}>
-                <Ionicons name="close-circle" size={20} color="#9CA3AF" />
+                <Ionicons name="close-circle" size={20} color="#B4B4BF" />
               </TouchableOpacity>
             )}
           </View>
@@ -145,7 +142,7 @@ export default function SmartNotes() {
           <RefreshControl
             refreshing={isFetchingNotes}
             onRefresh={handleRefresh}
-            tintColor="#3B82F6"
+            tintColor="#5B47E8"
           />
         }
         renderItem={({ item }) => <NoteItem item={item} />}
@@ -177,12 +174,12 @@ export default function SmartNotes() {
       {/* FAB */}
       <TouchableOpacity
         onPress={handleCreateNote}
-        className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-blue-500 shadow-lg"
+        className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-secondary-500"
         style={{
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.25,
-          shadowRadius: 4,
+          shadowOpacity: 0.2,
+          shadowRadius: 6,
           elevation: 5,
         }}
       >

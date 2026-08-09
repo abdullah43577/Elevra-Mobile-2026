@@ -1,12 +1,17 @@
 import { clsx } from "clsx";
 import * as Haptics from "expo-haptics";
-import { Pressable, type PressableProps } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  type PressableProps,
+} from "react-native";
 
 export interface AppButtonProps extends PressableProps {
   className?: string;
   onPress?: () => void;
   type?: "default" | "submit" | "delete";
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 const hapticMap: Partial<
@@ -28,9 +33,13 @@ export const AppButton = function ({
   onPress,
   type = "default",
   isLoading = false,
+  disabled = false,
   ...rest
 }: AppButtonProps) {
+  const isDisabled = disabled || isLoading;
+
   const handlePress = () => {
+    if (isDisabled) return;
     hapticMap[type]?.();
     onPress?.();
   };
@@ -38,12 +47,16 @@ export const AppButton = function ({
   return (
     <Pressable
       {...rest}
+      disabled={isDisabled}
       className={clsx(
-        "items-center justify-center rounded-lg px-4 py-3 active:opacity-75",
+        "h-[52px] flex-row items-center justify-center gap-2 rounded-2xl px-4 active:opacity-75",
         typeStyles[type],
+        isDisabled && "opacity-60",
         className,
       )}
       onPress={handlePress}
-    />
+    >
+      {isLoading ? <ActivityIndicator color="#ffffff" /> : rest.children}
+    </Pressable>
   );
 };

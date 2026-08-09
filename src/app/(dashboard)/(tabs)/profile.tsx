@@ -105,7 +105,7 @@ export default function Profile() {
   if (isFetchingProfile && !profile) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator color="#121212" />
+        <ActivityIndicator color="#17171C" />
       </View>
     );
   }
@@ -120,7 +120,7 @@ export default function Profile() {
       refreshControl={
         <RefreshControl
           refreshing={isFetchingProfile}
-          onRefresh={() => refetch}
+          onRefresh={() => refetch()}
         />
       }
     >
@@ -136,14 +136,12 @@ export default function Profile() {
         {/* Account details card */}
         <View className="rounded-2xl bg-white p-5">
           <View className="mb-4 flex-row items-center justify-between">
-            <AppText type="subtitle">Account details</AppText>
+            <AppText type="label">Account details</AppText>
             <Pressable
               onPress={() => setIsEditing((prev) => !prev)}
               hitSlop={8}
             >
-              <AppText type="link" className="font-medium text-primary-500">
-                {isEditing ? "Cancel" : "Edit"}
-              </AppText>
+              <AppText type="link">{isEditing ? "Cancel" : "Edit"}</AppText>
             </Pressable>
           </View>
 
@@ -155,7 +153,7 @@ export default function Profile() {
               onOpenProfessionPicker={() => setProfessionPickerVisible(true)}
               isUpdatingProfile={isUpdatingProfile}
               canSave={canSave}
-              onSubmit={() => handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmit)}
             />
           ) : (
             <AccountDetailsView />
@@ -175,9 +173,7 @@ export default function Profile() {
           onPress={() => setLogoutDialogVisible(true)}
           className="mt-2"
         >
-          <AppText type="default" className="font-semibold text-white">
-            Log out
-          </AppText>
+          <AppText className="font-semibold text-white">Log out</AppText>
         </AppButton>
       </View>
 

@@ -4,7 +4,11 @@ export default function SmartNotesLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // Hide the stack header globally
+        headerShown: false,
+        headerStyle: { backgroundColor: "#FFFFFF" },
+        headerTintColor: "#17171C",
+        headerTitleStyle: { fontWeight: "600", fontSize: 16 },
+        headerShadowVisible: false,
       }}
     >
       <Stack.Screen
@@ -23,7 +27,6 @@ export default function SmartNotesLayout() {
           presentation: "modal",
         }}
       />
-
       <Stack.Screen
         name="folders"
         options={{

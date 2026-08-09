@@ -1,27 +1,37 @@
 import { clsx } from "clsx";
+import { forwardRef, useState } from "react";
 import { TextInput, type TextInputProps } from "react-native";
 
 export interface InputProps extends TextInputProps {
-  placeholder: string;
-  onChangeText: (text: string) => void;
   className?: string;
 }
 
-export const Input = function ({
-  placeholder,
-  onChangeText,
-  className,
-  ...rest
-}: InputProps) {
+export const Input = forwardRef<TextInput, InputProps>(function Input(
+  { className, onFocus, onBlur, ...rest },
+  ref,
+) {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <TextInput
-      {...rest}
+      ref={ref}
+      placeholderTextColor="#B4B4BF"
+      onFocus={(e) => {
+        setIsFocused(true);
+        onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        setIsFocused(false);
+        onBlur?.(e);
+      }}
       className={clsx(
-        "focus:border-primary-500 w-full rounded-lg border border-neutral-400 bg-white px-4 py-3 text-sm",
+        "h-[50px] rounded-2xl border px-4 font-roboto text-[14px] text-primary-500",
+        isFocused
+          ? "border-secondary-500 bg-white"
+          : "border-neutral-200 bg-neutral-50",
         className,
       )}
-      placeholder={placeholder}
-      onChangeText={onChangeText}
+      {...rest}
     />
   );
-};
+});

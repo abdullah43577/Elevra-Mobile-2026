@@ -22,6 +22,15 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const CATEGORY_META: Record<
+  "Note" | "Recording" | "Resume",
+  { color: string; icon: keyof typeof Ionicons.glyphMap }
+> = {
+  Note: { color: "#5B47E8", icon: "document-text-outline" },
+  Recording: { color: "#D6653D", icon: "mic-outline" },
+  Resume: { color: "#0F9B7A", icon: "document-outline" },
+};
+
 export default function Home() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
@@ -54,25 +63,16 @@ export default function Home() {
         <View className="px-4 pt-4">
           <View className="flex-row items-center justify-between">
             <View>
-              <AppText type="default" className="text-gray-500">
-                {getGreeting()}
-              </AppText>
-              <View className="flex-row items-center gap-2">
-                <AppText type="title" className="text-gray-900">
-                  {profile?.first_name || "User"}
-                </AppText>
-                <AppText type="subtitle" className="text-gray-400">
-                  👋
-                </AppText>
-              </View>
-              <AppText type="subtitle" className="text-gray-400">
+              <AppText type="subtitle">{getGreeting()}</AppText>
+              <AppText type="title">{profile?.first_name || "User"} 👋</AppText>
+              <AppText type="caption" className="mt-0.5">
                 {formatDate()}
               </AppText>
             </View>
 
             <TouchableOpacity
               onPress={() => router.push("/(dashboard)/(tabs)/profile")}
-              className="h-12 w-12 items-center justify-center rounded-full bg-blue-100"
+              className="h-12 w-12 items-center justify-center rounded-full bg-secondary-50"
             >
               {profile?.profile_pic ? (
                 <Image
@@ -80,7 +80,7 @@ export default function Home() {
                   className="h-12 w-12 rounded-full"
                 />
               ) : (
-                <AppText type="title" className="text-blue-600">
+                <AppText type="title" className="text-secondary-600">
                   {getInitials({ profile })}
                 </AppText>
               )}
@@ -89,44 +89,56 @@ export default function Home() {
         </View>
 
         {/* Stats */}
-        <View className="mt-4 flex-row gap-3 px-4">
-          <View className="flex-1 rounded-xl bg-blue-50 p-4">
-            <AppText type="title" className="text-blue-600">
+        <View className="mt-5 flex-row gap-3 px-4">
+          <View
+            className="flex-1 rounded-2xl p-4"
+            style={{ backgroundColor: `${CATEGORY_META.Note.color}12` }}
+          >
+            <AppText type="title" style={{ color: CATEGORY_META.Note.color }}>
               {notes.length}
             </AppText>
-            <AppText type="subtitle" className="text-gray-500">
+            <AppText type="caption" className="mt-0.5">
               Notes
             </AppText>
           </View>
-          <View className="flex-1 rounded-xl bg-purple-50 p-4">
-            <AppText type="title" className="text-purple-600">
+          <View
+            className="flex-1 rounded-2xl p-4"
+            style={{ backgroundColor: `${CATEGORY_META.Recording.color}12` }}
+          >
+            <AppText
+              type="title"
+              style={{ color: CATEGORY_META.Recording.color }}
+            >
               {recordings.length}
             </AppText>
-            <AppText type="subtitle" className="text-gray-500">
+            <AppText type="caption" className="mt-0.5">
               Recordings
             </AppText>
           </View>
-          <View className="flex-1 rounded-xl bg-green-50 p-4">
-            <AppText type="title" className="text-green-600">
+          <View
+            className="flex-1 rounded-2xl p-4"
+            style={{ backgroundColor: `${CATEGORY_META.Resume.color}12` }}
+          >
+            <AppText type="title" style={{ color: CATEGORY_META.Resume.color }}>
               {resumes.length}
             </AppText>
-            <AppText type="subtitle" className="text-gray-500">
+            <AppText type="caption" className="mt-0.5">
               Resumes
             </AppText>
           </View>
         </View>
 
         {/* Quick Actions */}
-        <View className="mt-6 px-4">
-          <AppText type="subtitle" className="mb-3 font-semibold text-gray-700">
-            Quick Actions
+        <View className="mt-7 px-4">
+          <AppText type="label" className="mb-3">
+            Quick actions
           </AppText>
           <View className="flex-row gap-3">
             {quickActions.map((action) => (
               <TouchableOpacity
                 key={action.id}
                 onPress={action.onPress}
-                className="flex-1 items-center rounded-xl bg-gray-50 py-4"
+                className="flex-1 items-center rounded-2xl py-4"
                 style={{ backgroundColor: `${action.color}10` }}
               >
                 <View
@@ -139,7 +151,7 @@ export default function Home() {
                     color={action.color}
                   />
                 </View>
-                <AppText type="subtitle" className="text-gray-700">
+                <AppText type="caption" className="text-primary-500">
                   {action.label}
                 </AppText>
               </TouchableOpacity>
@@ -148,45 +160,31 @@ export default function Home() {
         </View>
 
         {/* Recent Activity */}
-        <View className="mt-6 px-4 pb-8">
+        <View className="mt-7 px-4 pb-8">
           <View className="mb-3 flex-row items-center justify-between">
-            <AppText type="subtitle" className="font-semibold text-gray-700">
-              Recent Activity
-            </AppText>
+            <AppText type="label">Recent activity</AppText>
             {recentItems.length > 0 && (
               <TouchableOpacity>
-                <AppText type="link" className="text-blue-500">
-                  See all
-                </AppText>
+                <AppText type="link">See all</AppText>
               </TouchableOpacity>
             )}
           </View>
 
           {recentItems.length === 0 ? (
-            <View className="items-center rounded-xl bg-gray-50 py-8">
-              <Ionicons name="time-outline" size={40} color="#D1D5DB" />
-              <AppText type="subtitle" className="mt-2 text-gray-400">
+            <View className="items-center rounded-2xl bg-neutral-50 py-8">
+              <Ionicons name="time-outline" size={40} color="#D5D5DE" />
+              <AppText type="subtitle" className="mt-2">
                 No recent activity
               </AppText>
-              <AppText type="default" className="text-gray-400">
+              <AppText type="caption" className="mt-1 px-8 text-center">
                 Your recent notes, resumes, and recordings will appear here
               </AppText>
             </View>
           ) : (
             <View className="gap-2">
               {recentItems.map((item) => {
-                const iconMap: Record<string, keyof typeof Ionicons.glyphMap> =
-                  {
-                    Note: "document-text-outline",
-                    Resume: "document-outline",
-                    Recording: "mic-outline",
-                  };
-
-                const colorMap: Record<string, string> = {
-                  Note: "#3B82F6",
-                  Resume: "#10B981",
-                  Recording: "#8B5CF6",
-                };
+                const meta =
+                  CATEGORY_META[item.type as keyof typeof CATEGORY_META];
 
                 return (
                   <TouchableOpacity
@@ -194,37 +192,25 @@ export default function Home() {
                     onPress={() => {
                       router.push({
                         pathname: item.route as any,
-                        params:
-                          item.type === "Note"
-                            ? { id: item.id }
-                            : { id: item.id },
+                        params: { id: item.id },
                       });
                     }}
-                    className="flex-row items-center rounded-xl border border-gray-100 bg-white p-3"
+                    className="flex-row items-center rounded-2xl border border-neutral-100 bg-white p-3"
                   >
                     <View
                       className="mr-3 h-10 w-10 items-center justify-center rounded-full"
-                      style={{ backgroundColor: `${colorMap[item.type]}20` }}
+                      style={{ backgroundColor: `${meta.color}20` }}
                     >
-                      <Ionicons
-                        name={iconMap[item.type]}
-                        size={20}
-                        color={colorMap[item.type]}
-                      />
+                      <Ionicons name={meta.icon} size={20} color={meta.color} />
                     </View>
                     <View className="flex-1">
-                      <AppText
-                        type="default"
-                        className="font-medium text-gray-900"
-                      >
+                      <AppText type="body" className="font-medium">
                         {item.title}
                       </AppText>
                       <View className="flex-row items-center gap-2">
-                        <AppText type="subtitle" className="text-gray-400">
-                          {item.type}
-                        </AppText>
-                        <View className="h-1 w-1 rounded-full bg-gray-300" />
-                        <AppText type="subtitle" className="text-gray-400">
+                        <AppText type="caption">{item.type}</AppText>
+                        <View className="h-1 w-1 rounded-full bg-neutral-300" />
+                        <AppText type="caption">
                           {new Date(item.date).toLocaleDateString()}
                         </AppText>
                       </View>
@@ -232,7 +218,7 @@ export default function Home() {
                     <Ionicons
                       name="chevron-forward"
                       size={20}
-                      color="#D1D5DB"
+                      color="#D5D5DE"
                     />
                   </TouchableOpacity>
                 );

@@ -27,7 +27,7 @@ export default function WorkspacesHub() {
         <AppText type="title" className="mb-1">
           Workspaces
         </AppText>
-        <AppText type="default" className="mb-6 text-neutral-500">
+        <AppText type="subtitle" className="mb-6">
           Everything you need, in one place
         </AppText>
 

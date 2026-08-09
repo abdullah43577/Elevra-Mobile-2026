@@ -40,7 +40,7 @@ export const FormInput = function <TFieldValues extends FieldValues>({
 
   return (
     <View>
-      <AppText type="subtitle" className="mb-1">
+      <AppText type="label" className="mb-1.5">
         {label}
       </AppText>
 
@@ -53,7 +53,7 @@ export const FormInput = function <TFieldValues extends FieldValues>({
               placeholder={placeholder ?? "Enter text"}
               inputMode={type === "email" ? "email" : "text"}
               secureTextEntry={type === "password" && !showPassword}
-              className={clsx(type === "password" && "pr-10", className)}
+              className={clsx(type === "password" && "pr-11", className)}
               onChangeText={onChange}
               onBlur={onBlur}
               value={value as string}
@@ -66,13 +66,13 @@ export const FormInput = function <TFieldValues extends FieldValues>({
               <View className="relative">
                 {input}
                 <Pressable
-                  className="absolute bottom-0 right-3 top-0 justify-center"
+                  className="absolute bottom-0 right-4 top-0 justify-center"
                   onPress={() => setShowPassword((prev) => !prev)}
                 >
                   {showPassword ? (
-                    <EyeSlash size={18} color="#74777f" variant="Linear" />
+                    <EyeSlash size={18} color="#7D7D8A" variant="Linear" />
                   ) : (
-                    <Eye size={18} color="#74777f" variant="Linear" />
+                    <Eye size={18} color="#7D7D8A" variant="Linear" />
                   )}
                 </Pressable>
               </View>
@@ -84,7 +84,7 @@ export const FormInput = function <TFieldValues extends FieldValues>({
       />
 
       {errorMessage && (
-        <AppText type="subtitle" className="mt-1 text-error-500">
+        <AppText type="caption" className="mt-1 text-error-500">
           {errorMessage}
         </AppText>
       )}
