@@ -1,14 +1,14 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
+import { useLogin } from "@/hooks/auth/use-login";
 import { signInSchema, type SignInFormValues } from "@/schemas/auth/sign-in";
+import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AntDesign } from "@expo/vector-icons";
-import { useLogin } from "@/hooks/auth/use-login";
 
 export default function SignIn() {
   const {
@@ -35,7 +35,7 @@ export default function SignIn() {
       <View className="flex-1 justify-center px-6 py-10">
         {/* Mark */}
         <View className="mb-6 h-10 w-10 items-center justify-center rounded-xl bg-primary-500">
-          <AppText className="font-bold text-white">E</AppText>
+          <AppText className="font-bricolage-bold text-white">E</AppText>
         </View>
 
         {/* Header */}
@@ -82,7 +82,7 @@ export default function SignIn() {
             onPress={handleSubmit(onSubmit)}
             className="mt-1"
           >
-            <AppText className="font-semibold text-white">
+            <AppText className="font-bricolage-semibold text-white">
               {isPending ? "Signing in..." : "Sign in"}
             </AppText>
           </AppButton>
@@ -101,14 +101,20 @@ export default function SignIn() {
         <View className="flex-row gap-3">
           <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-neutral-50 active:opacity-70">
             <AntDesign name="google" size={16} color="#17171C" />
-            <AppText type="body" className="text-[13px] font-semibold">
+            <AppText
+              type="body"
+              className="font-bricolage-semibold text-[13px]"
+            >
               Google
             </AppText>
           </Pressable>
 
           <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-neutral-50 active:opacity-70">
             <AntDesign name="apple" size={16} color="#17171C" />
-            <AppText type="body" className="text-[13px] font-semibold">
+            <AppText
+              type="body"
+              className="font-bricolage-semibold text-[13px]"
+            >
               Apple
             </AppText>
           </Pressable>

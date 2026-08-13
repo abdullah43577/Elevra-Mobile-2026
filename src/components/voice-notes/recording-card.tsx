@@ -1,10 +1,9 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Pressable } from "react-native";
+import { useDeleteRecording } from "@/hooks/voice-notes/use-delete-recording";
 import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { VoiceRecording } from "../../../types/voice-notes";
 import { AppText } from "../shared/app-text";
-import { useDeleteRecording } from "@/hooks/voice-notes/use-delete-recording";
 
 interface RecordingCardProps {
   recording: VoiceRecording;
@@ -39,7 +38,7 @@ export function RecordingCard({
         <View className="flex-1">
           <View className="flex-row items-center gap-2">
             <Ionicons name="mic-outline" size={20} color="#3B82F6" />
-            <AppText className="flex-1 text-base font-semibold text-gray-900">
+            <AppText className="font-bricolage-semibold flex-1 text-base text-gray-900">
               {recording.title}
             </AppText>
           </View>

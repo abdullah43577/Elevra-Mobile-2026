@@ -120,7 +120,7 @@ export default function Notifications() {
             <View className="flex-row items-center justify-between">
               <AppText
                 type="default"
-                className={`font-medium ${
+                className={`font-bricolage-medium ${
                   item.read ? "text-gray-700" : "text-gray-900"
                 }`}
               >

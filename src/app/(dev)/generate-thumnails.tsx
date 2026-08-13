@@ -1,17 +1,17 @@
-import React, { useState, useRef } from "react";
+import { TemplateRenderer } from "@/components/resume/template-renderer";
+import { AppText } from "@/components/shared/app-text";
+import { useGetTemplates } from "@/hooks/resume/use-get-templates";
+import { useUploadTemplateThumbnail } from "@/hooks/resume/use-upload-template-thumbnail";
+import { showToast } from "@/utils/show-toast";
+import { useRef, useState } from "react";
 import {
-  View,
+  ActivityIndicator,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { captureRef } from "react-native-view-shot";
-import { useGetTemplates } from "@/hooks/resume/use-get-templates";
-import { useUploadTemplateThumbnail } from "@/hooks/resume/use-upload-template-thumbnail";
-import { AppText } from "@/components/shared/app-text";
-import { showToast } from "@/utils/show-toast";
-import { TemplateRenderer } from "@/components/resume/template-renderer";
 
 export default function GenerateThumbnails() {
   const [generating, setGenerating] = useState(false);
@@ -92,7 +92,9 @@ export default function GenerateThumbnails() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="p-4">
-        <AppText className="text-2xl font-bold">Generate Thumbnails</AppText>
+        <AppText className="font-bricolage-bold text-2xl">
+          Generate Thumbnails
+        </AppText>
         <AppText className="text-gray-500">
           This will generate thumbnails for all templates
         </AppText>
@@ -105,7 +107,7 @@ export default function GenerateThumbnails() {
           {generating ? (
             <ActivityIndicator size="small" color="white" />
           ) : (
-            <AppText className="text-center font-semibold text-white">
+            <AppText className="font-bricolage-semibold text-center text-white">
               Generate All Thumbnails ({templates.length})
             </AppText>
           )}

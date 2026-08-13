@@ -1,5 +1,5 @@
-import { View } from "react-native";
 import { AppText } from "@/components/shared/app-text";
+import { View } from "react-native";
 import { CreativeSplitLayoutProps } from "../../../types/resume/layouts/types";
 
 export function CreativeSplitLayout({
@@ -25,7 +25,11 @@ export function CreativeSplitLayout({
       >
         {/* Name block */}
         <AppText
-          className={isThumbnail ? "text-base font-bold" : "text-xl font-bold"}
+          className={
+            isThumbnail
+              ? "font-bricolage-bold text-base"
+              : "font-bricolage-bold text-xl"
+          }
           style={{ color: sidebarText }}
         >
           {personalInfo?.firstName} {personalInfo?.lastName}
@@ -130,8 +134,8 @@ export function CreativeSplitLayout({
                   <AppText
                     className={
                       isThumbnail
-                        ? "text-[10px] font-semibold text-gray-900"
-                        : "font-semibold text-gray-900"
+                        ? "font-bricolage-semibold text-[10px] text-gray-900"
+                        : "font-bricolage-semibold text-gray-900"
                     }
                   >
                     {exp.position}
@@ -164,7 +168,7 @@ export function CreativeSplitLayout({
             />
             {education.map((edu, i) => (
               <View key={i} className="mt-2">
-                <AppText className="font-semibold text-gray-900">
+                <AppText className="font-bricolage-semibold text-gray-900">
                   {edu.degree}
                 </AppText>
                 <AppText className="text-sm text-gray-500">
@@ -183,7 +187,7 @@ export function CreativeSplitLayout({
             />
             {projects.map((proj, i) => (
               <View key={i} className="mt-2">
-                <AppText className="font-semibold text-gray-900">
+                <AppText className="font-bricolage-semibold text-gray-900">
                   {proj.name}
                 </AppText>
                 {proj.description && (
@@ -215,8 +219,8 @@ function SidebarLabel({
     <AppText
       className={
         isThumbnail
-          ? "text-[9px] font-semibold uppercase tracking-wide"
-          : "text-xs font-semibold uppercase tracking-wide"
+          ? "font-bricolage-semibold text-[9px] uppercase tracking-wide"
+          : "font-bricolage-semibold text-xs uppercase tracking-wide"
       }
       style={{ color, opacity: 0.7 }}
     >
@@ -257,8 +261,8 @@ function MainLabel({
     <AppText
       className={
         isThumbnail
-          ? "text-[10px] font-bold uppercase tracking-wide"
-          : "text-sm font-bold uppercase tracking-wide"
+          ? "font-bricolage-bold text-[10px] uppercase tracking-wide"
+          : "font-bricolage-bold text-sm uppercase tracking-wide"
       }
       style={{ color }}
     >

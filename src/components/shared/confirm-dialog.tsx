@@ -35,7 +35,7 @@ export const ConfirmDialog = function ({
       modalProps={{ onBackdropPress: isLoading ? undefined : onCancel }}
     >
       {message && (
-        <AppText type="default" className="text-primary-400 mb-5">
+        <AppText type="default" className="mb-5 text-primary-400">
           {message}
         </AppText>
       )}
@@ -43,11 +43,14 @@ export const ConfirmDialog = function ({
       <View className="flex-row gap-3">
         <AppButton
           type="default"
-          className="bg-primary-100 flex-1"
+          className="flex-1 bg-primary-100"
           onPress={onCancel}
           disabled={isLoading}
         >
-          <AppText type="default" className="font-semibold text-white">
+          <AppText
+            type="default"
+            className="font-bricolage-semibold text-white"
+          >
             {cancelLabel}
           </AppText>
         </AppButton>
@@ -59,7 +62,10 @@ export const ConfirmDialog = function ({
           isLoading={isLoading}
           disabled={isLoading}
         >
-          <AppText type="default" className="font-semibold text-white">
+          <AppText
+            type="default"
+            className="font-bricolage-semibold text-white"
+          >
             {isLoading ? "Please wait…" : confirmLabel}
           </AppText>
         </AppButton>

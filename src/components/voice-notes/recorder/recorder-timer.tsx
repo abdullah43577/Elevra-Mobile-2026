@@ -1,6 +1,6 @@
-import { View } from "react-native";
 import { AppText } from "@/components/shared/app-text";
 import { formatTime } from "@/provider/utils";
+import { View } from "react-native";
 
 interface RecorderTimerProps {
   elapsedTime: number;
@@ -20,7 +20,7 @@ export function RecorderTimer({
 
   return (
     <View className="items-center">
-      <AppText className="mb-8 text-6xl font-bold text-gray-900">
+      <AppText className="font-bricolage-bold mb-8 text-6xl text-gray-900">
         {formatTime(elapsedTime)}
       </AppText>
 

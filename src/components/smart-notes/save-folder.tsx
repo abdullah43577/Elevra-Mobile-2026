@@ -1,14 +1,14 @@
+import { COLORS } from "@/constants/colors";
+import { Ionicons } from "@expo/vector-icons";
 import { Dispatch, SetStateAction } from "react";
-import { AppModal } from "../shared/app-modal";
 import {
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { AppModal } from "../shared/app-modal";
 import { AppText } from "../shared/app-text";
-import { COLORS } from "@/constants/colors";
 
 interface Props {
   isModalVisible: boolean;
@@ -53,7 +53,7 @@ export const SaveFolder = function ({
         />
 
         {/* Color Picker */}
-        <AppText className="mb-2 text-sm font-medium text-gray-700">
+        <AppText className="font-bricolage-medium mb-2 text-sm text-gray-700">
           Color
         </AppText>
         <View className="mb-6 flex-row flex-wrap gap-3">
@@ -79,7 +79,7 @@ export const SaveFolder = function ({
             className="flex-1 rounded-lg bg-gray-100 py-3"
             disabled={isSaving}
           >
-            <AppText className="text-center font-semibold text-gray-700">
+            <AppText className="font-bricolage-semibold text-center text-gray-700">
               Cancel
             </AppText>
           </TouchableOpacity>
@@ -91,7 +91,7 @@ export const SaveFolder = function ({
             {isSaving ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
-              <AppText className="text-center font-semibold text-white">
+              <AppText className="font-bricolage-semibold text-center text-white">
                 {editingFolder ? "Update" : "Create"}
               </AppText>
             )}

@@ -1,6 +1,6 @@
-import { View, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity, View } from "react-native";
 
 interface PlaybackHeaderProps {
   onBack: () => void;
@@ -12,7 +12,7 @@ export function PlaybackHeader({ onBack }: PlaybackHeaderProps) {
       <TouchableOpacity onPress={onBack} className="p-1">
         <Ionicons name="arrow-back" size={24} color="#6B7280" />
       </TouchableOpacity>
-      <AppText className="text-lg font-semibold text-gray-900">
+      <AppText className="font-bricolage-semibold text-lg text-gray-900">
         Playback
       </AppText>
       <View className="w-10" />

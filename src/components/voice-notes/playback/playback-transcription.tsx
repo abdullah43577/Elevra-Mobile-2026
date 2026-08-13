@@ -1,5 +1,5 @@
-import { View } from "react-native";
 import { AppText } from "@/components/shared/app-text";
+import { View } from "react-native";
 
 interface PlaybackTranscriptionProps {
   isTranscribed: boolean;
@@ -13,7 +13,7 @@ export function PlaybackTranscription({
   if (isTranscribed && transcription) {
     return (
       <View className="mb-6 rounded-xl bg-blue-50 p-4">
-        <AppText className="mb-1 text-xs font-medium text-blue-700">
+        <AppText className="font-bricolage-medium mb-1 text-xs text-blue-700">
           Transcription
         </AppText>
         <AppText className="text-sm text-gray-700">{transcription}</AppText>

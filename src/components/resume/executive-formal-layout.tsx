@@ -1,5 +1,5 @@
-import { View } from "react-native";
 import { AppText } from "@/components/shared/app-text";
+import { View } from "react-native";
 import { ExecutiveFormalLayoutProps } from "../../../types/resume/layouts/types";
 
 export function ExecutiveFormalLayout({
@@ -27,7 +27,11 @@ export function ExecutiveFormalLayout({
       {/* Header — centered, formal */}
       <View className="items-center">
         <AppText
-          className={isThumbnail ? "text-sm font-bold" : "text-2xl font-bold"}
+          className={
+            isThumbnail
+              ? "font-bricolage-bold text-sm"
+              : "font-bricolage-bold text-2xl"
+          }
           style={{ color: theme.primaryColor, ...headingStyle }}
         >
           {personalInfo?.firstName?.toUpperCase()}{" "}
@@ -111,8 +115,8 @@ export function ExecutiveFormalLayout({
                 <AppText
                   className={
                     isThumbnail
-                      ? "text-[9px] font-semibold text-gray-900"
-                      : "font-semibold text-gray-900"
+                      ? "font-bricolage-semibold text-[9px] text-gray-900"
+                      : "font-bricolage-semibold text-gray-900"
                   }
                 >
                   {exp.position}
@@ -163,7 +167,7 @@ export function ExecutiveFormalLayout({
           {education.map((edu, i) => (
             <View key={i} className="mt-2 flex-row justify-between">
               <View>
-                <AppText className="font-semibold text-gray-900">
+                <AppText className="font-bricolage-semibold text-gray-900">
                   {edu.degree}
                 </AppText>
                 <AppText className="text-sm text-gray-600">
@@ -245,7 +249,7 @@ export function ExecutiveFormalLayout({
           <SectionLabel text="References" gold={gold} />
           {references.map((ref, i) => (
             <View key={i} className="mt-1.5 items-center">
-              <AppText className="text-sm font-semibold text-gray-900">
+              <AppText className="font-bricolage-semibold text-sm text-gray-900">
                 {ref.name}
               </AppText>
               <AppText className="text-xs text-gray-500">
@@ -272,8 +276,8 @@ function SectionLabel({
     <AppText
       className={
         isThumbnail
-          ? "text-center text-[9px] font-bold uppercase tracking-widest"
-          : "text-center text-sm font-bold uppercase tracking-widest"
+          ? "font-bricolage-bold text-center text-[9px] uppercase tracking-widest"
+          : "font-bricolage-bold text-center text-sm uppercase tracking-widest"
       }
       style={{ color: gold }}
     >

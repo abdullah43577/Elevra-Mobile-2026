@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const STATUS_OPTIONS = ["All", "Pinned", "Archived"];
@@ -82,7 +82,7 @@ export default function Filter() {
           onPress={() => router.back()}
           className="items-center rounded-2xl bg-secondary-500 py-3"
         >
-          <AppText type="body" className="font-semibold text-white">
+          <AppText type="body" className="font-bricolage-semibold text-white">
             Apply filters
           </AppText>
         </TouchableOpacity>

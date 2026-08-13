@@ -1,6 +1,6 @@
 import { Image, TouchableOpacity, View } from "react-native";
-import { AppText } from "../shared/app-text";
 import { AnyTemplate } from "../../../types/resume/template";
+import { AppText } from "../shared/app-text";
 
 export const TemplateCard = function ({
   item,
@@ -31,7 +31,10 @@ export const TemplateCard = function ({
         {/* Info */}
         <View className="mt-2">
           <View className="flex-row items-center justify-between">
-            <AppText type="subtitle" className="font-semibold text-gray-900">
+            <AppText
+              type="subtitle"
+              className="font-bricolage-semibold text-gray-900"
+            >
               {item.name}
             </AppText>
             {item.isPremium && (

@@ -1,22 +1,16 @@
-import { useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AppText } from "@/components/shared/app-text";
-import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
-import { useGetResumeById } from "@/hooks/resume/use-get-resume-by-id";
-import { useSaveResume } from "@/hooks/resume/use-save-resume";
+import { Certifications } from "@/components/resume-studio/resume-builder/certification";
+import { Education } from "@/components/resume-studio/resume-builder/education";
+import { Experience } from "@/components/resume-studio/resume-builder/experience";
+import { Languages } from "@/components/resume-studio/resume-builder/languages";
+import { PersonalInfo } from "@/components/resume-studio/resume-builder/personal-info";
+import { Projects } from "@/components/resume-studio/resume-builder/projects";
+import { References } from "@/components/resume-studio/resume-builder/references";
+import { Skills } from "@/components/resume-studio/resume-builder/skills";
 import { TemplateRenderer } from "@/components/resume/template-renderer";
-import { showToast } from "@/utils/show-toast";
+import { AppText } from "@/components/shared/app-text";
+import { useGetResumeById } from "@/hooks/resume/use-get-resume-by-id";
+import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
+import { useSaveResume } from "@/hooks/resume/use-save-resume";
 import {
   DEFAULT_CERTIFICATION,
   DEFAULT_EDUCATION,
@@ -28,14 +22,15 @@ import {
   ResumeBuilderFormValues,
   resumeBuilderSchema,
 } from "@/schemas/resume-builder/resume-builder";
-import { PersonalInfo } from "@/components/resume-studio/resume-builder/personal-info";
-import { Experience } from "@/components/resume-studio/resume-builder/experience";
-import { Education } from "@/components/resume-studio/resume-builder/education";
-import { Skills } from "@/components/resume-studio/resume-builder/skills";
-import { Languages } from "@/components/resume-studio/resume-builder/languages";
-import { Certifications } from "@/components/resume-studio/resume-builder/certification";
-import { Projects } from "@/components/resume-studio/resume-builder/projects";
-import { References } from "@/components/resume-studio/resume-builder/references";
+import { showToast } from "@/utils/show-toast";
+import { Ionicons } from "@expo/vector-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SECTIONS = [
   { id: "personal", label: "Personal Info", icon: "person-outline" },
@@ -225,7 +220,7 @@ export default function ResumeBuilder() {
         <TouchableOpacity onPress={() => router.back()} className="p-1">
           <Ionicons name="arrow-back" size={24} color="#6B7280" />
         </TouchableOpacity>
-        <AppText type="title" className="font-semibold text-gray-900">
+        <AppText type="title" className="font-bricolage-semibold text-gray-900">
           {isEditing ? "Edit Resume" : "Build Resume"}
         </AppText>
         <TouchableOpacity
@@ -271,7 +266,7 @@ export default function ResumeBuilder() {
             <View className="flex-1">
               <AppText
                 type="subtitle"
-                className="mb-2 text-sm font-medium text-gray-700"
+                className="font-bricolage-medium mb-2 text-sm text-gray-700"
               >
                 Resume Preview
               </AppText>
@@ -294,7 +289,7 @@ export default function ResumeBuilder() {
             </View>
           ) : (
             <View>
-              <AppText className="mb-1 text-xl font-bold text-gray-900">
+              <AppText className="font-bricolage-bold mb-1 text-xl text-gray-900">
                 {currentSection.label}
               </AppText>
 
@@ -380,7 +375,9 @@ export default function ResumeBuilder() {
             activeSection === 0 ? "opacity-50" : ""
           }`}
         >
-          <AppText className="font-semibold text-gray-500">Previous</AppText>
+          <AppText className="font-bricolage-semibold text-gray-500">
+            Previous
+          </AppText>
         </TouchableOpacity>
 
         {activeSection === SECTIONS.length - 1 ? (
@@ -392,7 +389,7 @@ export default function ResumeBuilder() {
             {isSaving ? (
               <ActivityIndicator size="small" color="white" />
             ) : (
-              <AppText className="font-semibold text-white">
+              <AppText className="font-bricolage-semibold text-white">
                 {isEditing ? "Update Resume" : "Create Resume"}
               </AppText>
             )}
@@ -402,7 +399,9 @@ export default function ResumeBuilder() {
             onPress={handleNext}
             className="rounded-lg bg-blue-500 px-8 py-3"
           >
-            <AppText className="font-semibold text-white">Next</AppText>
+            <AppText className="font-bricolage-semibold text-white">
+              Next
+            </AppText>
           </TouchableOpacity>
         )}
       </View>

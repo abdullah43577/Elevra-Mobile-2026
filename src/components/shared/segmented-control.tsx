@@ -29,7 +29,7 @@ export const SegmentedControl = function <T extends string>({
   disabled,
 }: SegmentedControlProps<T>) {
   return (
-    <View className="bg-primary-100 flex-row rounded-lg p-1">
+    <View className="flex-row rounded-lg bg-primary-100 p-1">
       {options.map((option) => {
         const isActive = option.value === value;
         return (
@@ -47,7 +47,9 @@ export const SegmentedControl = function <T extends string>({
             <AppText
               type="default"
               className={
-                isActive ? "font-medium text-primary-500" : "text-primary-300"
+                isActive
+                  ? "font-bricolage-medium text-primary-500"
+                  : "text-primary-300"
               }
             >
               {option.label}

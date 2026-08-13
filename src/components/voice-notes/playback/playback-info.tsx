@@ -1,7 +1,7 @@
-import { View } from "react-native";
+import { AppText } from "@/components/shared/app-text";
 import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
-import { AppText } from "@/components/shared/app-text";
+import { View } from "react-native";
 
 interface PlaybackInfoProps {
   title: string;
@@ -22,7 +22,7 @@ export function PlaybackInfo({
 
   return (
     <View>
-      <AppText className="mb-2 text-2xl font-bold text-gray-900">
+      <AppText className="font-bricolage-bold mb-2 text-2xl text-gray-900">
         {title}
       </AppText>
 

@@ -1,22 +1,22 @@
+import { AppText } from "@/components/shared/app-text";
+import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
+import { FormInput } from "@/components/shared/form-input";
+import {
+  DEFAULT_LANGUAGE,
+  ResumeBuilderFormValues,
+} from "@/schemas/resume-builder/resume-builder";
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
 import {
   Control,
-  FieldErrors,
   FieldArrayWithId,
+  FieldErrors,
   UseFieldArrayAppend,
   UseFieldArrayRemove,
   UseFormSetValue,
   useWatch,
 } from "react-hook-form";
-import { Ionicons } from "@expo/vector-icons";
-import { FormInput } from "@/components/shared/form-input";
-import { AppText } from "@/components/shared/app-text";
-import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
-import {
-  DEFAULT_LANGUAGE,
-  ResumeBuilderFormValues,
-} from "@/schemas/resume-builder/resume-builder";
+import { TouchableOpacity, View } from "react-native";
 
 interface LanguagesProps {
   control: Control<ResumeBuilderFormValues>;
@@ -64,7 +64,10 @@ export function Languages({
             className="mb-6 gap-4 rounded-xl border border-gray-200 p-5"
           >
             <View className="mb-4 flex-row items-center justify-between">
-              <AppText type="subtitle" className="font-medium text-gray-700">
+              <AppText
+                type="subtitle"
+                className="font-bricolage-medium text-gray-700"
+              >
                 Language {index + 1}
               </AppText>
               {fields.length > 1 && (

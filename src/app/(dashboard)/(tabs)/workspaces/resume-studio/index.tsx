@@ -1,17 +1,17 @@
-import { useState } from "react";
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  TextInput,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { TemplateCard } from "@/components/resume-studio/template-card";
 import { AppText } from "@/components/shared/app-text";
 import { useGetTemplates } from "@/hooks/resume/use-get-templates";
-import { TemplateCard } from "@/components/resume-studio/template-card";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Resumes from "./resumes";
 
 const CATEGORIES = ["All", "professional", "creative", "minimal", "executive"];
@@ -40,7 +40,7 @@ export default function ResumeStudio() {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header with Tab Switcher */}
       <View className="px-4 pb-2 pt-4">
-        <AppText type="title" className="font-bold text-gray-900">
+        <AppText type="title" className="font-bricolage-bold text-gray-900">
           Resume Studio
         </AppText>
         <AppText type="subtitle" className="text-gray-500">
@@ -67,7 +67,7 @@ export default function ResumeStudio() {
             }
           >
             <AppText
-              className={`text-center font-medium ${
+              className={`font-bricolage-medium text-center ${
                 activeTab === "templates" ? "text-blue-500" : "text-gray-500"
               }`}
             >
@@ -92,7 +92,7 @@ export default function ResumeStudio() {
             }
           >
             <AppText
-              className={`text-center font-medium ${
+              className={`font-bricolage-medium text-center ${
                 activeTab === "resumes" ? "text-blue-500" : "text-gray-500"
               }`}
             >

@@ -1,10 +1,10 @@
 import { ProfileFormValues } from "@/schemas/settings/profile";
 import { Control, FieldErrors } from "react-hook-form";
 import { Pressable, View } from "react-native";
-import { FormInput } from "../shared/form-input";
-import { AppText } from "../shared/app-text";
-import { FormSegmentedControl } from "../shared/form-segmented-control";
 import { AppButton } from "../shared/app-button";
+import { AppText } from "../shared/app-text";
+import { FormInput } from "../shared/form-input";
+import { FormSegmentedControl } from "../shared/form-segmented-control";
 
 interface Props {
   control: Control<ProfileFormValues>;
@@ -43,7 +43,7 @@ export const AccountDetailsEdit = function ({
       <View>
         <AppText
           type="default"
-          className="mb-1.5 text-sm font-medium text-neutral-700"
+          className="font-bricolage-medium mb-1.5 text-sm text-neutral-700"
         >
           Profession
         </AppText>
@@ -85,7 +85,7 @@ export const AccountDetailsEdit = function ({
         onPress={onSubmit}
         className="mt-1"
       >
-        <AppText type="default" className="font-semibold text-white">
+        <AppText type="default" className="font-bricolage-semibold text-white">
           {isUpdatingProfile ? "Saving…" : "Save changes"}
         </AppText>
       </AppButton>

@@ -1,8 +1,16 @@
-import { AppText } from "@/components/shared/app-text";
+import { AccountDetailsEdit } from "@/components/profile/account-details-edit";
+import { AccountDetailsView } from "@/components/profile/account-details-view";
+import { AccountPreferencesCard } from "@/components/profile/account-preferences-card";
+import { ProfileHeader } from "@/components/profile/profile-header";
 import { AppButton } from "@/components/shared/app-button";
-import { SegmentedControl } from "@/components/shared/segmented-control";
-import { ToggleSwitch } from "@/components/shared/toggle-switch";
+import { AppText } from "@/components/shared/app-text";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { ProfessionPicker } from "@/components/shared/profession-picker";
+import { useUpdateProfile } from "@/hooks/profile/use-update-profile";
+import { useUpdateSettings } from "@/hooks/profile/use-update-settings";
 import { useGetProfile } from "@/hooks/use-get-profile";
+import { useImagePicker } from "@/hooks/use-image-picker";
+import { ProfileFormValues, profileSchema } from "@/schemas/settings/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,16 +21,6 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { useUpdateProfile } from "@/hooks/profile/use-update-profile";
-import { useUpdateSettings } from "@/hooks/profile/use-update-settings";
-import { ProfileFormValues, profileSchema } from "@/schemas/settings/profile";
-import { useImagePicker } from "@/hooks/use-image-picker";
-import { ProfessionPicker } from "@/components/shared/profession-picker";
-import { AccountDetailsEdit } from "@/components/profile/account-details-edit";
-import { ProfileHeader } from "@/components/profile/profile-header";
-import { AccountDetailsView } from "@/components/profile/account-details-view";
-import { AccountPreferencesCard } from "@/components/profile/account-preferences-card";
 
 export default function Profile() {
   const { profile, isFetchingProfile, refetch, logout } = useGetProfile();
@@ -173,7 +171,9 @@ export default function Profile() {
           onPress={() => setLogoutDialogVisible(true)}
           className="mt-2"
         >
-          <AppText className="font-semibold text-white">Log out</AppText>
+          <AppText className="font-bricolage-semibold text-white">
+            Log out
+          </AppText>
         </AppButton>
       </View>
 

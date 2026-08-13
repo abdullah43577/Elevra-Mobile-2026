@@ -1,5 +1,4 @@
-import { router } from "expo-router";
-import { View, Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppText } from "./app-text";
 
@@ -43,7 +42,7 @@ export const ErrorFallback = ({
           </View>
 
           {/* Title */}
-          <AppText className="mb-3 text-center text-lg font-semibold text-[#374151]">
+          <AppText className="font-bricolage-semibold mb-3 text-center text-lg text-[#374151]">
             {title}
           </AppText>
 
@@ -59,7 +58,7 @@ export const ErrorFallback = ({
                 className="rounded-[8px] bg-gray-500 px-6 py-3"
                 onPress={handleGoBack}
               >
-                <Text className="text-sm font-semibold text-white">
+                <Text className="text-sm font-bricolage-semibold text-white">
                   Go Back
                 </Text>
               </TouchableOpacity> */}
@@ -68,7 +67,7 @@ export const ErrorFallback = ({
                 className="rounded-[8px] bg-green-500 px-6 py-3"
                 onPress={onRetry}
               >
-                <AppText className="text-sm font-semibold text-white">
+                <AppText className="font-bricolage-semibold text-sm text-white">
                   Try Again
                 </AppText>
               </TouchableOpacity>

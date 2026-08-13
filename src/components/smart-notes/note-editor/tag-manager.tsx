@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface Tag {
   id: string;
@@ -58,7 +58,9 @@ export function TagManager({
 
   return (
     <View className="mb-4">
-      <Text className="mb-2 text-sm font-medium text-gray-700">Tags</Text>
+      <Text className="font-bricolage-medium mb-2 text-sm text-gray-700">
+        Tags
+      </Text>
 
       {/* Selected Tags */}
       {selectedTags.length > 0 && (

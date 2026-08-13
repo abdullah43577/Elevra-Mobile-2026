@@ -1,5 +1,5 @@
-import { View } from "react-native";
 import { AppText } from "@/components/shared/app-text";
+import { View } from "react-native";
 import { MinimalCompactLayoutProps } from "../../../types/resume/layouts/types";
 
 // Small text-based glyphs — avoids pulling in an icon library just for this;
@@ -34,7 +34,11 @@ export function MinimalCompactLayout({
       {/* Header — left-aligned, no ornamentation */}
       <View className={isThumbnail ? "mb-1.5" : "mb-3"}>
         <AppText
-          className={isThumbnail ? "text-sm font-bold" : "text-xl font-bold"}
+          className={
+            isThumbnail
+              ? "font-bricolage-bold text-sm"
+              : "font-bricolage-bold text-xl"
+          }
           style={{ color: theme.primaryColor }}
         >
           {personalInfo?.firstName} {personalInfo?.lastName}
@@ -113,8 +117,8 @@ export function MinimalCompactLayout({
                     <AppText
                       className={
                         isThumbnail
-                          ? "text-[9px] font-semibold text-gray-900"
-                          : "text-sm font-semibold text-gray-900"
+                          ? "font-bricolage-semibold text-[9px] text-gray-900"
+                          : "font-bricolage-semibold text-sm text-gray-900"
                       }
                     >
                       {exp.position} · {exp.company}
@@ -148,7 +152,7 @@ export function MinimalCompactLayout({
             <SectionLabel text="Education" color={theme.primaryColor} />
             {education.map((edu, i) => (
               <View key={i} className="mt-1.5 flex-row justify-between">
-                <AppText className="text-sm font-semibold text-gray-900">
+                <AppText className="font-bricolage-semibold text-sm text-gray-900">
                   {edu.degree} · {edu.school}
                 </AppText>
                 <AppText className="text-xs text-gray-400">
@@ -219,8 +223,8 @@ function SectionLabel({
     <AppText
       className={
         isThumbnail
-          ? "text-[9px] font-bold uppercase tracking-wide"
-          : "text-xs font-bold uppercase tracking-wide"
+          ? "font-bricolage-bold text-[9px] uppercase tracking-wide"
+          : "font-bricolage-bold text-xs uppercase tracking-wide"
       }
       style={{ color }}
     >

@@ -1,19 +1,19 @@
+import { ResumeItem } from "@/components/resume-studio/resume-item";
+import { AppText } from "@/components/shared/app-text";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { useGetResumes } from "@/hooks/resume/use-get-resumes";
+import { showToast } from "@/utils/show-toast";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  RefreshControl,
   ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AppText } from "@/components/shared/app-text";
-import { useGetResumes } from "@/hooks/resume/use-get-resumes";
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { showToast } from "@/utils/show-toast";
-import { ResumeItem } from "@/components/resume-studio/resume-item";
 
 export default function Resumes() {
   const router = useRouter();
@@ -68,7 +68,7 @@ export default function Resumes() {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
-        <AppText type="title" className="font-bold text-gray-900">
+        <AppText type="title" className="font-bricolage-bold text-gray-900">
           My Resumes
         </AppText>
         <TouchableOpacity
@@ -102,7 +102,7 @@ export default function Resumes() {
         ListEmptyComponent={() => (
           <View className="flex-1 items-center justify-center py-16">
             <Ionicons name="document-text-outline" size={64} color="#D1D5DB" />
-            <AppText className="mt-4 text-xl font-semibold text-gray-700">
+            <AppText className="font-bricolage-semibold mt-4 text-xl text-gray-700">
               No resumes yet
             </AppText>
             <AppText className="mt-1 text-sm text-gray-400">
@@ -112,7 +112,7 @@ export default function Resumes() {
               onPress={handleCreateResume}
               className="mt-6 rounded-lg bg-blue-500 px-6 py-3"
             >
-              <AppText className="font-semibold text-white">
+              <AppText className="font-bricolage-semibold text-white">
                 Create Resume
               </AppText>
             </TouchableOpacity>

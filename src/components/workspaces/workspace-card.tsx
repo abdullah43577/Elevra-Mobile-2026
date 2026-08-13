@@ -1,7 +1,7 @@
 import { AppText } from "@/components/shared/app-text";
-import { Pressable, View } from "react-native";
-import { ChevronRight } from "lucide-react-native";
 import { WorkspaceItem } from "@/constants/workspaces";
+import { ChevronRight } from "lucide-react-native";
+import { Pressable, View } from "react-native";
 
 interface Props {
   item: WorkspaceItem;
@@ -22,7 +22,10 @@ export const WorkspaceCard = function ({ item, onPress }: Props) {
 
       <View className="flex-1">
         <View className="flex-row items-center gap-1.5">
-          <AppText type="default" className="font-semibold text-neutral-900">
+          <AppText
+            type="default"
+            className="font-bricolage-semibold text-neutral-900"
+          >
             {item.title}
           </AppText>
           {item.locked && (

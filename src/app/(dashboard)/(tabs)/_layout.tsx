@@ -1,6 +1,40 @@
-import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import { StyleSheet, type ColorValue } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+type TabBarIconProps = {
+  color: ColorValue;
+  size: number;
+  focused: boolean;
+};
+
+const TAB_ICONS = {
+  index: { active: "home", inactive: "home-outline" },
+  workspaces: { active: "grid", inactive: "grid-outline" },
+  "ai-chat": { active: "sparkles", inactive: "sparkles-outline" },
+  notifications: {
+    active: "notifications",
+    inactive: "notifications-outline",
+  },
+  profile: { active: "person", inactive: "person-outline" },
+} as const satisfies Record<
+  string,
+  {
+    active: keyof typeof Ionicons.glyphMap;
+    inactive: keyof typeof Ionicons.glyphMap;
+  }
+>;
+
+const makeTabIcon =
+  (key: keyof typeof TAB_ICONS) =>
+  ({ color, size, focused }: TabBarIconProps) => (
+    <Ionicons
+      name={focused ? TAB_ICONS[key].active : TAB_ICONS[key].inactive}
+      size={size}
+      color={color}
+    />
+  );
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
@@ -14,7 +48,7 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: "#FFFFFF",
           borderTopColor: "#EAEAEE",
-          borderTopWidth: 1,
+          borderTopWidth: StyleSheet.hairlineWidth,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom + 8,
           paddingTop: 8,
@@ -26,45 +60,35 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
-          ),
+          tabBarIcon: makeTabIcon("index"),
         }}
       />
       <Tabs.Screen
         name="workspaces"
         options={{
           title: "Workspaces",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="grid-outline" size={size} color={color} />
-          ),
+          tabBarIcon: makeTabIcon("workspaces"),
         }}
       />
       <Tabs.Screen
         name="ai-chat"
         options={{
           title: "AI Chat",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="sparkles-outline" size={size} color={color} />
-          ),
+          tabBarIcon: makeTabIcon("ai-chat"),
         }}
       />
       <Tabs.Screen
         name="notifications"
         options={{
           title: "Alerts",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="notifications-outline" size={size} color={color} />
-          ),
+          tabBarIcon: makeTabIcon("notifications"),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
-          ),
+          tabBarIcon: makeTabIcon("profile"),
         }}
       />
     </Tabs>

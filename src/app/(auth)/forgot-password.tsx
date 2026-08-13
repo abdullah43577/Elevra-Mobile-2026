@@ -61,7 +61,7 @@ export default function ForgotPassword() {
             disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            <AppText className="font-semibold text-white">
+            <AppText className="font-bricolage-semibold text-white">
               {isPending ? "Sending..." : "Send reset code"}
             </AppText>
           </AppButton>

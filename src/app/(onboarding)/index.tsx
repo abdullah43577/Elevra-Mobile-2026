@@ -1,6 +1,6 @@
+import { OnboardingDots } from "@/components/onboarding/onboarding-dots";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
-import { OnboardingDots } from "@/components/onboarding/onboarding-dots";
 import { onboardingSlides } from "@/constants/onboarding";
 import { useOnboardingStore } from "@/store/onboarding";
 import { router } from "expo-router";
@@ -11,8 +11,8 @@ import {
   Image,
   Pressable,
   View,
-  type NativeSyntheticEvent,
   type NativeScrollEvent,
+  type NativeSyntheticEvent,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -98,7 +98,7 @@ export default function Onboarding() {
         />
 
         <AppButton type="submit" onPress={handleNext}>
-          <AppText className="font-semibold text-white">
+          <AppText className="font-bricolage-semibold text-white">
             {isLastSlide ? "Get Started" : "Continue"}
           </AppText>
         </AppButton>

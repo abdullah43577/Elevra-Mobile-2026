@@ -1,19 +1,19 @@
+import { EmptyState } from "@/components/smart-notes/empty-state";
+import { RecordingCard } from "@/components/voice-notes/recording-card";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useGetRecordings } from "@/hooks/voice-notes/use-get-recordings";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  View,
-  Text,
   FlatList,
-  TouchableOpacity,
   RefreshControl,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useGetRecordings } from "@/hooks/voice-notes/use-get-recordings";
-import { RecordingCard } from "@/components/voice-notes/recording-card";
-import { EmptyState } from "@/components/smart-notes/empty-state";
-import { useDebounce } from "@/hooks/use-debounce";
 
 export default function VoiceNotes() {
   const router = useRouter();
@@ -60,7 +60,9 @@ export default function VoiceNotes() {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 pb-4 pt-2">
-        <Text className="text-2xl font-bold text-gray-900">Voice Notes</Text>
+        <Text className="font-bricolage-bold text-2xl text-gray-900">
+          Voice Notes
+        </Text>
         <View className="flex-row items-center gap-2">
           <TouchableOpacity onPress={handleToggleSearch} className="p-2">
             <Ionicons

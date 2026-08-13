@@ -3,6 +3,7 @@ import { User } from "../../types/auth";
 import { Note } from "../../types/notes";
 import { Resume } from "../../types/resume/resume";
 import { VoiceRecording } from "../../types/voice-notes";
+import { CONTENT_COLORS } from "./content-colors";
 
 export const getGreeting = function () {
   const hour = new Date().getHours();
@@ -32,7 +33,7 @@ export const quickActions = [
     id: "note",
     label: "New Note",
     icon: "document-text-outline",
-    color: "#3B82F6",
+    color: CONTENT_COLORS.note,
     onPress: () =>
       router.push("/(dashboard)/(tabs)/workspaces/smart-notes/note-editor"),
   },
@@ -40,7 +41,7 @@ export const quickActions = [
     id: "recording",
     label: "New Recording",
     icon: "mic-outline",
-    color: "#8B5CF6",
+    color: CONTENT_COLORS.recording,
     onPress: () =>
       router.push("/(dashboard)/(tabs)/workspaces/voice-notes/recorder"),
   },
@@ -48,7 +49,7 @@ export const quickActions = [
     id: "resume",
     label: "New Resume",
     icon: "document-outline",
-    color: "#10B981",
+    color: CONTENT_COLORS.resume,
     onPress: () => router.push("/(dashboard)/(tabs)/workspaces/resume-studio"),
   },
 ];

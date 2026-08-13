@@ -1,5 +1,5 @@
-import { View } from "react-native";
 import { AppText } from "@/components/shared/app-text";
+import { View } from "react-native";
 import { ProfessionalClassicLayoutProps } from "../../../types/resume/layouts/types";
 
 export function ProfessionalClassicLayout({
@@ -30,7 +30,11 @@ export function ProfessionalClassicLayout({
       {/* Header — centered, classic style */}
       <View className={`items-center ${sectionSpacing}`} style={borderStyle}>
         <AppText
-          className={isThumbnail ? "text-base font-bold" : "text-2xl font-bold"}
+          className={
+            isThumbnail
+              ? "font-bricolage-bold text-base"
+              : "font-bricolage-bold text-2xl"
+          }
           style={{ color: theme.primaryColor }}
         >
           {personalInfo?.firstName} {personalInfo?.lastName}
@@ -96,8 +100,8 @@ export function ProfessionalClassicLayout({
                 <AppText
                   className={
                     isThumbnail
-                      ? "text-[10px] font-semibold text-gray-900"
-                      : "font-semibold text-gray-900"
+                      ? "font-bricolage-semibold text-[10px] text-gray-900"
+                      : "font-bricolage-semibold text-gray-900"
                   }
                 >
                   {exp.position}
@@ -148,7 +152,7 @@ export function ProfessionalClassicLayout({
           {education.map((edu, i) => (
             <View key={i} className="mt-2">
               <View className="flex-row justify-between">
-                <AppText className="font-semibold text-gray-900">
+                <AppText className="font-bricolage-semibold text-gray-900">
                   {edu.degree}
                 </AppText>
                 <AppText className="text-xs text-gray-500">
@@ -229,8 +233,8 @@ function SectionLabel({
     <AppText
       className={
         isThumbnail
-          ? "text-[10px] font-bold uppercase tracking-wide"
-          : "text-base font-bold uppercase tracking-wide"
+          ? "font-bricolage-bold text-[10px] uppercase tracking-wide"
+          : "font-bricolage-bold text-base uppercase tracking-wide"
       }
       style={{ color }}
     >

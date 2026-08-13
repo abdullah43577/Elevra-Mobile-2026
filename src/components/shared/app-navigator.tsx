@@ -1,5 +1,14 @@
 import { Stack } from "expo-router";
-import { useFonts } from "expo-font";
+import {
+  BricolageGrotesque_200ExtraLight,
+  BricolageGrotesque_300Light,
+  BricolageGrotesque_400Regular,
+  BricolageGrotesque_500Medium,
+  BricolageGrotesque_600SemiBold,
+  BricolageGrotesque_700Bold,
+  BricolageGrotesque_800ExtraBold,
+  useFonts,
+} from "@expo-google-fonts/bricolage-grotesque";
 import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useOnboardingStore } from "@/store/onboarding";
@@ -11,10 +20,13 @@ import { StatusBar } from "expo-status-bar";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
-    "Roboto-Regular": require("../../../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("../../../assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Bold": require("../../../assets/fonts/Roboto-Bold.ttf"),
-    "Roboto-SemiBold": require("../../../assets/fonts/Roboto-SemiBold.ttf"),
+    "BricolageGrotesque-ExtraLight": BricolageGrotesque_200ExtraLight,
+    "BricolageGrotesque-Light": BricolageGrotesque_300Light,
+    "BricolageGrotesque-Regular": BricolageGrotesque_400Regular,
+    "BricolageGrotesque-Medium": BricolageGrotesque_500Medium,
+    "BricolageGrotesque-SemiBold": BricolageGrotesque_600SemiBold,
+    "BricolageGrotesque-Bold": BricolageGrotesque_700Bold,
+    "BricolageGrotesque-ExtraBold": BricolageGrotesque_800ExtraBold,
   });
   const { hasToken, isLoading: authLoading, checkAuthStatus } = useAuthStore();
   const { expoPushToken } = useNotifications();

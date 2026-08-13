@@ -38,7 +38,9 @@ export function AIActions({
 
   return (
     <View className="mt-4 rounded-xl bg-gray-50 p-4">
-      <Text className="mb-2 text-sm font-medium text-gray-700">AI Actions</Text>
+      <Text className="font-bricolage-medium mb-2 text-sm text-gray-700">
+        AI Actions
+      </Text>
 
       {/* Generate Summary Button */}
       <TouchableOpacity
@@ -69,7 +71,7 @@ export function AIActions({
           label={isGeneratingSummary ? "Generating summary..." : "Summary"}
           labelIcon="sparkles"
           containerClassName="mt-3 rounded-lg bg-blue-50 p-3"
-          labelClassName="text-xs font-medium text-blue-700"
+          labelClassName="text-xs font-bricolage-medium text-blue-700"
           textClassName="mt-1 text-sm text-gray-700"
           showCursor={true}
           onStreamComplete={onSummaryComplete}
@@ -79,7 +81,9 @@ export function AIActions({
       {/* Existing Summary from Database */}
       {existingSummary && !summary && !isGeneratingSummary && (
         <View className="mt-3 rounded-lg bg-blue-50 p-3">
-          <Text className="text-xs font-medium text-blue-700">Summary</Text>
+          <Text className="font-bricolage-medium text-xs text-blue-700">
+            Summary
+          </Text>
           <Text className="mt-1 text-sm text-gray-700">{existingSummary}</Text>
           {existingSummaryGeneratedAt && (
             <Text className="mt-1 text-xs text-gray-400">

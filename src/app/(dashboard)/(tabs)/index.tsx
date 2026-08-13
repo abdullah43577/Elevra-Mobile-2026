@@ -1,4 +1,5 @@
 import { AppText } from "@/components/shared/app-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import {
   formatDate,
   getGreeting,
@@ -26,9 +27,9 @@ const CATEGORY_META: Record<
   "Note" | "Recording" | "Resume",
   { color: string; icon: keyof typeof Ionicons.glyphMap }
 > = {
-  Note: { color: "#5B47E8", icon: "document-text-outline" },
-  Recording: { color: "#D6653D", icon: "mic-outline" },
-  Resume: { color: "#0F9B7A", icon: "document-outline" },
+  Note: { color: CONTENT_COLORS.note, icon: "document-text-outline" },
+  Recording: { color: CONTENT_COLORS.recording, icon: "mic-outline" },
+  Resume: { color: CONTENT_COLORS.resume, icon: "document-outline" },
 };
 
 export default function Home() {
@@ -204,7 +205,7 @@ export default function Home() {
                       <Ionicons name={meta.icon} size={20} color={meta.color} />
                     </View>
                     <View className="flex-1">
-                      <AppText type="body" className="font-medium">
+                      <AppText type="body" className="font-bricolage-medium">
                         {item.title}
                       </AppText>
                       <View className="flex-row items-center gap-2">

@@ -1,18 +1,18 @@
-import { View, TouchableOpacity } from "react-native";
-import {
-  Control,
-  FieldErrors,
-  FieldArrayWithId,
-  UseFieldArrayAppend,
-  UseFieldArrayRemove,
-} from "react-hook-form";
-import { Ionicons } from "@expo/vector-icons";
-import { FormInput } from "@/components/shared/form-input";
 import { AppText } from "@/components/shared/app-text";
+import { FormInput } from "@/components/shared/form-input";
 import {
   DEFAULT_EXPERIENCE,
   ResumeBuilderFormValues,
 } from "@/schemas/resume-builder/resume-builder";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  Control,
+  FieldArrayWithId,
+  FieldErrors,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
+} from "react-hook-form";
+import { TouchableOpacity, View } from "react-native";
 
 interface ExperienceProps {
   control: Control<ResumeBuilderFormValues>;
@@ -37,7 +37,10 @@ export function Experience({
           className="mb-4 gap-4 rounded-xl border border-gray-200 p-4"
         >
           <View className="mb-3 flex-row items-center justify-between">
-            <AppText type="subtitle" className="font-medium text-gray-700">
+            <AppText
+              type="subtitle"
+              className="font-bricolage-medium text-gray-700"
+            >
               Experience {index + 1}
             </AppText>
             {fields.length > 1 && (

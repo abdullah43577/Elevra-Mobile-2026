@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface Folder {
   id: string;
@@ -39,7 +39,9 @@ export function FolderPicker({
 
   return (
     <View className="mb-4">
-      <Text className="mb-2 text-sm font-medium text-gray-700">Folder</Text>
+      <Text className="font-bricolage-medium mb-2 text-sm text-gray-700">
+        Folder
+      </Text>
       <TouchableOpacity
         onPress={handleToggle}
         className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"

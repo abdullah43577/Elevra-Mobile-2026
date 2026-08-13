@@ -1,6 +1,6 @@
+import { useGetProfile } from "@/hooks/use-get-profile";
 import { View } from "react-native";
 import { AppText } from "../shared/app-text";
-import { useGetProfile } from "@/hooks/use-get-profile";
 
 export const AccountDetailsView = function () {
   const { profile } = useGetProfile();
@@ -11,7 +11,7 @@ export const AccountDetailsView = function () {
         <AppText type="default" className="text-neutral-500">
           Profession
         </AppText>
-        <AppText type="default" className="font-medium">
+        <AppText type="default" className="font-bricolage-medium">
           {profile?.profession?.name ?? "Not set"}
         </AppText>
       </View>
@@ -20,7 +20,7 @@ export const AccountDetailsView = function () {
         <AppText type="default" className="text-neutral-500">
           Gender
         </AppText>
-        <AppText type="default" className="font-medium capitalize">
+        <AppText type="default" className="font-bricolage-medium capitalize">
           {profile?.gender?.toLowerCase() ?? "Not set"}
         </AppText>
       </View>

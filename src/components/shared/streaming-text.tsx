@@ -1,13 +1,6 @@
-import { useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  Animated,
-  StyleProp,
-  TextStyle,
-} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useRef } from "react";
+import { ActivityIndicator, Animated, Text, View } from "react-native";
 import { AppText } from "./app-text";
 
 interface StreamingTextProps {
@@ -30,7 +23,7 @@ export function StreamingText({
   label = "Generating...",
   labelIcon = "sparkles",
   containerClassName = "mt-3 rounded-lg bg-blue-50 p-3",
-  labelClassName = "text-xs font-medium text-blue-700",
+  labelClassName = "text-xs font-bricolage-medium text-blue-700",
   textClassName = "mt-1 text-sm text-gray-700",
   showCursor = true,
   onStreamComplete,

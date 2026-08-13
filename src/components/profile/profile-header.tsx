@@ -1,6 +1,6 @@
+import { useGetProfile } from "@/hooks/use-get-profile";
 import { ActivityIndicator, Image, Pressable, View } from "react-native";
 import { AppText } from "../shared/app-text";
-import { useGetProfile } from "@/hooks/use-get-profile";
 
 interface Props {
   onChangePicture: () => void;
@@ -56,7 +56,7 @@ export const ProfileHeader = function ({
           </View>
         </Pressable>
 
-        <AppText type="default" className="text-base font-semibold">
+        <AppText type="default" className="font-bricolage-semibold text-base">
           {profile?.first_name} {profile?.last_name}
         </AppText>
         <AppText type="default" className="text-neutral-500">

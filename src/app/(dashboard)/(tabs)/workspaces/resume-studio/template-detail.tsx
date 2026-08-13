@@ -1,15 +1,15 @@
+import { TemplateRenderer } from "@/components/resume/template-renderer";
+import { AppText } from "@/components/shared/app-text";
+import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
-  View,
+  ActivityIndicator,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
+  View,
 } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { AppText } from "@/components/shared/app-text";
-import { TemplateRenderer } from "@/components/resume/template-renderer";
-import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
 
 export default function TemplateDetail() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function TemplateDetail() {
         <TouchableOpacity onPress={() => router.back()} className="p-1">
           <Ionicons name="arrow-back" size={24} color="#6B7280" />
         </TouchableOpacity>
-        <AppText type="title" className="font-semibold text-gray-900">
+        <AppText type="title" className="font-bricolage-semibold text-gray-900">
           Template Preview
         </AppText>
         <View className="w-10" />
@@ -62,7 +62,7 @@ export default function TemplateDetail() {
 
         {/* Info */}
         <View className="px-4">
-          <AppText className="text-xl font-bold text-gray-900">
+          <AppText className="font-bricolage-bold text-xl text-gray-900">
             {template.name}
           </AppText>
           <AppText type="subtitle" className="mt-1 text-gray-500">
@@ -88,7 +88,7 @@ export default function TemplateDetail() {
             onPress={handleUseTemplate}
             className="rounded-lg bg-blue-500 py-4"
           >
-            <AppText className="text-center font-semibold text-white">
+            <AppText className="font-bricolage-semibold text-center text-white">
               Use This Template
             </AppText>
           </TouchableOpacity>

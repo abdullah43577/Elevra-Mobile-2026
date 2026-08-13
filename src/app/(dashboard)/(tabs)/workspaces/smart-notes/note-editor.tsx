@@ -138,7 +138,7 @@ export default function NoteEditor() {
 
       <ScrollView className="flex-1 px-4 pt-4">
         <TextInput
-          className="font-roboto text-2xl font-bold text-primary-500"
+          className="font-bricolage-bold font-roboto text-2xl text-primary-500"
           placeholder="Note title..."
           value={title}
           onChangeText={setTitle}

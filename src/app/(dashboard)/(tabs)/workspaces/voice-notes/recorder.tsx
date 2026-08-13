@@ -1,25 +1,25 @@
-import { useState, useEffect, useRef } from "react";
-import { View, TextInput } from "react-native";
-import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { File } from "expo-file-system";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { FileSelectionStatus } from "@/components/voice-notes/recorder/file-selection-status";
+import { RecorderActions } from "@/components/voice-notes/recorder/recorder-actions";
+import { RecorderHeader } from "@/components/voice-notes/recorder/recorder-header";
+import { RecorderPlayback } from "@/components/voice-notes/recorder/recorder-playback";
+import { RecorderTimer } from "@/components/voice-notes/recorder/recorder-timer";
+import { useAudioPicker } from "@/hooks/use-audio-picker";
+import { useSaveRecording } from "@/hooks/voice-notes/use-save-recording";
+import { showToast } from "@/utils/show-toast";
 import {
-  useAudioRecorder,
   AudioModule,
   RecordingPresets,
   setAudioModeAsync,
+  useAudioPlayer,
+  useAudioRecorder,
   useAudioRecorderState,
 } from "expo-audio";
-import { useAudioPlayer } from "expo-audio";
-import { useSaveRecording } from "@/hooks/voice-notes/use-save-recording";
-import { useAudioPicker } from "@/hooks/use-audio-picker";
-import { showToast } from "@/utils/show-toast";
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { RecorderHeader } from "@/components/voice-notes/recorder/recorder-header";
-import { FileSelectionStatus } from "@/components/voice-notes/recorder/file-selection-status";
-import { RecorderTimer } from "@/components/voice-notes/recorder/recorder-timer";
-import { RecorderActions } from "@/components/voice-notes/recorder/recorder-actions";
-import { RecorderPlayback } from "@/components/voice-notes/recorder/recorder-playback";
+import { File } from "expo-file-system";
+import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Recorder() {
   const router = useRouter();
@@ -340,7 +340,7 @@ export default function Recorder() {
       <View className="flex-1 items-center justify-center px-6">
         {/* Title Input */}
         <TextInput
-          className="mb-4 w-full rounded-xl bg-gray-50 px-4 py-3 text-center text-lg font-medium text-gray-900"
+          className="font-bricolage-medium mb-4 w-full rounded-xl bg-gray-50 px-4 py-3 text-center text-lg text-gray-900"
           placeholder="Recording title..."
           value={title}
           onChangeText={setTitle}

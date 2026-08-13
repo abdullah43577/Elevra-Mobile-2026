@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { FlatList, Pressable, TextInput, View } from "react-native";
-import { AppText } from "./app-text";
 import { AppModal } from "./app-modal";
+import { AppText } from "./app-text";
 
 export interface PickerOption {
   label: string;
@@ -91,14 +91,16 @@ export const BottomSheetPicker = function ({
                 }}
               >
                 <AppText
-                  className={isSelected ? "font-semibold text-blue-500" : ""}
+                  className={
+                    isSelected ? "font-bricolage-semibold text-blue-500" : ""
+                  }
                 >
                   {item.label}
                 </AppText>
 
                 {isSelected && (
                   <View className="h-5 w-5 items-center justify-center rounded-full bg-blue-500">
-                    <AppText className="text-xs font-bold text-white">
+                    <AppText className="font-bricolage-bold text-xs text-white">
                       ✓
                     </AppText>
                   </View>

@@ -1,6 +1,6 @@
-import { View, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
+import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 
 interface RecorderHeaderProps {
   onBack: () => void;
@@ -21,7 +21,7 @@ export function RecorderHeader({
         <Ionicons name="close" size={24} color="#6B7280" />
       </TouchableOpacity>
 
-      <AppText className="text-lg font-semibold text-gray-900">
+      <AppText className="font-bricolage-semibold text-lg text-gray-900">
         New Recording
       </AppText>
 
@@ -34,7 +34,7 @@ export function RecorderHeader({
           <ActivityIndicator size="small" color="#3B82F6" />
         ) : (
           <AppText
-            className={`font-semibold ${
+            className={`font-bricolage-semibold ${
               hasFile ? "text-blue-500" : "text-gray-400"
             }`}
           >

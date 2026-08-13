@@ -1,7 +1,7 @@
-import { View, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
 import { useDeleteResume } from "@/hooks/resume/use-delete-resume";
+import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 import { Resume } from "../../../types/resume/resume";
 
 interface ResumeItemProps {
@@ -31,7 +31,10 @@ export function ResumeItem({
   return (
     <View className="mx-4 mb-4 rounded-xl border border-gray-200 bg-white p-4">
       {/* Title */}
-      <AppText type="subtitle" className="font-semibold text-gray-900">
+      <AppText
+        type="subtitle"
+        className="font-bricolage-semibold text-gray-900"
+      >
         {resume.title}
       </AppText>
 

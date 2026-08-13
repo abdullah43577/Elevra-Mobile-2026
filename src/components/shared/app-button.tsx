@@ -5,6 +5,7 @@ import {
   Pressable,
   type PressableProps,
 } from "react-native";
+import { AppText } from "./app-text";
 
 export interface AppButtonProps extends PressableProps {
   className?: string;
@@ -12,6 +13,10 @@ export interface AppButtonProps extends PressableProps {
   type?: "default" | "submit" | "delete";
   isLoading?: boolean;
   disabled?: boolean;
+  // Preferred over passing raw `children` for text-only buttons — renders
+  // through AppText with the correct foreground color for `type` baked in,
+  // so a dark background can never end up with dark (unreadable) text.
+  label?: string;
 }
 
 const hapticMap: Partial<
@@ -28,12 +33,23 @@ const typeStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
   delete: "bg-error-500",
 };
 
+// Mirrors tailwind.config.js's `primary/secondary/error.foreground` tokens.
+// AppButton previously never applied these, so button text color depended
+// entirely on the consumer remembering to set it correctly per type.
+const textStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
+  default: "text-primary-foreground",
+  submit: "text-secondary-foreground",
+  delete: "text-error-foreground",
+};
+
 export const AppButton = function ({
   className,
   onPress,
   type = "default",
   isLoading = false,
   disabled = false,
+  label,
+  children,
   ...rest
 }: AppButtonProps) {
   const isDisabled = disabled || isLoading;
@@ -56,7 +72,15 @@ export const AppButton = function ({
       )}
       onPress={handlePress}
     >
-      {isLoading ? <ActivityIndicator color="#ffffff" /> : rest.children}
+      {isLoading ? (
+        <ActivityIndicator color="#ffffff" />
+      ) : label ? (
+        <AppText type="label" className={textStyles[type]}>
+          {label}
+        </AppText>
+      ) : (
+        children
+      )}
     </Pressable>
   );
 };

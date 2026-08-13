@@ -1,7 +1,7 @@
+import { useGetProfile } from "@/hooks/use-get-profile";
 import { View } from "react-native";
 import { AppText } from "../shared/app-text";
 import { SegmentedControl } from "../shared/segmented-control";
-import { useGetProfile } from "@/hooks/use-get-profile";
 import { ToggleSwitch } from "../shared/toggle-switch";
 
 interface Props {
@@ -27,7 +27,7 @@ export const AccountPreferencesCard = function ({
         <View>
           <AppText
             type="default"
-            className="mb-2 text-sm font-medium text-neutral-700"
+            className="font-bricolage-medium mb-2 text-sm text-neutral-700"
           >
             Theme
           </AppText>
@@ -57,7 +57,7 @@ export const AccountPreferencesCard = function ({
           <View className="rounded-full bg-primary-50 px-3 py-1">
             <AppText
               type="default"
-              className="text-xs font-semibold capitalize text-primary-500"
+              className="font-bricolage-semibold text-xs capitalize text-primary-500"
             >
               {profile?.settings?.subscriptionTier ?? "free"}
             </AppText>

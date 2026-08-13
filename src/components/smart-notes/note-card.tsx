@@ -1,13 +1,12 @@
-import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Note } from "../../../types/notes";
 
 interface NoteCardProps {
@@ -74,7 +73,7 @@ export function NoteCard({
             {note.isArchived && (
               <Ionicons name="archive-outline" size={16} color="#9CA3AF" />
             )}
-            <Text className="flex-1 text-base font-semibold text-gray-900">
+            <Text className="font-bricolage-semibold flex-1 text-base text-gray-900">
               {note.title}
             </Text>
           </View>

@@ -1,6 +1,8 @@
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
+import { useResendOTP } from "@/hooks/auth/use-resend-otp";
+import { useVerifyEmail } from "@/hooks/auth/use-verify-email";
 import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
@@ -11,8 +13,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useVerifyEmail } from "@/hooks/auth/use-verify-email";
-import { useResendOTP } from "@/hooks/auth/use-resend-otp";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
@@ -61,7 +61,9 @@ export default function VerifyEmail() {
         <AppText type="title">Verify your email</AppText>
         <AppText type="subtitle" className="mt-1 text-neutral-500">
           Enter the 6-digit code sent to{" "}
-          <AppText className="font-semibold text-neutral-700">{email}</AppText>
+          <AppText className="font-bricolage-semibold text-neutral-700">
+            {email}
+          </AppText>
         </AppText>
 
         {/* Form */}
@@ -84,7 +86,7 @@ export default function VerifyEmail() {
             disabled={isPending}
             onPress={handleSubmit(onSubmit)}
           >
-            <AppText className="font-semibold text-white">
+            <AppText className="font-bricolage-semibold text-white">
               {isPending ? "Verifying..." : "Verify Email"}
             </AppText>
           </AppButton>

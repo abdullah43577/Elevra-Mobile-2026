@@ -1,22 +1,21 @@
+import { AppModal } from "@/components/shared/app-modal";
+import { AppText } from "@/components/shared/app-text";
+import { EmptyState } from "@/components/smart-notes/empty-state";
+import { TagItem } from "@/components/smart-notes/tag-item";
+import { useCreateTag } from "@/hooks/smart-notes/use-create-tag";
+import { useGetTags } from "@/hooks/smart-notes/use-get-tags";
+import { showToast } from "@/utils/show-toast";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
   ActivityIndicator,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { AppText } from "@/components/shared/app-text";
-import { AppModal } from "@/components/shared/app-modal";
-import { useGetTags } from "@/hooks/smart-notes/use-get-tags";
-import { useCreateTag } from "@/hooks/smart-notes/use-create-tag";
-import { useDeleteTag } from "@/hooks/smart-notes/use-delete-tag";
-import { EmptyState } from "@/components/smart-notes/empty-state";
-import { showToast } from "@/utils/show-toast";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TagItem } from "@/components/smart-notes/tag-item";
 
 export default function Tags() {
   const router = useRouter();
@@ -25,12 +24,6 @@ export default function Tags() {
 
   const { tags, isFetchingTags, refetchTags } = useGetTags();
   const { createTag, isCreating } = useCreateTag();
-
-  // NOTE: deleteTag/isDeleting were previously set up here with a hardcoded
-  // empty tagId and never used. If TagItem needs delete functionality,
-  // it likely needs its own useDeleteTag call per row (with the real id),
-  // not one shared instance at the screen level. Left uninstantiated here
-  // until that's confirmed.
 
   const handleCreate = function () {
     if (!tagName.trim()) {
@@ -113,7 +106,10 @@ export default function Tags() {
               className="flex-1 items-center rounded-2xl bg-neutral-100 py-3"
               disabled={isCreating}
             >
-              <AppText type="body" className="font-semibold text-neutral-600">
+              <AppText
+                type="body"
+                className="font-bricolage-semibold text-neutral-600"
+              >
                 Cancel
               </AppText>
             </TouchableOpacity>
@@ -125,7 +121,10 @@ export default function Tags() {
               {isCreating ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
-                <AppText type="body" className="font-semibold text-white">
+                <AppText
+                  type="body"
+                  className="font-bricolage-semibold text-white"
+                >
                   Create
                 </AppText>
               )}

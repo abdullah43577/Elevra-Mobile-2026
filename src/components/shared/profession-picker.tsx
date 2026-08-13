@@ -1,5 +1,5 @@
-import { AppText } from "@/components/shared/app-text";
 import { AppModal } from "@/components/shared/app-modal";
+import { AppText } from "@/components/shared/app-text";
 import { useGetProfessions } from "@/hooks/profile/use-get-professions";
 import { useMemo, useState } from "react";
 import { FlatList, Pressable, TextInput, View } from "react-native";
@@ -88,7 +88,9 @@ export const ProfessionPicker = function ({
               >
                 <AppText
                   type="default"
-                  className={isSelected ? "font-semibold text-primary-500" : ""}
+                  className={
+                    isSelected ? "font-bricolage-semibold text-primary-500" : ""
+                  }
                 >
                   {item.name}
                 </AppText>
@@ -97,7 +99,7 @@ export const ProfessionPicker = function ({
                   <View className="h-5 w-5 items-center justify-center rounded-full bg-primary-500">
                     <AppText
                       type="default"
-                      className="text-xs font-bold text-white"
+                      className="font-bricolage-bold text-xs text-white"
                     >
                       ✓
                     </AppText>
