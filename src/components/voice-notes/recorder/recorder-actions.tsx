@@ -1,6 +1,7 @@
-import { View, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
+import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, Pressable, View } from "react-native";
 
 interface RecorderActionsProps {
   isRecording: boolean;
@@ -21,57 +22,64 @@ export function RecorderActions({
   onStopRecording,
   onPickAudio,
 }: RecorderActionsProps) {
-  const getStatusText = function () {
-    if (isRecording) return "Tap to stop recording";
-    if (isUploadedFile) return "File ready to save";
-    return "Record or upload an audio file";
-  };
+  const statusText = isRecording
+    ? "Tap to stop recording"
+    : isUploadedFile
+      ? "File ready to save"
+      : "Record, or upload an audio file";
+
+  const recordColor = isRecording ? "#B93A32" : CONTENT_COLORS.recording;
 
   return (
     <View className="items-center">
-      <View className="flex-row items-center gap-4">
-        {/* Record Button */}
-        <TouchableOpacity
+      <View className="flex-row items-center gap-5">
+        <Pressable
           onPress={isRecording ? onStopRecording : onRecord}
-          className={`h-20 w-20 items-center justify-center rounded-full ${
-            isRecording ? "bg-red-500" : "bg-blue-500"
-          }`}
           disabled={isSaving || isUploadedFile}
+          className="items-center justify-center rounded-full active:opacity-80"
+          style={{
+            width: 84,
+            height: 84,
+            backgroundColor: recordColor,
+            opacity: isSaving || isUploadedFile ? 0.4 : 1,
+            shadowColor: recordColor,
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.3,
+            shadowRadius: 16,
+            elevation: 8,
+          }}
         >
           <Ionicons
             name={isRecording ? "stop" : "mic"}
-            size={32}
+            size={34}
             color="white"
           />
-        </TouchableOpacity>
+        </Pressable>
 
-        {/* OR Divider */}
-        {!isUploadedFile && (
-          <AppText className="text-sm text-gray-400">or</AppText>
-        )}
-
-        {/* Upload Button */}
-        <TouchableOpacity
+        <Pressable
           onPress={onPickAudio}
-          className={`h-20 w-20 items-center justify-center rounded-full ${
-            isUploadedFile ? "bg-green-500" : "bg-gray-200"
-          }`}
           disabled={isSaving || isRecording || isPicking}
+          className="items-center justify-center rounded-full border-hairline border-neutral-200 bg-white active:opacity-70"
+          style={{
+            width: 64,
+            height: 64,
+            opacity: isSaving || isRecording ? 0.4 : 1,
+          }}
         >
           {isPicking ? (
-            <ActivityIndicator size="small" color="#6B7280" />
+            <ActivityIndicator size="small" color="#7D7D8A" />
           ) : (
             <Ionicons
               name={isUploadedFile ? "checkmark" : "cloud-upload-outline"}
-              size={32}
-              color={isUploadedFile ? "white" : "#6B7280"}
+              size={24}
+              color={isUploadedFile ? CONTENT_COLORS.resume : "#7D7D8A"}
             />
           )}
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
-      <AppText className="mt-4 text-sm text-gray-500">
-        {getStatusText()}
+      <AppText type="caption" className="mt-5">
+        {statusText}
       </AppText>
     </View>
   );

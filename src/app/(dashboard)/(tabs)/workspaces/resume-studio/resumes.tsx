@@ -102,7 +102,7 @@ export default function Resumes() {
         ListEmptyComponent={() => (
           <View className="flex-1 items-center justify-center py-16">
             <Ionicons name="document-text-outline" size={64} color="#D1D5DB" />
-            <AppText className="font-bricolage-semibold mt-4 text-xl text-gray-700">
+            <AppText className="mt-4 font-bricolage-semibold text-xl text-gray-700">
               No resumes yet
             </AppText>
             <AppText className="mt-1 text-sm text-gray-400">

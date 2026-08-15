@@ -2,31 +2,27 @@ import { View } from "react-native";
 
 export function SkeletonCard() {
   return (
-    <View className="mx-4 my-1.5 rounded-xl border border-gray-100 bg-gray-50 p-4">
+    <View className="mb-3 rounded-2xl border-hairline border-neutral-200 bg-white p-4">
       <View className="flex-row items-start justify-between">
-        <View className="flex-1">
-          {/* Title skeleton */}
-          <View className="h-5 w-3/4 rounded bg-gray-200" />
-          {/* Content skeleton */}
-          <View className="mt-2 space-y-1">
-            <View className="h-3 w-full rounded bg-gray-200" />
-            <View className="h-3 w-2/3 rounded bg-gray-200" />
-          </View>
-          {/* Tags skeleton */}
-          <View className="mt-2 flex-row gap-2">
-            <View className="h-5 w-12 rounded bg-gray-200" />
-            <View className="h-5 w-12 rounded bg-gray-200" />
-          </View>
-          {/* Timestamp skeleton */}
-          <View className="mt-2 h-3 w-24 rounded bg-gray-200" />
+        <View className="flex-1 gap-2">
+          <View className="h-4 w-3/5 rounded-full bg-neutral-100" />
+          <View className="h-3 w-full rounded-full bg-neutral-100" />
+          <View className="h-3 w-2/3 rounded-full bg-neutral-100" />
         </View>
-        {/* Action buttons skeleton */}
-        <View className="flex-row gap-1">
-          <View className="h-6 w-6 rounded-full bg-gray-200" />
-          <View className="h-6 w-6 rounded-full bg-gray-200" />
-          <View className="h-6 w-6 rounded-full bg-gray-200" />
+
+        <View className="flex-row gap-1.5">
+          <View className="h-7 w-7 rounded-full bg-neutral-100" />
+          <View className="h-7 w-7 rounded-full bg-neutral-100" />
+          <View className="h-7 w-7 rounded-full bg-neutral-100" />
         </View>
       </View>
+
+      <View className="mt-3 flex-row gap-1.5">
+        <View className="h-5 w-16 rounded-full bg-neutral-100" />
+        <View className="h-5 w-12 rounded-full bg-neutral-100" />
+      </View>
+
+      <View className="mt-3 h-3 w-28 rounded-full bg-neutral-100" />
     </View>
   );
 }

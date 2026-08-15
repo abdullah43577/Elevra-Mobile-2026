@@ -1,4 +1,6 @@
-import { ScrollView, TouchableOpacity, Text, View } from "react-native";
+import { AppText } from "@/components/shared/app-text";
+import { clsx } from "clsx";
+import { Pressable, ScrollView, View } from "react-native";
 
 interface Folder {
   id: string;
@@ -13,6 +15,15 @@ interface FilterChipsProps {
   onClearFilter: () => void;
 }
 
+const chipClass = function (isSelected: boolean) {
+  return clsx(
+    "flex-row items-center gap-1.5 rounded-full border-hairline px-3.5 py-1.5 active:opacity-70",
+    isSelected
+      ? "border-primary-500 bg-primary-500"
+      : "border-neutral-200 bg-white",
+  );
+};
+
 export function FilterChips({
   folders,
   selectedFolder,
@@ -23,40 +34,51 @@ export function FilterChips({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      className="max-h-10 flex-shrink-0 px-4 py-1"
+      contentContainerClassName="gap-2 px-5"
     >
-      <TouchableOpacity
-        onPress={onClearFilter}
-        className={`mr-2 self-center rounded-full px-4 py-1.5 ${
-          !selectedFolder ? "bg-blue-500" : "bg-gray-200"
-        }`}
-      >
-        <Text className={!selectedFolder ? "text-white" : "text-gray-700"}>
-          All
-        </Text>
-      </TouchableOpacity>
-
-      {folders.map((folder) => (
-        <TouchableOpacity
-          key={folder.id}
-          onPress={() => onSelectFolder(folder.id)}
-          className={`mr-2 flex-row items-center self-center rounded-full px-4 py-1.5 ${
-            selectedFolder === folder.id ? "bg-blue-500" : "bg-gray-200"
-          }`}
+      <Pressable onPress={onClearFilter} className={chipClass(!selectedFolder)}>
+        <AppText
+          type="caption"
+          className={
+            !selectedFolder
+              ? "font-bricolage-semibold text-white"
+              : "text-neutral-600"
+          }
         >
-          <View
-            className="mr-2 h-2 w-2 rounded-full"
-            style={{ backgroundColor: folder.color || "#6B7280" }}
-          />
-          <Text
-            className={
-              selectedFolder === folder.id ? "text-white" : "text-gray-700"
-            }
+          All
+        </AppText>
+      </Pressable>
+
+      {folders.map((folder) => {
+        const isSelected = selectedFolder === folder.id;
+
+        return (
+          <Pressable
+            key={folder.id}
+            onPress={() => onSelectFolder(folder.id)}
+            className={chipClass(isSelected)}
           >
-            {folder.name}
-          </Text>
-        </TouchableOpacity>
-      ))}
+            <View
+              className="rounded-full"
+              style={{
+                width: 6,
+                height: 6,
+                backgroundColor: folder.color || "#7D7D8A",
+              }}
+            />
+            <AppText
+              type="caption"
+              className={
+                isSelected
+                  ? "font-bricolage-semibold text-white"
+                  : "text-neutral-600"
+              }
+            >
+              {folder.name}
+            </AppText>
+          </Pressable>
+        );
+      })}
     </ScrollView>
   );
 }

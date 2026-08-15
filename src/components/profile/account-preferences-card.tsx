@@ -1,8 +1,12 @@
 import { useGetProfile } from "@/hooks/use-get-profile";
+import { toTitleCase } from "@/provider/utils";
 import { View } from "react-native";
 import { AppText } from "../shared/app-text";
+import { Badge } from "../shared/badge";
 import { SegmentedControl } from "../shared/segmented-control";
 import { ToggleSwitch } from "../shared/toggle-switch";
+import { SettingsCard } from "./settings-card";
+import { SettingsRow } from "./settings-row";
 
 interface Props {
   onThemeChange: (str: "SYSTEM" | "LIGHT" | "DARK") => void;
@@ -18,52 +22,45 @@ export const AccountPreferencesCard = function ({
   const { profile } = useGetProfile();
 
   return (
-    <View className="rounded-2xl bg-white p-5">
-      <AppText type="subtitle" className="mb-4">
-        Preferences
-      </AppText>
+    <SettingsCard title="Preferences">
+      <View className="px-5 pb-4 pt-4">
+        <AppText type="default" className="mb-2.5 text-neutral-500">
+          Appearance
+        </AppText>
+        <SegmentedControl
+          options={[
+            { label: "System", value: "SYSTEM" },
+            { label: "Light", value: "LIGHT" },
+            { label: "Dark", value: "DARK" },
+          ]}
+          value={profile?.settings?.theme ?? "SYSTEM"}
+          onChange={onThemeChange}
+          disabled={isUpdatingSettings}
+        />
+      </View>
 
-      <View className="gap-5">
-        <View>
-          <AppText
-            type="default"
-            className="font-bricolage-medium mb-2 text-sm text-neutral-700"
-          >
-            Theme
-          </AppText>
-          <SegmentedControl
-            options={[
-              { label: "System", value: "SYSTEM" },
-              { label: "Light", value: "LIGHT" },
-              { label: "Dark", value: "DARK" },
-            ]}
-            value={profile?.settings?.theme ?? "SYSTEM"}
-            onChange={onThemeChange}
-            disabled={isUpdatingSettings}
-          />
-        </View>
-
-        <View className="flex-row items-center justify-between border-t border-neutral-100 pt-4">
-          <AppText type="default">Push notifications</AppText>
+      <SettingsRow
+        label="Push notifications"
+        withDivider
+        right={
           <ToggleSwitch
             value={profile?.settings?.notifications ?? true}
             onValueChange={onNotificationsToggle}
             disabled={isUpdatingSettings}
           />
-        </View>
+        }
+      />
 
-        <View className="flex-row items-center justify-between border-t border-neutral-100 pt-4">
-          <AppText type="default">Subscription</AppText>
-          <View className="rounded-full bg-primary-50 px-3 py-1">
-            <AppText
-              type="default"
-              className="font-bricolage-semibold text-xs capitalize text-primary-500"
-            >
-              {profile?.settings?.subscriptionTier ?? "free"}
-            </AppText>
-          </View>
-        </View>
-      </View>
-    </View>
+      <SettingsRow
+        label="Subscription"
+        withDivider
+        right={
+          <Badge
+            label={toTitleCase(profile?.settings?.subscriptionTier, "Free")}
+            variant="secondary"
+          />
+        }
+      />
+    </SettingsCard>
   );
 };

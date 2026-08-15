@@ -17,7 +17,7 @@ export const TextArea = function ({
     <TextInput
       {...rest}
       className={clsx(
-        "focus:border-primary-500 w-full rounded-lg border border-neutral-400 bg-white px-4 py-3 text-sm",
+        "w-full rounded-lg border border-neutral-400 bg-white px-4 py-3 text-sm focus:border-primary-500",
         className,
       )}
       placeholder={placeholder}

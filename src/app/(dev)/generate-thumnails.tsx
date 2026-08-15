@@ -107,7 +107,7 @@ export default function GenerateThumbnails() {
           {generating ? (
             <ActivityIndicator size="small" color="white" />
           ) : (
-            <AppText className="font-bricolage-semibold text-center text-white">
+            <AppText className="text-center font-bricolage-semibold text-white">
               Generate All Thumbnails ({templates.length})
             </AppText>
           )}

@@ -25,7 +25,7 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
         onBlur?.(e);
       }}
       className={clsx(
-        "h-[50px] rounded-2xl border px-4 font-roboto text-[14px] text-primary-500",
+        "font-roboto h-[50px] rounded-2xl border px-4 text-[14px] text-primary-500",
         isFocused
           ? "border-secondary-500 bg-white"
           : "border-neutral-200 bg-neutral-50",

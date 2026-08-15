@@ -1,13 +1,11 @@
+import { AppText } from "@/components/shared/app-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
+import { stripHtml } from "@/provider/utils";
 import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
-import {
-  ActivityIndicator,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, View } from "react-native";
 import { Note } from "../../../types/notes";
+import { NoteCardActions } from "./note-card-actions";
 
 interface NoteCardProps {
   note: Note;
@@ -20,27 +18,6 @@ interface NoteCardProps {
   isTogglingPin?: boolean;
 }
 
-// Helper function to strip HTML tags and decode HTML entities
-const stripHtml = function (html: string) {
-  if (!html) return "";
-
-  // Remove HTML tags
-  let text = html.replace(/<[^>]*>/g, " ");
-
-  // Decode common HTML entities
-  text = text.replace(/&nbsp;/g, " ");
-  text = text.replace(/&amp;/g, "&");
-  text = text.replace(/&lt;/g, "<");
-  text = text.replace(/&gt;/g, ">");
-  text = text.replace(/&quot;/g, '"');
-  text = text.replace(/&#39;/g, "'");
-
-  // Remove extra whitespace
-  text = text.replace(/\s+/g, " ").trim();
-
-  return text;
-};
-
 export function NoteCard({
   note,
   onPress,
@@ -51,122 +28,98 @@ export function NoteCard({
   isTogglingArchive = false,
   isTogglingPin = false,
 }: NoteCardProps) {
-  // Get plain text preview (max 100 characters)
-  const contentPreview = note.content ? stripHtml(note.content) : "";
-  const truncatedContent =
-    contentPreview.length > 100
-      ? contentPreview.slice(0, 100) + "..."
-      : contentPreview;
+  const preview = stripHtml(note.content);
+  const visibleTags = note.tags?.slice(0, 3) ?? [];
+  const hiddenTagCount = (note.tags?.length ?? 0) - visibleTags.length;
+  const hasChips = !!note.folder || visibleTags.length > 0;
 
   return (
     <Pressable
       onPress={onPress}
-      className="mx-4 my-1.5 rounded-xl border border-gray-100 bg-gray-50 p-4"
-      style={({ pressed }) => ({
-        opacity: pressed ? 0.7 : 1,
-      })}
+      className="mb-3 rounded-2xl border-hairline border-neutral-200 bg-white p-4 active:opacity-70"
     >
-      <View className="flex-row items-start justify-between">
+      <View className="flex-row items-start gap-3">
         <View className="flex-1">
-          <View className="flex-row items-center gap-2">
-            {note.isPinned && <Ionicons name="pin" size={16} color="#F59E0B" />}
-            {note.isArchived && (
-              <Ionicons name="archive-outline" size={16} color="#9CA3AF" />
+          <View className="flex-row items-center gap-1.5">
+            {note.isPinned && (
+              <Ionicons name="bookmark" size={13} color={CONTENT_COLORS.note} />
             )}
-            <Text className="font-bricolage-semibold flex-1 text-base text-gray-900">
+            <AppText
+              type="label"
+              className="flex-1 text-[15px]"
+              numberOfLines={1}
+            >
               {note.title}
-            </Text>
+            </AppText>
           </View>
 
-          {/* Content Preview - Plain text only, no HTML tags */}
-          {truncatedContent && (
-            <Text numberOfLines={2} className="mt-1 text-sm text-gray-600">
-              {truncatedContent}
-            </Text>
+          {!!preview && (
+            <AppText
+              type="caption"
+              className="mt-1.5 leading-[17px] text-neutral-500"
+              numberOfLines={2}
+            >
+              {preview}
+            </AppText>
+          )}
+        </View>
+
+        <NoteCardActions
+          isPinned={note.isPinned}
+          isArchived={note.isArchived}
+          onPin={onPin}
+          onArchive={onArchive}
+          onDelete={onDelete}
+          isTogglingPin={isTogglingPin}
+          isTogglingArchive={isTogglingArchive}
+          isDeleting={isDeleting}
+        />
+      </View>
+
+      {hasChips && (
+        <View className="mt-3 flex-row flex-wrap items-center gap-1.5">
+          {note.folder && (
+            <View
+              className="flex-row items-center gap-1.5 rounded-full px-2.5 py-1"
+              style={{
+                backgroundColor: `${note.folder.color || "#7D7D8A"}14`,
+              }}
+            >
+              <View
+                className="rounded-full"
+                style={{
+                  width: 5,
+                  height: 5,
+                  backgroundColor: note.folder.color || "#7D7D8A",
+                }}
+              />
+              <AppText type="caption" className="text-neutral-600">
+                {note.folder.name}
+              </AppText>
+            </View>
           )}
 
-          <View className="mt-2 flex-row flex-wrap items-center gap-2">
-            {note.folder && (
-              <View
-                className="rounded-full px-2 py-0.5"
-                style={{
-                  backgroundColor: note.folder.color || "#E5E7EB",
-                }}
-              >
-                <Text className="text-xs text-gray-700">
-                  {note.folder.name}
-                </Text>
-              </View>
-            )}
+          {visibleTags.map((tagItem) => (
+            <View
+              key={tagItem.id}
+              className="rounded-full bg-neutral-100 px-2.5 py-1"
+            >
+              <AppText type="caption" className="text-neutral-600">
+                #{tagItem.tag.name}
+              </AppText>
+            </View>
+          ))}
 
-            {note.tags?.slice(0, 3).map((tagItem) => (
-              <View
-                key={tagItem.id}
-                className="rounded-full bg-blue-100 px-2 py-0.5"
-              >
-                <Text className="text-xs text-blue-700">
-                  #{tagItem.tag.name}
-                </Text>
-              </View>
-            ))}
-
-            {note.tags && note.tags.length > 3 && (
-              <Text className="text-xs text-gray-400">
-                +{note.tags.length - 3}
-              </Text>
-            )}
-          </View>
-
-          <Text className="mt-2 text-xs text-gray-400">
-            Updated{" "}
-            {formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true })}
-          </Text>
+          {hiddenTagCount > 0 && (
+            <AppText type="caption">+{hiddenTagCount}</AppText>
+          )}
         </View>
+      )}
 
-        <View className="flex-row gap-1">
-          <TouchableOpacity
-            onPress={onPin}
-            className="p-1"
-            disabled={isTogglingPin}
-          >
-            {isTogglingPin ? (
-              <ActivityIndicator size="small" color="#F59E0B" />
-            ) : (
-              <Ionicons
-                name={note.isPinned ? "pin" : "pin-outline"}
-                size={18}
-                color={note.isPinned ? "#F59E0B" : "#9CA3AF"}
-              />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={onArchive}
-            className="p-1"
-            disabled={isTogglingArchive}
-          >
-            {isTogglingArchive ? (
-              <ActivityIndicator size="small" color="#3B82F6" />
-            ) : (
-              <Ionicons
-                name={note.isArchived ? "archive" : "archive-outline"}
-                size={18}
-                color={note.isArchived ? "#3B82F6" : "#9CA3AF"}
-              />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={onDelete}
-            className="p-1"
-            disabled={isDeleting}
-          >
-            {isDeleting ? (
-              <ActivityIndicator size="small" color="#EF4444" />
-            ) : (
-              <Ionicons name="trash-outline" size={18} color="#EF4444" />
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
+      <AppText type="caption" className="mt-3">
+        Updated{" "}
+        {formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true })}
+      </AppText>
     </Pressable>
   );
 }

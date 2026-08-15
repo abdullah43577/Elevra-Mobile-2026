@@ -1,34 +1,56 @@
+import { AppText } from "@/components/shared/app-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { useDeleteTag } from "@/hooks/smart-notes/use-delete-tag";
-import { Tag } from "../../../types/notes";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
-import { AppText } from "../shared/app-text";
 import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, Pressable, View } from "react-native";
+import { Tag } from "../../../types/notes";
 
-export const TagItem = function ({ item }: { item: Tag }) {
-  const { deleteTag: deleteThisTag, isDeleting: isDeletingThis } = useDeleteTag(
-    {
-      tagId: item.id,
-    },
-  );
+interface Props {
+  item: Tag;
+  withDivider?: boolean;
+}
+
+export const TagItem = function ({ item, withDivider = false }: Props) {
+  const { deleteTag, isDeleting } = useDeleteTag({ tagId: item.id });
+
+  const noteCount = item._count?.notes || 0;
 
   return (
-    <View className="flex-row items-center justify-between border-b border-gray-50 px-4 py-3">
-      <AppText className="text-base text-gray-900">#{item.name}</AppText>
-      <View className="flex-row items-center gap-3">
-        <AppText className="text-sm text-gray-400">
-          {item._count?.notes || 0} notes
-        </AppText>
-        <TouchableOpacity
-          onPress={() => deleteThisTag(null)}
-          disabled={isDeletingThis}
-        >
-          {isDeletingThis ? (
-            <ActivityIndicator size="small" color="#EF4444" />
-          ) : (
-            <Ionicons name="trash-outline" size={20} color="#EF4444" />
-          )}
-        </TouchableOpacity>
+    <View
+      className={`flex-row items-center gap-3 px-4 py-3.5 ${
+        withDivider ? "border-t-hairline border-neutral-100" : ""
+      }`}
+    >
+      <View
+        className="items-center justify-center rounded-squircle"
+        style={{
+          width: 34,
+          height: 34,
+          backgroundColor: `${CONTENT_COLORS.note}14`,
+        }}
+      >
+        <Ionicons name="pricetag" size={15} color={CONTENT_COLORS.note} />
       </View>
+
+      <View className="flex-1">
+        <AppText type="label">#{item.name}</AppText>
+        <AppText type="caption" className="mt-0.5">
+          {noteCount} {noteCount === 1 ? "note" : "notes"}
+        </AppText>
+      </View>
+
+      <Pressable
+        onPress={() => deleteTag(null)}
+        disabled={isDeleting}
+        hitSlop={8}
+        className="h-8 w-8 items-center justify-center rounded-full active:bg-error-50"
+      >
+        {isDeleting ? (
+          <ActivityIndicator size="small" color="#B93A32" />
+        ) : (
+          <Ionicons name="trash-outline" size={16} color="#B4B4BF" />
+        )}
+      </Pressable>
     </View>
   );
 };

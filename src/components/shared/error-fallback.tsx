@@ -42,7 +42,7 @@ export const ErrorFallback = ({
           </View>
 
           {/* Title */}
-          <AppText className="font-bricolage-semibold mb-3 text-center text-lg text-[#374151]">
+          <AppText className="mb-3 text-center font-bricolage-semibold text-lg text-[#374151]">
             {title}
           </AppText>
 

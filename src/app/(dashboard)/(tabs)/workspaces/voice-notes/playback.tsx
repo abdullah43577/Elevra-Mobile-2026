@@ -1,8 +1,9 @@
 import { AppText } from "@/components/shared/app-text";
+import { ScreenHeader } from "@/components/shared/screen-header";
 import { PlaybackControls } from "@/components/voice-notes/playback/playback-controls";
-import { PlaybackHeader } from "@/components/voice-notes/playback/playback-header";
 import { PlaybackInfo } from "@/components/voice-notes/playback/playback-info";
 import { PlaybackTranscription } from "@/components/voice-notes/playback/playback-transcription";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { useGetRecordingById } from "@/hooks/voice-notes/use-get-recording-by-id";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -20,14 +21,11 @@ export default function Playback() {
   });
 
   const player = useAudioPlayer(recording?.fileUrl ?? null);
-  // `useAudioPlayerStatus` re-renders on every status update. Reading
-  // `player.currentTime` / `player.duration` directly during render does not —
-  // the native object mutates without telling React, which is why the timers
-  // sat at 0:00 until something else happened to trigger a re-render.
+  // Reading player.currentTime/duration during render does not re-render — the
+  // native object mutates without notifying React.
   const status = useAudioPlayerStatus(player);
 
-  // `status.duration` stays 0 until the remote file has loaded, so fall back to
-  // the duration we already persisted when the recording was saved.
+  // status.duration stays 0 until the remote file loads.
   const duration =
     status.duration > 0 ? status.duration : (recording?.duration ?? 0);
   const currentTime = duration
@@ -43,8 +41,7 @@ export default function Playback() {
       return;
     }
 
-    // A player parked at the end of the track ignores `play()`. Rewinding first
-    // is what lets the recording be replayed as many times as the user wants.
+    // A player parked at the end ignores play(), so rewind before replaying.
     if (isFinished) await player.seekTo(0);
     player.play();
   };
@@ -63,30 +60,29 @@ export default function Playback() {
     router.back();
   };
 
-  // Block on the first load only — `isFetchingRecording` also goes true for
-  // background refetches, and swapping to a spinner then would tear down the
+  // First load only — a spinner on background refetches would tear down the
   // player mid-playback.
   if (isFetchingRecording && !recording) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#3B82F6" />
+      <View className="flex-1 items-center justify-center bg-neutral-50">
+        <ActivityIndicator size="large" color={CONTENT_COLORS.recording} />
       </View>
     );
   }
 
   if (!recording) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <AppText className="text-gray-500">Recording not found</AppText>
+      <View className="flex-1 items-center justify-center bg-neutral-50">
+        <AppText type="subtitle">Recording not found</AppText>
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <PlaybackHeader onBack={handleBack} />
+    <SafeAreaView className="flex-1 bg-neutral-50">
+      <ScreenHeader title="Playback" onBack={handleBack} />
 
-      <View className="flex-1 px-6 pt-8">
+      <View className="flex-1 px-5 pt-8">
         <PlaybackInfo
           title={recording.title}
           duration={recording.duration}

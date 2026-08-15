@@ -2,7 +2,8 @@ import { AccountDetailsEdit } from "@/components/profile/account-details-edit";
 import { AccountDetailsView } from "@/components/profile/account-details-view";
 import { AccountPreferencesCard } from "@/components/profile/account-preferences-card";
 import { ProfileHeader } from "@/components/profile/profile-header";
-import { AppButton } from "@/components/shared/app-button";
+import { SettingsCard } from "@/components/profile/settings-card";
+import { SettingsRow } from "@/components/profile/settings-row";
 import { AppText } from "@/components/shared/app-text";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { ProfessionPicker } from "@/components/shared/profession-picker";
@@ -12,15 +13,16 @@ import { useGetProfile } from "@/hooks/use-get-profile";
 import { useImagePicker } from "@/hooks/use-image-picker";
 import { ProfileFormValues, profileSchema } from "@/schemas/settings/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Constants from "expo-constants";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
-  Pressable,
   RefreshControl,
   ScrollView,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
   const { profile, isFetchingProfile, refetch, logout } = useGetProfile();
@@ -102,7 +104,7 @@ export default function Profile() {
 
   if (isFetchingProfile && !profile) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
+      <View className="flex-1 items-center justify-center bg-neutral-50">
         <ActivityIndicator color="#17171C" />
       </View>
     );
@@ -111,71 +113,71 @@ export default function Profile() {
   const displayUri = previewUri || profile?.profile_pic;
 
   return (
-    <ScrollView
-      className="flex-1 bg-neutral-50"
-      contentContainerClassName="pb-12"
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={isFetchingProfile}
-          onRefresh={() => refetch()}
+    <SafeAreaView className="flex-1 bg-neutral-50">
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="pb-10"
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetchingProfile}
+            onRefresh={() => refetch()}
+          />
+        }
+      >
+        <ProfileHeader
+          onChangePicture={handleChangePicture}
+          displayUri={displayUri}
+          isUpdatingProfile={isUpdatingProfile}
+          isEditing={isEditing}
         />
-      }
-    >
-      {/* Header */}
-      <ProfileHeader
-        onChangePicture={handleChangePicture}
-        displayUri={displayUri}
-        isUpdatingProfile={isUpdatingProfile}
-        isEditing={isEditing}
-      />
 
-      <View className="gap-4 px-6 pt-4">
-        {/* Account details card */}
-        <View className="rounded-2xl bg-white p-5">
-          <View className="mb-4 flex-row items-center justify-between">
-            <AppText type="label">Account details</AppText>
-            <Pressable
-              onPress={() => setIsEditing((prev) => !prev)}
-              hitSlop={8}
-            >
-              <AppText type="link">{isEditing ? "Cancel" : "Edit"}</AppText>
-            </Pressable>
+        <View className="gap-4 px-5 pt-4">
+          <SettingsCard
+            title="Account details"
+            actionLabel={isEditing ? "Cancel" : "Edit"}
+            onPressAction={() => setIsEditing((prev) => !prev)}
+          >
+            {isEditing ? (
+              <View className="px-5 pb-5 pt-4">
+                <AccountDetailsEdit
+                  control={control}
+                  errors={errors}
+                  selectedProfessionName={selectedProfessionName}
+                  onOpenProfessionPicker={() =>
+                    setProfessionPickerVisible(true)
+                  }
+                  isUpdatingProfile={isUpdatingProfile}
+                  canSave={canSave}
+                  onSubmit={handleSubmit(onSubmit)}
+                />
+              </View>
+            ) : (
+              <View className="mt-4">
+                <AccountDetailsView />
+              </View>
+            )}
+          </SettingsCard>
+
+          <AccountPreferencesCard
+            onThemeChange={handleThemeChange}
+            isUpdatingSettings={isUpdatingSettings}
+            onNotificationsToggle={handleNotificationsToggle}
+          />
+
+          <View className="overflow-hidden rounded-3xl border-hairline border-neutral-200 bg-white">
+            <SettingsRow
+              label="Log out"
+              destructive
+              onPress={() => setLogoutDialogVisible(true)}
+            />
           </View>
 
-          {isEditing ? (
-            <AccountDetailsEdit
-              control={control}
-              errors={errors}
-              selectedProfessionName={selectedProfessionName}
-              onOpenProfessionPicker={() => setProfessionPickerVisible(true)}
-              isUpdatingProfile={isUpdatingProfile}
-              canSave={canSave}
-              onSubmit={handleSubmit(onSubmit)}
-            />
-          ) : (
-            <AccountDetailsView />
-          )}
-        </View>
-
-        {/* Preferences card */}
-        <AccountPreferencesCard
-          onThemeChange={handleThemeChange}
-          isUpdatingSettings={isUpdatingSettings}
-          onNotificationsToggle={handleNotificationsToggle}
-        />
-
-        {/* Danger zone */}
-        <AppButton
-          type="delete"
-          onPress={() => setLogoutDialogVisible(true)}
-          className="mt-2"
-        >
-          <AppText className="font-bricolage-semibold text-white">
-            Log out
+          <AppText type="caption" className="mt-1 text-center text-neutral-300">
+            Elevra v{Constants.expoConfig?.version ?? "1.0.0"}
           </AppText>
-        </AppButton>
-      </View>
+        </View>
+      </ScrollView>
 
       <ProfessionPicker
         visible={professionPickerVisible}
@@ -196,6 +198,6 @@ export default function Profile() {
         onConfirm={handleLogout}
         onCancel={() => setLogoutDialogVisible(false)}
       />
-    </ScrollView>
+    </SafeAreaView>
   );
 }

@@ -26,15 +26,20 @@ const TAB_ICONS = {
   }
 >;
 
-const makeTabIcon =
-  (key: keyof typeof TAB_ICONS) =>
-  ({ color, size, focused }: TabBarIconProps) => (
-    <Ionicons
-      name={focused ? TAB_ICONS[key].active : TAB_ICONS[key].inactive}
-      size={size}
-      color={color}
-    />
-  );
+const makeTabIcon = function (key: keyof typeof TAB_ICONS) {
+  const TabBarIcon = function ({ color, size, focused }: TabBarIconProps) {
+    return (
+      <Ionicons
+        name={focused ? TAB_ICONS[key].active : TAB_ICONS[key].inactive}
+        size={size}
+        color={color}
+      />
+    );
+  };
+
+  TabBarIcon.displayName = `TabBarIcon(${key})`;
+  return TabBarIcon;
+};
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();

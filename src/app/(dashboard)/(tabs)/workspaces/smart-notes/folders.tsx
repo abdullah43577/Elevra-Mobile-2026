@@ -1,16 +1,17 @@
-import { useState } from "react";
-import { View, FlatList, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { AppText } from "@/components/shared/app-text";
+import { EmptyState } from "@/components/shared/empty-state";
+import { IconButton } from "@/components/shared/icon-button";
+import { ScreenHeader } from "@/components/shared/screen-header";
+import { FolderItem } from "@/components/smart-notes/folder-item";
+import { SaveFolder } from "@/components/smart-notes/save-folder";
+import { COLORS } from "@/constants/colors";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
 import { useSaveFolder } from "@/hooks/smart-notes/use-save-folder";
-import { EmptyState } from "@/components/smart-notes/empty-state";
-import { SaveFolder } from "@/components/smart-notes/save-folder";
 import { showToast } from "@/utils/show-toast";
-import { COLORS } from "@/constants/colors";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FolderItem } from "@/components/smart-notes/folder-item";
 
 export default function Folders() {
   const router = useRouter();
@@ -29,10 +30,7 @@ export default function Folders() {
     if (!folderName.trim())
       return showToast("error", "Please enter a folder name");
 
-    saveFolder({
-      name: folderName.trim(),
-      color: selectedColor,
-    });
+    saveFolder({ name: folderName.trim(), color: selectedColor });
   };
 
   const openCreateModal = function () {
@@ -55,42 +53,55 @@ export default function Folders() {
     setFolderName("");
   };
 
-  const handleBack = function () {
-    router.back();
-  };
-
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-row items-center justify-between border-b border-neutral-100 px-4 py-3">
-        <TouchableOpacity onPress={handleBack} className="p-1">
-          <Ionicons name="arrow-back" size={24} color="#7D7D8A" />
-        </TouchableOpacity>
-        <AppText type="label" className="text-[16px]">
-          Folders
-        </AppText>
-        <TouchableOpacity onPress={openCreateModal} className="p-1">
-          <Ionicons name="add" size={24} color="#5B47E8" />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView className="flex-1 bg-neutral-50">
+      <ScreenHeader
+        title="Folders"
+        onBack={() => router.back()}
+        right={
+          <IconButton
+            icon="add"
+            onPress={openCreateModal}
+            size={24}
+            color={CONTENT_COLORS.note}
+          />
+        }
+      />
 
-      <FlatList
-        data={folders}
-        keyExtractor={(item) => item.id}
-        refreshing={isFetchingFolders}
-        onRefresh={refetchFolders}
-        renderItem={({ item }) => (
-          <FolderItem item={item} openEditModal={openEditModal} />
-        )}
-        ListEmptyComponent={() => (
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="px-5 py-5"
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetchingFolders}
+            onRefresh={refetchFolders}
+            tintColor={CONTENT_COLORS.note}
+          />
+        }
+      >
+        {folders.length === 0 ? (
           <EmptyState
             icon="folder-outline"
             title="No folders"
-            subtitle="Create folders to organize your notes"
-            buttonText="Create Folder"
+            subtitle="Create folders to keep your notes organized"
+            buttonText="Create folder"
             onButtonPress={openCreateModal}
           />
+        ) : (
+          <View className="overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+            {folders.map((folder, index) => (
+              <FolderItem
+                key={folder.id}
+                item={folder}
+                openEditModal={openEditModal}
+                withDivider={index > 0}
+              />
+            ))}
+          </View>
         )}
-      />
+      </ScrollView>
 
       <SaveFolder
         isModalVisible={isModalVisible}

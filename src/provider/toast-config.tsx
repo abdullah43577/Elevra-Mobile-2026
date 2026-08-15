@@ -62,14 +62,20 @@ const variants = {
 
 const makeToast = function (type: keyof typeof variants) {
   const { bg, border, color, Icon, iconColor } = variants[type];
-  return ({ text1 }: BaseToastProps) => (
-    <View
-      style={[styles.container, { backgroundColor: bg, borderColor: border }]}
-    >
-      <Icon size={18} color={iconColor} style={styles.icon} />
-      <Text style={[styles.text, { color }]}>{text1}</Text>
-    </View>
-  );
+
+  const Toast = function ({ text1 }: BaseToastProps) {
+    return (
+      <View
+        style={[styles.container, { backgroundColor: bg, borderColor: border }]}
+      >
+        <Icon size={18} color={iconColor} style={styles.icon} />
+        <Text style={[styles.text, { color }]}>{text1}</Text>
+      </View>
+    );
+  };
+
+  Toast.displayName = `Toast(${type})`;
+  return Toast;
 };
 
 export const toastConfig = {

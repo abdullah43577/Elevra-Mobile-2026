@@ -10,7 +10,7 @@ import { AppText } from "./app-text";
 export interface AppButtonProps extends PressableProps {
   className?: string;
   onPress?: () => void;
-  type?: "default" | "submit" | "delete";
+  type?: "default" | "submit" | "secondary" | "delete";
   isLoading?: boolean;
   disabled?: boolean;
   // Preferred over passing raw `children` for text-only buttons — renders
@@ -24,12 +24,14 @@ const hapticMap: Partial<
 > = {
   default: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
   submit: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+  secondary: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
   delete: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
 };
 
 const typeStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
   default: "bg-primary-500",
   submit: "bg-secondary-500",
+  secondary: "bg-neutral-100",
   delete: "bg-error-500",
 };
 
@@ -39,6 +41,7 @@ const typeStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
 const textStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
   default: "text-primary-foreground",
   submit: "text-secondary-foreground",
+  secondary: "text-primary-500",
   delete: "text-error-foreground",
 };
 

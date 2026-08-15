@@ -1,9 +1,19 @@
+import { Ionicons } from "@expo/vector-icons";
+import { formatDistanceToNow } from "date-fns";
 import { router } from "expo-router";
 import { User } from "../../types/auth";
 import { Note } from "../../types/notes";
 import { Resume } from "../../types/resume/resume";
 import { VoiceRecording } from "../../types/voice-notes";
-import { CONTENT_COLORS } from "./content-colors";
+import { CONTENT_COLORS, ContentCategory } from "./content-colors";
+
+export interface RecentItem {
+  id: string;
+  title: string;
+  type: ContentCategory;
+  date: string;
+  route: string;
+}
 
 export const getGreeting = function () {
   const hour = new Date().getHours();
@@ -28,10 +38,14 @@ export const getInitials = function ({ profile }: { profile?: User }) {
   return `${first}${last}`.toUpperCase();
 };
 
+export const formatRelativeDate = function (date: string) {
+  return formatDistanceToNow(new Date(date), { addSuffix: true });
+};
+
 export const quickActions = [
   {
     id: "note",
-    label: "New Note",
+    label: "Note",
     icon: "document-text-outline",
     color: CONTENT_COLORS.note,
     onPress: () =>
@@ -39,7 +53,7 @@ export const quickActions = [
   },
   {
     id: "recording",
-    label: "New Recording",
+    label: "Recording",
     icon: "mic-outline",
     color: CONTENT_COLORS.recording,
     onPress: () =>
@@ -47,12 +61,18 @@ export const quickActions = [
   },
   {
     id: "resume",
-    label: "New Resume",
+    label: "Resume",
     icon: "document-outline",
     color: CONTENT_COLORS.resume,
     onPress: () => router.push("/(dashboard)/(tabs)/workspaces/resume-studio"),
   },
-];
+] satisfies {
+  id: string;
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  color: string;
+  onPress: () => void;
+}[];
 
 export const getRecentItems = function ({
   notes,
@@ -63,13 +83,7 @@ export const getRecentItems = function ({
   resumes: Resume[];
   recordings: VoiceRecording[];
 }) {
-  const items: {
-    id: string;
-    title: string;
-    type: string;
-    date: string;
-    route: string;
-  }[] = [];
+  const items: RecentItem[] = [];
 
   // Add recent notes
   notes.slice(0, 3).forEach((note) => {

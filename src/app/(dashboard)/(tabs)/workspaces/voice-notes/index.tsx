@@ -1,18 +1,15 @@
-import { EmptyState } from "@/components/smart-notes/empty-state";
+import { AppText } from "@/components/shared/app-text";
+import { EmptyState } from "@/components/shared/empty-state";
+import { IconButton } from "@/components/shared/icon-button";
+import { SearchBar } from "@/components/shared/search-bar";
 import { RecordingCard } from "@/components/voice-notes/recording-card";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useGetRecordings } from "@/hooks/voice-notes/use-get-recordings";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Pressable, RefreshControl, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function VoiceNotes() {
@@ -22,26 +19,13 @@ export default function VoiceNotes() {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const { recordings, isFetchingRecordings, refetchRecordings } =
-    useGetRecordings({
-      search: debouncedSearch || undefined,
-    });
-
-  const handleRefresh = function () {
-    refetchRecordings();
-  };
+    useGetRecordings({ search: debouncedSearch || undefined });
 
   const handleCreateRecording = function () {
     router.push("/(dashboard)/(tabs)/workspaces/voice-notes/recorder");
   };
 
-  const handleRecordingPress = function (recordingId: string) {
-    router.push({
-      pathname: "/(dashboard)/(tabs)/workspaces/voice-notes/playback",
-      params: { id: recordingId },
-    });
-  };
-
-  const handlePlayback = function (recordingId: string) {
+  const handleOpenRecording = function (recordingId: string) {
     router.push({
       pathname: "/(dashboard)/(tabs)/workspaces/voice-notes/playback",
       params: { id: recordingId },
@@ -49,90 +33,94 @@ export default function VoiceNotes() {
   };
 
   const handleToggleSearch = function () {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
-  const handleClearSearch = function () {
-    setSearchQuery("");
+    setIsSearchVisible((prev) => !prev);
+    if (isSearchVisible) setSearchQuery("");
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-4 pb-4 pt-2">
-        <Text className="font-bricolage-bold text-2xl text-gray-900">
-          Voice Notes
-        </Text>
-        <View className="flex-row items-center gap-2">
-          <TouchableOpacity onPress={handleToggleSearch} className="p-2">
-            <Ionicons
-              name={isSearchVisible ? "close-outline" : "search-outline"}
-              size={24}
-              color="#6B7280"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleCreateRecording} className="p-2">
-            <Ionicons name="mic-outline" size={24} color="#3B82F6" />
-          </TouchableOpacity>
+    <SafeAreaView className="flex-1 bg-neutral-50">
+      <View className="flex-row items-start justify-between px-5 pb-4 pt-2">
+        <View className="flex-1 pr-3">
+          <AppText type="display">Voice Notes</AppText>
+          <AppText type="subtitle" className="mt-1">
+            {recordings.length}{" "}
+            {recordings.length === 1 ? "recording" : "recordings"}
+          </AppText>
         </View>
+
+        <IconButton
+          icon={isSearchVisible ? "close-outline" : "search-outline"}
+          onPress={handleToggleSearch}
+        />
       </View>
 
-      {/* Search Bar */}
       {isSearchVisible && (
-        <View className="px-4 pb-3">
-          <View className="flex-row items-center rounded-xl bg-gray-100 px-4 py-2">
-            <Ionicons name="search-outline" size={20} color="#9CA3AF" />
-            <TextInput
-              className="ml-2 flex-1 text-base text-gray-900"
-              placeholder="Search recordings..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              autoFocus
-              placeholderTextColor="#9CA3AF"
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={handleClearSearch}>
-                <Ionicons name="close-circle" size={20} color="#9CA3AF" />
-              </TouchableOpacity>
-            )}
-          </View>
+        <View className="px-5 pb-3">
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onClear={() => setSearchQuery("")}
+            placeholder="Search recordings..."
+            autoFocus
+          />
         </View>
       )}
 
-      {/* Recordings List */}
       <FlatList
         data={recordings}
         keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <RecordingCard
+            recording={item}
+            onPress={() => handleOpenRecording(item.id)}
+            onPlayback={() => handleOpenRecording(item.id)}
+          />
+        )}
         refreshControl={
           <RefreshControl
             refreshing={isFetchingRecordings}
-            onRefresh={handleRefresh}
-            tintColor="#3B82F6"
+            onRefresh={refetchRecordings}
+            tintColor={CONTENT_COLORS.recording}
           />
         }
-        renderItem={({ item }) => {
-          return (
-            <RecordingCard
-              recording={item}
-              onPress={() => handleRecordingPress(item.id)}
-              onPlayback={() => handlePlayback(item.id)}
-            />
-          );
-        }}
-        ListEmptyComponent={() => (
+        ListEmptyComponent={
           <EmptyState
             icon="mic-outline"
-            title="No recordings yet"
-            subtitle="Tap the mic button to start recording your first voice note"
-            buttonText="Start Recording"
-            onButtonPress={handleCreateRecording}
+            title={searchQuery ? "No recordings found" : "No recordings yet"}
+            subtitle={
+              searchQuery
+                ? "Try a different search term"
+                : "Record or upload your first voice note"
+            }
+            accentColor={CONTENT_COLORS.recording}
+            {...(!searchQuery && {
+              buttonText: "Start recording",
+              onButtonPress: handleCreateRecording,
+            })}
           />
-        )}
+        }
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingHorizontal: 20,
+          paddingBottom: 110,
           flexGrow: 1,
         }}
+        showsVerticalScrollIndicator={false}
       />
+
+      <Pressable
+        onPress={handleCreateRecording}
+        className="absolute bottom-6 right-5 h-14 w-14 items-center justify-center rounded-full active:opacity-80"
+        style={{
+          backgroundColor: CONTENT_COLORS.recording,
+          shadowColor: CONTENT_COLORS.recording,
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.3,
+          shadowRadius: 12,
+          elevation: 6,
+        }}
+      >
+        <Ionicons name="mic" size={24} color="white" />
+      </Pressable>
     </SafeAreaView>
   );
 }

@@ -10,11 +10,9 @@ import { KeyboardAvoidingView, Platform, View } from "react-native";
 interface Props {
   onChange: (value: string) => void;
   /**
-   * Seeds the document ONCE. tentap reads this at bridge-construction time and
-   * the webview owns the document from then on, so later changes to this prop
-   * are deliberately ignored. Callers must therefore not mount this component
-   * until the content they want to show is resolved — see note-editor.tsx,
-   * which waits for the fetched note before rendering.
+   * Seeds the document ONCE — tentap reads it at bridge-construction time and
+   * the webview owns the document afterwards. Do not mount this component
+   * until the content you want to show is resolved.
    */
   initialContent?: string;
   autofocus?: boolean;
@@ -32,9 +30,8 @@ export const RichTextEditor = function ({
     avoidIosKeyboard: true,
     initialContent,
     onChange: async () => {
-      // tentap emits a change while it loads `initialContent`. Letting that
-      // through would push an empty "<p></p>" up into parent state and wipe
-      // the note before the user has typed a single character.
+      // tentap emits a change while loading; letting it through would push an
+      // empty "<p></p>" into parent state and wipe the note.
       if (!isHydrated.current) return;
       onChange(await editor.getHTML());
     },
@@ -44,10 +41,8 @@ export const RichTextEditor = function ({
 
   useEffect(() => {
     if (!isReady || isHydrated.current) return;
-    // `initialContent` is applied at construction, but on a cold webview the
-    // document can still be empty by the time the bridge reports ready — which
-    // is what left the editor blank when opening an existing note. Re-apply it
-    // once here, then hand ownership of the document to the webview.
+    // On a cold webview the document can still be empty once the bridge reports
+    // ready, so re-apply the seed content exactly once.
     editor.setContent(initialContent);
     isHydrated.current = true;
   }, [isReady, initialContent, editor]);

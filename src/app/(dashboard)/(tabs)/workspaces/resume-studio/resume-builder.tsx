@@ -266,7 +266,7 @@ export default function ResumeBuilder() {
             <View className="flex-1">
               <AppText
                 type="subtitle"
-                className="font-bricolage-medium mb-2 text-sm text-gray-700"
+                className="mb-2 font-bricolage-medium text-sm text-gray-700"
               >
                 Resume Preview
               </AppText>
@@ -289,7 +289,7 @@ export default function ResumeBuilder() {
             </View>
           ) : (
             <View>
-              <AppText className="font-bricolage-bold mb-1 text-xl text-gray-900">
+              <AppText className="mb-1 font-bricolage-bold text-xl text-gray-900">
                 {currentSection.label}
               </AppText>
 

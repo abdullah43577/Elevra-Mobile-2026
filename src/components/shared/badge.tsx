@@ -34,14 +34,14 @@ export const Badge = function ({
   };
 
   const containerClass = clsx(
-    "self-start rounded-full px-3 py-1",
+    "self-start rounded-full px-2.5 py-1",
     container,
     onPress && "active:opacity-70",
     className,
   );
 
   const content = (
-    <AppText type="subtitle" className={text}>
+    <AppText type="caption" className={clsx("font-bricolage-semibold", text)}>
       {label}
     </AppText>
   );

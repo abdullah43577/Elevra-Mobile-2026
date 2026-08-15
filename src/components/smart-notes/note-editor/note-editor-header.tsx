@@ -1,5 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/components/shared/app-text";
+import { ScreenHeader } from "@/components/shared/screen-header";
+import { CONTENT_COLORS } from "@/constants/content-colors";
+import { ActivityIndicator, Pressable } from "react-native";
 
 interface NoteEditorHeaderProps {
   noteId?: string;
@@ -15,20 +17,19 @@ export function NoteEditorHeader({
   onSave,
 }: NoteEditorHeaderProps) {
   return (
-    <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
-      <TouchableOpacity onPress={onBack} className="p-1">
-        <Ionicons name="close" size={24} color="#6B7280" />
-      </TouchableOpacity>
-      <Text className="font-bricolage-semibold text-lg text-gray-900">
-        {noteId ? "Edit Note" : "New Note"}
-      </Text>
-      <TouchableOpacity onPress={onSave} className="p-1" disabled={isSaving}>
-        {isSaving ? (
-          <ActivityIndicator size="small" color="#3B82F6" />
+    <ScreenHeader
+      title={noteId ? "Edit note" : "New note"}
+      onBack={onBack}
+      backIcon="close"
+      right={
+        isSaving ? (
+          <ActivityIndicator size="small" color={CONTENT_COLORS.note} />
         ) : (
-          <Text className="font-bricolage-semibold text-blue-500">Save</Text>
-        )}
-      </TouchableOpacity>
-    </View>
+          <Pressable onPress={onSave} hitSlop={8}>
+            <AppText type="link">Save</AppText>
+          </Pressable>
+        )
+      }
+    />
   );
 }

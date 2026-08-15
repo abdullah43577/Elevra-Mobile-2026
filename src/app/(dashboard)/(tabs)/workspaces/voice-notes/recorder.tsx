@@ -329,7 +329,7 @@ export default function Recorder() {
   const hasRecording = !!audioRecorder.uri && !isRecording;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-neutral-50">
       <RecorderHeader
         onBack={handleBack}
         onSave={handleSaveRecording}
@@ -340,11 +340,11 @@ export default function Recorder() {
       <View className="flex-1 items-center justify-center px-6">
         {/* Title Input */}
         <TextInput
-          className="font-bricolage-medium mb-4 w-full rounded-xl bg-gray-50 px-4 py-3 text-center text-lg text-gray-900"
+          className="mb-8 w-full rounded-2xl border-hairline border-neutral-200 bg-white px-4 py-3.5 text-center font-bricolage-medium text-[17px] text-primary-500"
           placeholder="Recording title..."
           value={title}
           onChangeText={setTitle}
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#B4B4BF"
           editable={!isSaving}
         />
 

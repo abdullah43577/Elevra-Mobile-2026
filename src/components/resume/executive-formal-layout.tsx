@@ -276,8 +276,8 @@ function SectionLabel({
     <AppText
       className={
         isThumbnail
-          ? "font-bricolage-bold text-center text-[9px] uppercase tracking-widest"
-          : "font-bricolage-bold text-center text-sm uppercase tracking-widest"
+          ? "text-center font-bricolage-bold text-[9px] uppercase tracking-widest"
+          : "text-center font-bricolage-bold text-sm uppercase tracking-widest"
       }
       style={{ color: gold }}
     >

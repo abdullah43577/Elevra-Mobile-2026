@@ -13,24 +13,27 @@ export function RecorderTimer({
   isRecording,
   isUploadedFile,
 }: RecorderTimerProps) {
-  // Don't show timer for uploaded files
-  if (isUploadedFile) {
-    return null;
-  }
+  if (isUploadedFile) return null;
 
   return (
-    <View className="items-center">
-      <AppText className="font-bricolage-bold mb-8 text-6xl text-gray-900">
+    <View className="mb-10 items-center">
+      <AppText className="font-bricolage-bold text-[56px] leading-[64px] tracking-tight text-primary-500">
         {formatTime(elapsedTime)}
       </AppText>
 
-      {/* Recording Status Indicator */}
-      {isRecording && (
-        <View className="mb-4 flex-row items-center gap-2">
-          <View className="h-3 w-3 rounded-full bg-red-500" />
-          <AppText className="text-sm text-red-500">Recording...</AppText>
-        </View>
-      )}
+      <View className="mt-2 h-6 flex-row items-center gap-2">
+        {isRecording && (
+          <>
+            <View className="h-2 w-2 rounded-full bg-error-500" />
+            <AppText
+              type="caption"
+              className="font-bricolage-semibold text-error-500"
+            >
+              Recording
+            </AppText>
+          </>
+        )}
+      </View>
     </View>
   );
 }

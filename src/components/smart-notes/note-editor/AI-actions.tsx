@@ -1,7 +1,9 @@
+import { AppText } from "@/components/shared/app-text";
 import { StreamingText } from "@/components/shared/streaming-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Pressable, View } from "react-native";
 
 interface AIActionsProps {
   noteId?: string;
@@ -20,8 +22,6 @@ interface AIActionsProps {
 }
 
 export function AIActions({
-  noteId,
-  content,
   summary,
   isGeneratingSummary,
   summaryComplete,
@@ -35,34 +35,29 @@ export function AIActions({
   disabled = false,
 }: AIActionsProps) {
   const isDisabled = disabled || isGeneratingSummary || !hasContent || !isSaved;
+  const accent = isDisabled ? "#B4B4BF" : CONTENT_COLORS.note;
 
   return (
-    <View className="mt-4 rounded-xl bg-gray-50 p-4">
-      <Text className="font-bricolage-medium mb-2 text-sm text-gray-700">
-        AI Actions
-      </Text>
+    <View className="mb-6 mt-2 rounded-2xl border-hairline border-neutral-200 bg-white p-4">
+      <AppText type="label" className="mb-3">
+        AI actions
+      </AppText>
 
-      {/* Generate Summary Button */}
-      <TouchableOpacity
+      <Pressable
         onPress={onGenerateSummary}
-        className="flex-row items-center gap-2"
         disabled={isDisabled}
+        className="flex-row items-center gap-2 active:opacity-70"
       >
         {isGeneratingSummary ? (
-          <ActivityIndicator size="small" color="#3B82F6" />
+          <ActivityIndicator size="small" color={CONTENT_COLORS.note} />
         ) : (
-          <Ionicons
-            name="sparkles"
-            size={20}
-            color={isDisabled ? "#9CA3AF" : "#3B82F6"}
-          />
+          <Ionicons name="sparkles" size={17} color={accent} />
         )}
-        <Text className={isDisabled ? "text-gray-400" : "text-blue-500"}>
+        <AppText type="label" style={{ color: accent }}>
           {isGeneratingSummary ? "Generating summary..." : "Summarize with AI"}
-        </Text>
-      </TouchableOpacity>
+        </AppText>
+      </Pressable>
 
-      {/* Streaming Summary */}
       {(summary || isGeneratingSummary) && (
         <StreamingText
           text={summary}
@@ -70,36 +65,41 @@ export function AIActions({
           isComplete={summaryComplete}
           label={isGeneratingSummary ? "Generating summary..." : "Summary"}
           labelIcon="sparkles"
-          containerClassName="mt-3 rounded-lg bg-blue-50 p-3"
-          labelClassName="text-xs font-bricolage-medium text-blue-700"
-          textClassName="mt-1 text-sm text-gray-700"
-          showCursor={true}
+          containerClassName="mt-3 rounded-xl bg-secondary-50 p-3.5"
+          labelClassName="text-xs font-bricolage-semibold text-secondary-600"
+          textClassName="mt-1.5 text-sm leading-[20px] text-primary-500"
+          showCursor
           onStreamComplete={onSummaryComplete}
         />
       )}
 
-      {/* Existing Summary from Database */}
       {existingSummary && !summary && !isGeneratingSummary && (
-        <View className="mt-3 rounded-lg bg-blue-50 p-3">
-          <Text className="font-bricolage-medium text-xs text-blue-700">
+        <View className="mt-3 rounded-xl bg-secondary-50 p-3.5">
+          <AppText
+            type="caption"
+            className="font-bricolage-semibold text-secondary-600"
+          >
             Summary
-          </Text>
-          <Text className="mt-1 text-sm text-gray-700">{existingSummary}</Text>
+          </AppText>
+          <AppText type="default" className="mt-1.5 text-[15px] leading-[20px]">
+            {existingSummary}
+          </AppText>
           {existingSummaryGeneratedAt && (
-            <Text className="mt-1 text-xs text-gray-400">
+            <AppText type="caption" className="mt-2">
               Generated{" "}
               {formatDistanceToNow(new Date(existingSummaryGeneratedAt), {
                 addSuffix: true,
               })}
-            </Text>
+            </AppText>
           )}
         </View>
       )}
 
-      {/* Error State */}
       {summaryError && (
-        <View className="mt-3 rounded-lg bg-red-50 p-3">
-          <Text className="text-sm text-red-600">{summaryError}</Text>
+        <View className="mt-3 rounded-xl bg-error-50 p-3.5">
+          <AppText type="caption" className="text-error-600">
+            {summaryError}
+          </AppText>
         </View>
       )}
     </View>

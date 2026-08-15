@@ -1,4 +1,5 @@
 import { ProfileFormValues } from "@/schemas/settings/profile";
+import { ChevronRight } from "lucide-react-native";
 import { Control, FieldErrors } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { AppButton } from "../shared/app-button";
@@ -41,15 +42,11 @@ export const AccountDetailsEdit = function ({
       />
 
       <View>
-        <AppText
-          type="default"
-          className="font-bricolage-medium mb-1.5 text-sm text-neutral-700"
-        >
+        <AppText type="label" className="mb-1.5">
           Profession
         </AppText>
         <Pressable
-          className="flex-row items-center justify-between rounded-xl border border-neutral-200 px-4 py-3.5"
-          //   onPress={() => setProfessionPickerVisible(true)}
+          className="flex-row items-center justify-between rounded-2xl border-hairline border-neutral-200 bg-neutral-50 px-4 py-3.5 active:opacity-70"
           onPress={onOpenProfessionPicker}
         >
           <AppText
@@ -58,9 +55,7 @@ export const AccountDetailsEdit = function ({
           >
             {selectedProfessionName ?? "Select a profession"}
           </AppText>
-          <AppText type="default" className="text-neutral-400">
-            ›
-          </AppText>
+          <ChevronRight size={16} color="#B4B4BF" />
         </Pressable>
       </View>
 
@@ -81,14 +76,10 @@ export const AccountDetailsEdit = function ({
         type="submit"
         isLoading={isUpdatingProfile}
         disabled={!canSave}
-        // onPress={handleSubmit(onSubmit)}
         onPress={onSubmit}
+        label="Save changes"
         className="mt-1"
-      >
-        <AppText type="default" className="font-bricolage-semibold text-white">
-          {isUpdatingProfile ? "Saving…" : "Save changes"}
-        </AppText>
-      </AppButton>
+      />
     </View>
   );
 };

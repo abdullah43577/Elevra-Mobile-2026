@@ -1,48 +1,61 @@
+import { AppText } from "@/components/shared/app-text";
 import { useDeleteFolder } from "@/hooks/smart-notes/use-delete-folder";
-import { Folder } from "../../../types/notes";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
-import { AppText } from "../shared/app-text";
 import { Ionicons } from "@expo/vector-icons";
+import { ActivityIndicator, Pressable, View } from "react-native";
+import { Folder } from "../../../types/notes";
+
+interface Props {
+  item: Folder;
+  openEditModal: (item: Folder) => void;
+  withDivider?: boolean;
+}
 
 export const FolderItem = function ({
   item,
   openEditModal,
-}: {
-  item: Folder;
-  openEditModal: (item: Folder) => void;
-}) {
-  // Each folder gets its own delete hook
-  const { deleteFolder, isDeleting } = useDeleteFolder({
-    folderId: item.id,
-  });
+  withDivider = false,
+}: Props) {
+  const { deleteFolder, isDeleting } = useDeleteFolder({ folderId: item.id });
+
+  const noteCount = item._count?.notes || 0;
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => openEditModal(item)}
-      className="flex-row items-center justify-between border-b border-gray-50 px-4 py-3"
+      className={`flex-row items-center gap-3 px-4 py-3.5 active:bg-neutral-50 ${
+        withDivider ? "border-t-hairline border-neutral-100" : ""
+      }`}
     >
-      <View className="flex-row items-center gap-3">
-        <View
-          className="h-4 w-4 rounded-full"
-          style={{ backgroundColor: item.color || "#6B7280" }}
-        />
-        <AppText className="text-base text-gray-900">{item.name}</AppText>
+      <View
+        className="items-center justify-center rounded-squircle"
+        style={{
+          width: 34,
+          height: 34,
+          backgroundColor: `${item.color || "#7D7D8A"}14`,
+        }}
+      >
+        <Ionicons name="folder" size={16} color={item.color || "#7D7D8A"} />
       </View>
-      <View className="flex-row items-center gap-3">
-        <AppText className="text-sm text-gray-400">
-          {item._count?.notes || 0} notes
+
+      <View className="flex-1">
+        <AppText type="label">{item.name}</AppText>
+        <AppText type="caption" className="mt-0.5">
+          {noteCount} {noteCount === 1 ? "note" : "notes"}
         </AppText>
-        <TouchableOpacity
-          onPress={() => deleteFolder(null)}
-          disabled={isDeleting}
-        >
-          {isDeleting ? (
-            <ActivityIndicator size="small" color="#EF4444" />
-          ) : (
-            <Ionicons name="trash-outline" size={20} color="#EF4444" />
-          )}
-        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+
+      <Pressable
+        onPress={() => deleteFolder(null)}
+        disabled={isDeleting}
+        hitSlop={8}
+        className="h-8 w-8 items-center justify-center rounded-full active:bg-error-50"
+      >
+        {isDeleting ? (
+          <ActivityIndicator size="small" color="#B93A32" />
+        ) : (
+          <Ionicons name="trash-outline" size={16} color="#B4B4BF" />
+        )}
+      </Pressable>
+    </Pressable>
   );
 };

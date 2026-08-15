@@ -25,9 +25,6 @@ export default function NoteEditor() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [summaryComplete, setSummaryComplete] = useState(false);
 
-  // A brand-new note has nothing to load, so it is ready immediately. An
-  // existing note is only "hydrated" once the fetched record has been copied
-  // into local state — the editor must not mount before that (see below).
   const [isHydrated, setIsHydrated] = useState(!noteId);
   const hydratedNoteId = useRef<string | null>(null);
 
@@ -54,10 +51,8 @@ export default function NoteEditor() {
   });
 
   useEffect(() => {
-    // Copy the record into local state exactly once per note. `note` gets a new
-    // identity on every background refetch (useGetData refetches on mount and
-    // on focus), and re-running this would throw away whatever the user has
-    // typed since opening the screen.
+    // Once per note only — `note` changes identity on every background refetch,
+    // and re-running this would discard the user's unsaved edits.
     if (!note || hydratedNoteId.current === note.id) return;
 
     hydratedNoteId.current = note.id;
@@ -128,9 +123,8 @@ export default function NoteEditor() {
     setSelectedTags(selectedTags.filter((t) => t !== tagName));
   };
 
-  // Only block on the *first* load. `isFetchingNote` also goes true for
-  // background refetches, and returning the spinner then would unmount the
-  // editor mid-edit and discard the user's work.
+  // First load only — a spinner on background refetches would unmount the
+  // editor mid-edit.
   if (isFetchingNote && !note) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
@@ -151,23 +145,22 @@ export default function NoteEditor() {
         onSave={handleSave}
       />
 
-      <ScrollView className="flex-1 px-4 pt-4">
+      <ScrollView className="flex-1 px-5 pt-5">
         <TextInput
-          className="font-bricolage-bold font-roboto text-2xl text-primary-500"
+          className="font-bricolage-bold text-[26px] leading-[32px] text-primary-500"
           placeholder="Note title..."
           value={title}
           onChangeText={setTitle}
-          placeholderTextColor="#B4B4BF"
+          placeholderTextColor="#D5D5DE"
           editable={!isSaving}
+          multiline
         />
 
-        <View className="my-4 h-px bg-neutral-200" />
+        <View className="my-5 h-px bg-neutral-100" />
 
         <View className="min-h-[200px]">
-          {/* Mounted only once `content` holds the real note body. The editor
-              seeds its document from `initialContent` on mount and ignores the
-              prop afterwards, so mounting it early is what left the body blank
-              and uneditable when opening a saved note. */}
+          {/* Mounted only once `content` holds the real note body — see
+              RichTextEditor's `initialContent`. */}
           {isHydrated ? (
             <RichTextEditor
               key={noteId ?? "new-note"}
@@ -180,7 +173,7 @@ export default function NoteEditor() {
           )}
         </View>
 
-        <View className="my-4 h-px bg-neutral-200" />
+        <View className="my-5 h-px bg-neutral-100" />
 
         <FolderPicker
           folders={folders}

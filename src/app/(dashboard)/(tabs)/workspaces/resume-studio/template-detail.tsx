@@ -88,7 +88,7 @@ export default function TemplateDetail() {
             onPress={handleUseTemplate}
             className="rounded-lg bg-blue-500 py-4"
           >
-            <AppText className="font-bricolage-semibold text-center text-white">
+            <AppText className="text-center font-bricolage-semibold text-white">
               Use This Template
             </AppText>
           </TouchableOpacity>

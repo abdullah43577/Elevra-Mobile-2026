@@ -1,4 +1,5 @@
 import { AppText } from "@/components/shared/app-text";
+import { Badge } from "@/components/shared/badge";
 import { WorkspaceItem } from "@/constants/workspaces";
 import { ChevronRight } from "lucide-react-native";
 import { Pressable, View } from "react-native";
@@ -14,34 +15,29 @@ export const WorkspaceCard = function ({ item, onPress }: Props) {
   return (
     <Pressable
       onPress={() => onPress(item)}
-      className="flex-row items-center gap-4 rounded-2xl bg-white p-5"
+      className="flex-row items-center gap-4 rounded-2xl border-hairline border-neutral-200 bg-white p-4 active:opacity-70"
     >
-      <View className="h-11 w-11 items-center justify-center rounded-xl bg-neutral-100">
-        <Icon size={20} color="#18181b" />
+      <View
+        className="items-center justify-center rounded-squircle"
+        style={{ width: 42, height: 42, backgroundColor: `${item.color}14` }}
+      >
+        <Icon size={20} color={item.color} />
       </View>
 
       <View className="flex-1">
-        <View className="flex-row items-center gap-1.5">
-          <AppText
-            type="default"
-            className="font-bricolage-semibold text-neutral-900"
-          >
+        <View className="flex-row items-center gap-2">
+          <AppText type="label" className="text-[15px]">
             {item.title}
           </AppText>
-          {item.locked && (
-            <View className="rounded-full bg-neutral-100 px-2 py-0.5">
-              <AppText type="default" className="text-xs text-neutral-400">
-                Soon
-              </AppText>
-            </View>
-          )}
+          {item.locked && <Badge label="Soon" />}
         </View>
-        <AppText type="default" className="mt-0.5 text-sm text-neutral-500">
+
+        <AppText type="caption" className="mt-1" numberOfLines={1}>
           {item.description}
         </AppText>
       </View>
 
-      <ChevronRight size={18} color="#a3a3a3" />
+      <ChevronRight size={17} color="#D5D5DE" />
     </Pressable>
   );
 };

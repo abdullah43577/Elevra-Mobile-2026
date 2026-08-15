@@ -1,6 +1,7 @@
 import { AppText } from "@/components/shared/app-text";
-import { Ionicons } from "@expo/vector-icons";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { ScreenHeader } from "@/components/shared/screen-header";
+import { CONTENT_COLORS } from "@/constants/content-colors";
+import { ActivityIndicator, Pressable } from "react-native";
 
 interface RecorderHeaderProps {
   onBack: () => void;
@@ -16,32 +17,25 @@ export function RecorderHeader({
   hasFile,
 }: RecorderHeaderProps) {
   return (
-    <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
-      <TouchableOpacity onPress={onBack} className="p-1">
-        <Ionicons name="close" size={24} color="#6B7280" />
-      </TouchableOpacity>
-
-      <AppText className="font-bricolage-semibold text-lg text-gray-900">
-        New Recording
-      </AppText>
-
-      <TouchableOpacity
-        onPress={onSave}
-        className="p-1"
-        disabled={isSaving || !hasFile}
-      >
-        {isSaving ? (
-          <ActivityIndicator size="small" color="#3B82F6" />
+    <ScreenHeader
+      title="New recording"
+      onBack={onBack}
+      backIcon="close"
+      right={
+        isSaving ? (
+          <ActivityIndicator size="small" color={CONTENT_COLORS.recording} />
         ) : (
-          <AppText
-            className={`font-bricolage-semibold ${
-              hasFile ? "text-blue-500" : "text-gray-400"
-            }`}
-          >
-            Save
-          </AppText>
-        )}
-      </TouchableOpacity>
-    </View>
+          <Pressable onPress={onSave} disabled={!hasFile} hitSlop={8}>
+            <AppText
+              type="link"
+              className={hasFile ? "" : "text-neutral-300"}
+              style={hasFile ? { color: CONTENT_COLORS.recording } : undefined}
+            >
+              Save
+            </AppText>
+          </Pressable>
+        )
+      }
+    />
   );
 }

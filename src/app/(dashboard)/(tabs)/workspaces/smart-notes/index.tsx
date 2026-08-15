@@ -1,21 +1,19 @@
-import { useState } from "react";
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  RefreshControl,
-  TextInput,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
-import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
-import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
-import { SkeletonCard } from "@/components/smart-notes/skeleton-card";
+import { EmptyState } from "@/components/shared/empty-state";
+import { IconButton } from "@/components/shared/icon-button";
+import { SearchBar } from "@/components/shared/search-bar";
 import { FilterChips } from "@/components/smart-notes/filter-chips";
-import { EmptyState } from "@/components/smart-notes/empty-state";
 import { NoteItem } from "@/components/smart-notes/note-item";
+import { SkeletonCard } from "@/components/smart-notes/skeleton-card";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
+import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { FlatList, Pressable, RefreshControl, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SmartNotes() {
   const router = useRouter();
@@ -31,10 +29,6 @@ export default function SmartNotes() {
 
   const { folders, isFetchingFolders } = useGetFolders();
 
-  const handleRefresh = function () {
-    refetchNotes();
-  };
-
   const handleCreateNote = function () {
     router.push("/(dashboard)/(tabs)/workspaces/smart-notes/note-editor");
   };
@@ -45,146 +39,128 @@ export default function SmartNotes() {
   };
 
   const handleToggleSearch = function () {
-    setIsSearchVisible(!isSearchVisible);
+    setIsSearchVisible((prev) => !prev);
+    if (isSearchVisible) setSearchQuery("");
   };
 
-  const handleNavigateToFolders = function () {
-    router.push("/(dashboard)/(tabs)/workspaces/smart-notes/folders");
-  };
-
-  const handleNavigateToTags = function () {
-    router.push("/(dashboard)/(tabs)/workspaces/smart-notes/tags");
-  };
-
-  const handleNavigateToFilter = function () {
-    router.push("/(dashboard)/(tabs)/workspaces/smart-notes/filter");
-  };
-
-  const handleClearSearch = function () {
-    setSearchQuery("");
-  };
-
-  if (isFetchingNotes && notes.length === 0) {
-    return (
-      <View className="flex-1 bg-white px-4 pt-4">
-        <View className="mb-4 flex-row items-center justify-between">
-          <AppText type="title">Smart Notes</AppText>
-        </View>
-        {[1, 2, 3].map((i) => (
-          <SkeletonCard key={i} />
-        ))}
-      </View>
-    );
-  }
+  const isFiltering = !!searchQuery || !!selectedFolder;
+  const isFirstLoad = isFetchingNotes && notes.length === 0;
 
   return (
-    <View className="flex-1 bg-white">
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-4 pb-4 pt-2">
-        <AppText type="title">Smart Notes</AppText>
-        <View className="flex-row items-center gap-2">
-          <TouchableOpacity onPress={handleToggleSearch} className="p-2">
-            <Ionicons
-              name={isSearchVisible ? "close-outline" : "search-outline"}
-              size={24}
-              color="#7D7D8A"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigateToFolders} className="p-2">
-            <Ionicons name="folder-outline" size={24} color="#7D7D8A" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigateToTags} className="p-2">
-            <Ionicons name="pricetag-outline" size={24} color="#7D7D8A" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigateToFilter} className="p-2">
-            <Ionicons name="filter-outline" size={24} color="#7D7D8A" />
-          </TouchableOpacity>
+    <SafeAreaView className="flex-1 bg-neutral-50">
+      <View className="flex-row items-start justify-between px-5 pb-4 pt-2">
+        <View className="flex-1 pr-3">
+          <AppText type="display">Smart Notes</AppText>
+          <AppText type="subtitle" className="mt-1">
+            {notes.length} {notes.length === 1 ? "note" : "notes"}
+          </AppText>
+        </View>
+
+        <View className="flex-row items-center">
+          <IconButton
+            icon={isSearchVisible ? "close-outline" : "search-outline"}
+            onPress={handleToggleSearch}
+          />
+          <IconButton
+            icon="folder-outline"
+            onPress={() =>
+              router.push("/(dashboard)/(tabs)/workspaces/smart-notes/folders")
+            }
+          />
+          <IconButton
+            icon="pricetag-outline"
+            onPress={() =>
+              router.push("/(dashboard)/(tabs)/workspaces/smart-notes/tags")
+            }
+          />
+          <IconButton
+            icon="options-outline"
+            onPress={() =>
+              router.push("/(dashboard)/(tabs)/workspaces/smart-notes/filter")
+            }
+          />
         </View>
       </View>
 
-      {/* Search Bar */}
       {isSearchVisible && (
-        <View className="px-4 pb-3">
-          <View className="flex-row items-center rounded-2xl bg-neutral-100 px-4 py-2">
-            <Ionicons name="search-outline" size={20} color="#B4B4BF" />
-            <TextInput
-              className="ml-2 flex-1 font-roboto text-base text-primary-500"
-              placeholder="Search notes..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              autoFocus
-              placeholderTextColor="#B4B4BF"
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={handleClearSearch}>
-                <Ionicons name="close-circle" size={20} color="#B4B4BF" />
-              </TouchableOpacity>
-            )}
-          </View>
+        <View className="px-5 pb-3">
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onClear={() => setSearchQuery("")}
+            placeholder="Search notes..."
+            autoFocus
+          />
         </View>
       )}
 
-      {/* Filter Chips */}
       {!isFetchingFolders && folders.length > 0 && (
-        <FilterChips
-          folders={folders}
-          selectedFolder={selectedFolder}
-          onSelectFolder={setSelectedFolder}
-          onClearFilter={handleClearFilter}
+        <View className="pb-4">
+          <FilterChips
+            folders={folders}
+            selectedFolder={selectedFolder}
+            onSelectFolder={setSelectedFolder}
+            onClearFilter={handleClearFilter}
+          />
+        </View>
+      )}
+
+      {isFirstLoad ? (
+        <View className="px-5">
+          {[1, 2, 3].map((key) => (
+            <SkeletonCard key={key} />
+          ))}
+        </View>
+      ) : (
+        <FlatList
+          data={notes}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <NoteItem item={item} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isFetchingNotes}
+              onRefresh={refetchNotes}
+              tintColor={CONTENT_COLORS.note}
+            />
+          }
+          ListEmptyComponent={
+            <EmptyState
+              icon="document-text-outline"
+              title={isFiltering ? "No notes found" : "No notes yet"}
+              subtitle={
+                isFiltering
+                  ? "Try adjusting your search or filters"
+                  : "Create your first note to get started"
+              }
+              {...(!isFiltering && {
+                buttonText: "Create note",
+                onButtonPress: handleCreateNote,
+              })}
+            />
+          }
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+            paddingBottom: 110,
+            flexGrow: 1,
+          }}
+          showsVerticalScrollIndicator={false}
         />
       )}
 
-      {/* Notes List */}
-      <FlatList
-        data={notes}
-        keyExtractor={(item) => item.id}
-        refreshControl={
-          <RefreshControl
-            refreshing={isFetchingNotes}
-            onRefresh={handleRefresh}
-            tintColor="#5B47E8"
-          />
-        }
-        renderItem={({ item }) => <NoteItem item={item} />}
-        ListEmptyComponent={() => (
-          <EmptyState
-            icon="document-text-outline"
-            title={
-              searchQuery || selectedFolder ? "No notes found" : "No notes yet"
-            }
-            subtitle={
-              searchQuery || selectedFolder
-                ? "Try adjusting your filters"
-                : "Create your first note to get started"
-            }
-            buttonText={
-              searchQuery || selectedFolder ? undefined : "Create Note"
-            }
-            onButtonPress={
-              searchQuery || selectedFolder ? undefined : handleCreateNote
-            }
-          />
-        )}
-        contentContainerStyle={{
-          paddingBottom: 100,
-          flexGrow: 1,
-        }}
-      />
-
-      {/* FAB */}
-      <TouchableOpacity
+      <Pressable
         onPress={handleCreateNote}
-        className="absolute bottom-6 right-6 h-14 w-14 items-center justify-center rounded-full bg-secondary-500"
+        className="absolute bottom-6 right-5 h-14 w-14 items-center justify-center rounded-full active:opacity-80"
         style={{
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 6,
-          elevation: 5,
+          backgroundColor: CONTENT_COLORS.note,
+          shadowColor: CONTENT_COLORS.note,
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.3,
+          shadowRadius: 12,
+          elevation: 6,
         }}
       >
-        <Ionicons name="add" size={28} color="white" />
-      </TouchableOpacity>
-    </View>
+        <Ionicons name="add" size={26} color="white" />
+      </Pressable>
+    </SafeAreaView>
   );
 }

@@ -1,12 +1,8 @@
 import { COLORS } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Dispatch, SetStateAction } from "react";
-import {
-  ActivityIndicator,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, TextInput, View } from "react-native";
+import { AppButton } from "../shared/app-button";
 import { AppModal } from "../shared/app-modal";
 import { AppText } from "../shared/app-text";
 
@@ -38,64 +34,53 @@ export const SaveFolder = function ({
       isVisible={isModalVisible}
       onClose={closeModal}
       variant="bottom-sheet"
-      title={editingFolder ? "Edit Folder" : "New Folder"}
+      title={editingFolder ? "Edit folder" : "New folder"}
       showHandle
     >
       <View className="mt-2">
-        {/* Folder Name */}
         <TextInput
-          className="mb-4 rounded-xl bg-gray-50 px-4 py-3 text-base text-gray-900"
+          className="mb-5 rounded-2xl border-hairline border-neutral-200 bg-neutral-50 px-4 py-3.5 font-bricolage text-base text-primary-500"
           placeholder="Folder name..."
           value={folderName}
           onChangeText={setFolderName}
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#B4B4BF"
           editable={!isSaving}
         />
 
-        {/* Color Picker */}
-        <AppText className="font-bricolage-medium mb-2 text-sm text-gray-700">
+        <AppText type="label" className="mb-3">
           Color
         </AppText>
-        <View className="mb-6 flex-row flex-wrap gap-3">
+        <View className="mb-7 flex-row flex-wrap gap-3">
           {COLORS.map((color) => (
-            <TouchableOpacity
+            <Pressable
               key={color}
               onPress={() => setSelectedColor(color)}
-              className="h-10 w-10 items-center justify-center rounded-full"
-              style={{ backgroundColor: color }}
               disabled={isSaving}
+              className="items-center justify-center rounded-full active:opacity-70"
+              style={{ width: 38, height: 38, backgroundColor: color }}
             >
               {selectedColor === color && (
-                <Ionicons name="checkmark" size={20} color="white" />
+                <Ionicons name="checkmark" size={18} color="white" />
               )}
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
 
-        {/* Actions */}
         <View className="flex-row gap-3">
-          <TouchableOpacity
+          <AppButton
+            type="secondary"
             onPress={closeModal}
-            className="flex-1 rounded-lg bg-gray-100 py-3"
             disabled={isSaving}
-          >
-            <AppText className="font-bricolage-semibold text-center text-gray-700">
-              Cancel
-            </AppText>
-          </TouchableOpacity>
-          <TouchableOpacity
+            label="Cancel"
+            className="flex-1"
+          />
+          <AppButton
+            type="submit"
             onPress={handleSave}
-            className="flex-1 rounded-lg bg-blue-500 py-3"
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              <AppText className="font-bricolage-semibold text-center text-white">
-                {editingFolder ? "Update" : "Create"}
-              </AppText>
-            )}
-          </TouchableOpacity>
+            isLoading={isSaving}
+            label={editingFolder ? "Update" : "Create"}
+            className="flex-1"
+          />
         </View>
       </View>
     </AppModal>

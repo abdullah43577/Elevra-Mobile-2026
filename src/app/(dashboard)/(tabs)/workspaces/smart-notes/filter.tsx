@@ -1,12 +1,49 @@
+import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
+import { ScreenHeader } from "@/components/shared/screen-header";
+import { SectionHeader } from "@/components/shared/section-header";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Fragment, useState } from "react";
+import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const STATUS_OPTIONS = ["All", "Pinned", "Archived"];
 const SORT_OPTIONS = ["Last updated", "Date created", "Alphabetical"];
+
+interface OptionListProps {
+  options: string[];
+  selected: string;
+  onSelect: (value: string) => void;
+}
+
+const OptionList = function ({ options, selected, onSelect }: OptionListProps) {
+  return (
+    <View className="overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+      {options.map((option, index) => {
+        const isSelected = selected === option.toLowerCase();
+
+        return (
+          <Fragment key={option}>
+            {index > 0 && <View className="h-px bg-neutral-100" />}
+            <Pressable
+              onPress={() => onSelect(option.toLowerCase())}
+              className="flex-row items-center justify-between px-4 py-3.5 active:bg-neutral-50"
+            >
+              <AppText type="default">{option}</AppText>
+              <Ionicons
+                name={isSelected ? "checkmark-circle" : "ellipse-outline"}
+                size={21}
+                color={isSelected ? CONTENT_COLORS.note : "#D5D5DE"}
+              />
+            </Pressable>
+          </Fragment>
+        );
+      })}
+    </View>
+  );
+};
 
 export default function Filter() {
   const router = useRouter();
@@ -19,73 +56,46 @@ export default function Filter() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-row items-center justify-between border-b border-neutral-100 px-4 py-3">
-        <TouchableOpacity onPress={() => router.back()} className="p-1">
-          <Ionicons name="close" size={24} color="#7D7D8A" />
-        </TouchableOpacity>
-        <AppText type="label" className="text-[16px]">
-          Filter notes
-        </AppText>
-        <TouchableOpacity onPress={handleReset} className="p-1">
-          <AppText type="link">Reset</AppText>
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView className="flex-1 bg-neutral-50">
+      <ScreenHeader
+        title="Filter notes"
+        onBack={() => router.back()}
+        backIcon="close"
+        right={
+          <Pressable onPress={handleReset} hitSlop={8}>
+            <AppText type="link">Reset</AppText>
+          </Pressable>
+        }
+      />
 
-      <ScrollView className="flex-1 px-4 pt-4">
-        <AppText type="label" className="mb-3">
-          Status
-        </AppText>
-        <View className="gap-1">
-          {STATUS_OPTIONS.map((option) => (
-            <TouchableOpacity
-              key={option}
-              onPress={() => setSelectedFilter(option.toLowerCase())}
-              className="flex-row items-center justify-between border-b border-neutral-50 py-3"
-            >
-              <AppText type="body">{option}</AppText>
-              {selectedFilter === option.toLowerCase() && (
-                <Ionicons name="checkmark-circle" size={24} color="#5B47E8" />
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="px-5 py-5"
+        showsVerticalScrollIndicator={false}
+      >
+        <SectionHeader title="Status" />
+        <OptionList
+          options={STATUS_OPTIONS}
+          selected={selectedFilter}
+          onSelect={setSelectedFilter}
+        />
 
-        <View className="my-4 h-px bg-neutral-200" />
+        <View className="h-7" />
 
-        <AppText type="label" className="mb-3">
-          Sort by
-        </AppText>
-        <View className="gap-1">
-          {SORT_OPTIONS.map((option) => {
-            const isSelected = selectedSort === option.toLowerCase();
-            return (
-              <TouchableOpacity
-                key={option}
-                onPress={() => setSelectedSort(option.toLowerCase())}
-                className="flex-row items-center justify-between border-b border-neutral-50 py-3"
-              >
-                <AppText type="body">{option}</AppText>
-                <Ionicons
-                  name={isSelected ? "radio-button-on" : "radio-button-off"}
-                  size={24}
-                  color={isSelected ? "#5B47E8" : "#D5D5DE"}
-                />
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        <SectionHeader title="Sort by" />
+        <OptionList
+          options={SORT_OPTIONS}
+          selected={selectedSort}
+          onSelect={setSelectedSort}
+        />
       </ScrollView>
 
-      <View className="border-t border-neutral-100 px-4 py-4">
-        <TouchableOpacity
+      <View className="border-t-hairline border-neutral-200 bg-white px-5 py-4">
+        <AppButton
+          type="submit"
+          label="Apply filters"
           onPress={() => router.back()}
-          className="items-center rounded-2xl bg-secondary-500 py-3"
-        >
-          <AppText type="body" className="font-bricolage-semibold text-white">
-            Apply filters
-          </AppText>
-        </TouchableOpacity>
+        />
       </View>
     </SafeAreaView>
   );

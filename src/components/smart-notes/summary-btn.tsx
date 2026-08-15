@@ -1,5 +1,6 @@
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Pressable } from "react-native";
 import { AppText } from "../shared/app-text";
 
 interface SummaryButtonProps {
@@ -18,25 +19,22 @@ export function SummaryButton({
   disabled = false,
 }: SummaryButtonProps) {
   const isDisabled = disabled || isGenerating || !hasContent || !isSaved;
+  const accent = isDisabled ? "#B4B4BF" : CONTENT_COLORS.note;
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
-      className="flex-row items-center gap-2"
       disabled={isDisabled}
+      className="flex-row items-center gap-2 active:opacity-70"
     >
       {isGenerating ? (
-        <ActivityIndicator size="small" color="#3B82F6" />
+        <ActivityIndicator size="small" color={CONTENT_COLORS.note} />
       ) : (
-        <Ionicons
-          name="sparkles"
-          size={20}
-          color={isDisabled ? "#9CA3AF" : "#3B82F6"}
-        />
+        <Ionicons name="sparkles" size={17} color={accent} />
       )}
-      <AppText className={isDisabled ? "text-gray-400" : "text-blue-500"}>
+      <AppText type="label" style={{ color: accent }}>
         {isGenerating ? "Generating summary..." : "Summarize with AI"}
       </AppText>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

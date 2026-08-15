@@ -1,7 +1,8 @@
 import { AppText } from "@/components/shared/app-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { formatTime } from "@/provider/utils";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 interface PlaybackControlsProps {
   isPlaying: boolean;
@@ -16,6 +17,8 @@ interface PlaybackControlsProps {
   onSeekBackward: () => void;
   onSeekForward: () => void;
 }
+
+const ACCENT = CONTENT_COLORS.recording;
 
 export function PlaybackControls({
   isPlaying,
@@ -32,49 +35,62 @@ export function PlaybackControls({
   const clampedProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <View className="items-center rounded-xl bg-gray-50 p-6">
-      {/* Progress Bar */}
-      <View className="relative h-1 w-full rounded-full bg-gray-300">
+    <View className="rounded-3xl border-hairline border-neutral-200 bg-white p-6">
+      <View className="h-1 w-full overflow-hidden rounded-full bg-neutral-100">
         <View
-          className="absolute h-1 rounded-full bg-blue-500"
-          style={{ width: `${clampedProgress}%` }}
+          className="h-full rounded-full"
+          style={{ width: `${clampedProgress}%`, backgroundColor: ACCENT }}
         />
       </View>
 
-      {/* Time Labels */}
-      <View className="mt-2 w-full flex-row justify-between">
-        <AppText className="text-xs text-gray-500">
-          {formatTime(currentTime)}
-        </AppText>
-        <AppText className="text-xs text-gray-500">
-          {formatTime(duration)}
-        </AppText>
+      <View className="mt-2.5 flex-row justify-between">
+        <AppText type="caption">{formatTime(currentTime)}</AppText>
+        <AppText type="caption">{formatTime(duration)}</AppText>
       </View>
 
-      {/* Play/Pause Button */}
-      <TouchableOpacity
-        onPress={onPlayPause}
-        className="mt-6 h-20 w-20 items-center justify-center rounded-full bg-blue-500"
-      >
-        <Ionicons name={playIcon} size={40} color="white" />
-      </TouchableOpacity>
+      <View className="mt-6 flex-row items-center justify-center gap-7">
+        <Pressable
+          onPress={onSeekBackward}
+          disabled={isLoading}
+          hitSlop={8}
+          className="active:opacity-60"
+        >
+          <Ionicons
+            name="play-back"
+            size={22}
+            color={isLoading ? "#D5D5DE" : "#7D7D8A"}
+          />
+        </Pressable>
 
-      {/* Seek Controls */}
-      <View className="mt-4 flex-row gap-6">
-        <TouchableOpacity onPress={onSeekBackward} disabled={isLoading}>
+        <Pressable
+          onPress={onPlayPause}
+          className="items-center justify-center rounded-full active:opacity-80"
+          style={{
+            width: 68,
+            height: 68,
+            backgroundColor: ACCENT,
+            shadowColor: ACCENT,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.3,
+            shadowRadius: 12,
+            elevation: 6,
+          }}
+        >
+          <Ionicons name={playIcon} size={30} color="white" />
+        </Pressable>
+
+        <Pressable
+          onPress={onSeekForward}
+          disabled={isLoading}
+          hitSlop={8}
+          className="active:opacity-60"
+        >
           <Ionicons
-            name="play-back-outline"
-            size={28}
-            color={isLoading ? "#D1D5DB" : "#6B7280"}
+            name="play-forward"
+            size={22}
+            color={isLoading ? "#D5D5DE" : "#7D7D8A"}
           />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onSeekForward} disabled={isLoading}>
-          <Ionicons
-            name="play-forward-outline"
-            size={28}
-            color={isLoading ? "#D1D5DB" : "#6B7280"}
-          />
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );

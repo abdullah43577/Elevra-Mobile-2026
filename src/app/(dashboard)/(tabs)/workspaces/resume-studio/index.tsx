@@ -67,7 +67,7 @@ export default function ResumeStudio() {
             }
           >
             <AppText
-              className={`font-bricolage-medium text-center ${
+              className={`text-center font-bricolage-medium ${
                 activeTab === "templates" ? "text-blue-500" : "text-gray-500"
               }`}
             >
@@ -92,7 +92,7 @@ export default function ResumeStudio() {
             }
           >
             <AppText
-              className={`font-bricolage-medium text-center ${
+              className={`text-center font-bricolage-medium ${
                 activeTab === "resumes" ? "text-blue-500" : "text-gray-500"
               }`}
             >

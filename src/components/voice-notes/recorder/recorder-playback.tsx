@@ -1,6 +1,8 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { AppText } from "@/components/shared/app-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { formatTime } from "@/provider/utils";
+import { Ionicons } from "@expo/vector-icons";
+import { Pressable, View } from "react-native";
 
 interface RecorderPlaybackProps {
   isPlaying: boolean;
@@ -19,39 +21,43 @@ export function RecorderPlayback({
 }: RecorderPlaybackProps) {
   const displayDuration = totalDuration > 0 ? totalDuration : duration;
   const displayTime = totalDuration > 0 ? currentTime : 0;
+  const progress =
+    displayDuration > 0
+      ? Math.min((displayTime / displayDuration) * 100, 100)
+      : 0;
 
   return (
-    <View className="mb-4 mt-4 w-full items-center">
-      <View className="flex-row items-center justify-center space-x-4">
-        <TouchableOpacity
-          onPress={onPlayPause}
-          className="h-14 w-14 items-center justify-center rounded-full bg-[#2563EB]"
-        >
-          <Ionicons
-            name={isPlaying ? "pause" : "play"}
-            size={28}
-            color="white"
-          />
-        </TouchableOpacity>
+    <View className="mb-6 w-full items-center rounded-2xl border-hairline border-neutral-200 bg-white p-5">
+      <Pressable
+        onPress={onPlayPause}
+        className="items-center justify-center rounded-full active:opacity-80"
+        style={{
+          width: 52,
+          height: 52,
+          backgroundColor: `${CONTENT_COLORS.recording}14`,
+        }}
+      >
+        <Ionicons
+          name={isPlaying ? "pause" : "play"}
+          size={22}
+          color={CONTENT_COLORS.recording}
+        />
+      </Pressable>
+
+      <View className="mt-4 h-1 w-full overflow-hidden rounded-full bg-neutral-100">
+        <View
+          className="h-full rounded-full"
+          style={{
+            width: `${progress}%`,
+            backgroundColor: CONTENT_COLORS.recording,
+          }}
+        />
       </View>
-      <View className="mt-2 flex-row items-center justify-center space-x-2">
-        <Text className="font-mono text-sm text-gray-500">
-          {formatTime(displayTime)}
-        </Text>
-        <Text className="text-sm text-gray-300">/</Text>
-        <Text className="font-mono text-sm text-gray-500">
-          {formatTime(displayDuration)}
-        </Text>
+
+      <View className="mt-2 w-full flex-row justify-between">
+        <AppText type="caption">{formatTime(displayTime)}</AppText>
+        <AppText type="caption">{formatTime(displayDuration)}</AppText>
       </View>
-      {/* Progress bar */}
-      {totalDuration > 0 && (
-        <View className="mt-3 h-1 w-full overflow-hidden rounded-full bg-gray-200">
-          <View
-            className="h-full rounded-full bg-[#2563EB]"
-            style={{ width: `${(displayTime / totalDuration) * 100}%` }}
-          />
-        </View>
-      )}
     </View>
   );
 }

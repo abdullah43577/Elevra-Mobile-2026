@@ -1,6 +1,8 @@
+import { AppText } from "@/components/shared/app-text";
+import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Fragment, useState } from "react";
+import { Pressable, View } from "react-native";
 
 interface Folder {
   id: string;
@@ -23,63 +25,92 @@ export function FolderPicker({
 }: FolderPickerProps) {
   const [showPicker, setShowPicker] = useState(false);
 
-  const handleToggle = function () {
-    setShowPicker(!showPicker);
-  };
-
   const handleSelect = function (folderId: string | null) {
     onSelectFolder(folderId);
     setShowPicker(false);
   };
 
-  const selectedFolderName = selectedFolderId
-    ? folders.find((f: any) => f.id === selectedFolderId)?.name ||
-      "Select folder"
-    : "Select folder";
+  const selected = folders.find((folder) => folder.id === selectedFolderId);
 
   return (
-    <View className="mb-4">
-      <Text className="font-bricolage-medium mb-2 text-sm text-gray-700">
+    <View className="mb-5">
+      <AppText type="label" className="mb-2">
         Folder
-      </Text>
-      <TouchableOpacity
-        onPress={handleToggle}
-        className="flex-row items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
+      </AppText>
+
+      <Pressable
+        onPress={() => setShowPicker((prev) => !prev)}
         disabled={disabled}
+        className="flex-row items-center gap-2 rounded-2xl border-hairline border-neutral-200 bg-neutral-50 px-4 py-3.5 active:opacity-70"
       >
-        <Text className="text-gray-900">{selectedFolderName}</Text>
+        {selected && (
+          <View
+            className="rounded-full"
+            style={{
+              width: 8,
+              height: 8,
+              backgroundColor: selected.color || "#7D7D8A",
+            }}
+          />
+        )}
+        <AppText
+          type="default"
+          className={selected ? "flex-1" : "flex-1 text-neutral-400"}
+        >
+          {selected?.name ?? "Select folder"}
+        </AppText>
         <Ionicons
           name={showPicker ? "chevron-up" : "chevron-down"}
-          size={20}
-          color="#6B7280"
+          size={16}
+          color="#B4B4BF"
         />
-      </TouchableOpacity>
+      </Pressable>
 
       {showPicker && (
-        <View className="mt-2 overflow-hidden rounded-xl bg-gray-50">
-          <TouchableOpacity
+        <View className="mt-2 overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+          <Pressable
             onPress={() => handleSelect(null)}
-            className="border-b border-gray-200 px-4 py-3"
+            className="flex-row items-center justify-between px-4 py-3 active:bg-neutral-50"
           >
-            <Text className="text-gray-900">No folder</Text>
-          </TouchableOpacity>
-          {folders.map((folder: any) => (
-            <TouchableOpacity
-              key={folder.id}
-              onPress={() => handleSelect(folder.id)}
-              className="flex-row items-center justify-between border-b border-gray-200 px-4 py-3"
-            >
-              <View className="flex-row items-center gap-2">
-                <View
-                  className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: folder.color || "#6B7280" }}
-                />
-                <Text className="text-gray-900">{folder.name}</Text>
-              </View>
-              {selectedFolderId === folder.id && (
-                <Ionicons name="checkmark" size={20} color="#3B82F6" />
-              )}
-            </TouchableOpacity>
+            <AppText type="default" className="text-neutral-500">
+              No folder
+            </AppText>
+            {!selectedFolderId && (
+              <Ionicons
+                name="checkmark"
+                size={17}
+                color={CONTENT_COLORS.note}
+              />
+            )}
+          </Pressable>
+
+          {folders.map((folder) => (
+            <Fragment key={folder.id}>
+              <View className="h-px bg-neutral-100" />
+              <Pressable
+                onPress={() => handleSelect(folder.id)}
+                className="flex-row items-center justify-between px-4 py-3 active:bg-neutral-50"
+              >
+                <View className="flex-row items-center gap-2">
+                  <View
+                    className="rounded-full"
+                    style={{
+                      width: 8,
+                      height: 8,
+                      backgroundColor: folder.color || "#7D7D8A",
+                    }}
+                  />
+                  <AppText type="default">{folder.name}</AppText>
+                </View>
+                {selectedFolderId === folder.id && (
+                  <Ionicons
+                    name="checkmark"
+                    size={17}
+                    color={CONTENT_COLORS.note}
+                  />
+                )}
+              </Pressable>
+            </Fragment>
           ))}
         </View>
       )}
