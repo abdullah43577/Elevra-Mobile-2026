@@ -1,9 +1,7 @@
 import { View, type ViewProps } from "react-native";
-import { ThemeColor } from "@/constants/theme";
 import { clsx } from "clsx";
 
 export interface AppViewProps extends ViewProps {
-  type?: ThemeColor;
   className?: string;
 }
 
