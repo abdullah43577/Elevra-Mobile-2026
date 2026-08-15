@@ -10,7 +10,7 @@ import { useGetTags } from "@/hooks/smart-notes/use-get-tags";
 import { useSaveNote } from "@/hooks/smart-notes/use-save-notes";
 import { showToast } from "@/utils/show-toast";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -24,6 +24,12 @@ export default function NoteEditor() {
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [summaryComplete, setSummaryComplete] = useState(false);
+
+  // A brand-new note has nothing to load, so it is ready immediately. An
+  // existing note is only "hydrated" once the fetched record has been copied
+  // into local state — the editor must not mount before that (see below).
+  const [isHydrated, setIsHydrated] = useState(!noteId);
+  const hydratedNoteId = useRef<string | null>(null);
 
   const { note, isFetchingNote } = useGetNoteById({
     noteId: noteId || "",
@@ -48,15 +54,21 @@ export default function NoteEditor() {
   });
 
   useEffect(() => {
-    if (note) {
-      setTitle(note.title);
-      setContent(note.content || "");
-      setSelectedFolderId(note.folderId || null);
-      if (note.tags) {
-        setSelectedTags(note.tags.map((tagItem: any) => tagItem.tag.name));
-      }
-      setSummaryComplete(false);
+    // Copy the record into local state exactly once per note. `note` gets a new
+    // identity on every background refetch (useGetData refetches on mount and
+    // on focus), and re-running this would throw away whatever the user has
+    // typed since opening the screen.
+    if (!note || hydratedNoteId.current === note.id) return;
+
+    hydratedNoteId.current = note.id;
+    setTitle(note.title);
+    setContent(note.content || "");
+    setSelectedFolderId(note.folderId || null);
+    if (note.tags) {
+      setSelectedTags(note.tags.map((tagItem: any) => tagItem.tag.name));
     }
+    setSummaryComplete(false);
+    setIsHydrated(true);
   }, [note]);
 
   const handleSave = function () {
@@ -116,7 +128,10 @@ export default function NoteEditor() {
     setSelectedTags(selectedTags.filter((t) => t !== tagName));
   };
 
-  if (isFetchingNote) {
+  // Only block on the *first* load. `isFetchingNote` also goes true for
+  // background refetches, and returning the spinner then would unmount the
+  // editor mid-edit and discard the user's work.
+  if (isFetchingNote && !note) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#5B47E8" />
@@ -149,10 +164,20 @@ export default function NoteEditor() {
         <View className="my-4 h-px bg-neutral-200" />
 
         <View className="min-h-[200px]">
-          <RichTextEditor
-            onChange={handleContentChange}
-            content={content || "<p></p>"}
-          />
+          {/* Mounted only once `content` holds the real note body. The editor
+              seeds its document from `initialContent` on mount and ignores the
+              prop afterwards, so mounting it early is what left the body blank
+              and uneditable when opening a saved note. */}
+          {isHydrated ? (
+            <RichTextEditor
+              key={noteId ?? "new-note"}
+              onChange={handleContentChange}
+              initialContent={content || "<p></p>"}
+              autofocus={!noteId}
+            />
+          ) : (
+            <ActivityIndicator color="#5B47E8" />
+          )}
         </View>
 
         <View className="my-4 h-px bg-neutral-200" />

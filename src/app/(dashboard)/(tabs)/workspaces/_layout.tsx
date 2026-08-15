@@ -11,7 +11,6 @@ export default function WorkspacesLayout() {
         name="index"
         options={{
           title: "Workspaces",
-          headerShown: true,
         }}
       />
       <Stack.Screen

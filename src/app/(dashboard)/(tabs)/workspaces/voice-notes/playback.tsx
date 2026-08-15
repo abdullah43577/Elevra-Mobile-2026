@@ -1,73 +1,72 @@
-import { useState, useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useAudioPlayer } from "expo-audio";
-import { useGetRecordingById } from "@/hooks/voice-notes/use-get-recording-by-id";
 import { AppText } from "@/components/shared/app-text";
+import { PlaybackControls } from "@/components/voice-notes/playback/playback-controls";
 import { PlaybackHeader } from "@/components/voice-notes/playback/playback-header";
 import { PlaybackInfo } from "@/components/voice-notes/playback/playback-info";
 import { PlaybackTranscription } from "@/components/voice-notes/playback/playback-transcription";
-import { PlaybackControls } from "@/components/voice-notes/playback/playback-controls";
+import { useGetRecordingById } from "@/hooks/voice-notes/use-get-recording-by-id";
+import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Playback() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id?: string }>();
   const recordingId = params.id;
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-
   const { recording, isFetchingRecording } = useGetRecordingById({
     recordingId: recordingId || "",
     shouldFetch: !!recordingId,
   });
 
-  const player = useAudioPlayer(recording?.fileUrl || "");
+  const player = useAudioPlayer(recording?.fileUrl ?? null);
+  // `useAudioPlayerStatus` re-renders on every status update. Reading
+  // `player.currentTime` / `player.duration` directly during render does not —
+  // the native object mutates without telling React, which is why the timers
+  // sat at 0:00 until something else happened to trigger a re-render.
+  const status = useAudioPlayerStatus(player);
 
-  useEffect(() => {
-    const subscription = player.addListener(
-      "playbackStatusUpdate",
-      (status: any) => {
-        if (typeof status?.playing === "boolean") {
-          setIsPlaying(status.playing);
-        }
-        if (typeof status?.currentTime === "number" && status?.duration) {
-          setProgress((status.currentTime / status.duration) * 100);
-        }
-      },
-    );
+  // `status.duration` stays 0 until the remote file has loaded, so fall back to
+  // the duration we already persisted when the recording was saved.
+  const duration =
+    status.duration > 0 ? status.duration : (recording?.duration ?? 0);
+  const currentTime = duration
+    ? Math.min(status.currentTime, duration)
+    : status.currentTime;
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const isFinished =
+    status.didJustFinish || (duration > 0 && currentTime >= duration - 0.25);
 
-    return () => subscription?.remove?.();
-  }, [player]);
-
-  const handlePlayPause = function () {
-    if (isPlaying) {
+  const handlePlayPause = async function () {
+    if (status.playing) {
       player.pause();
-    } else {
-      player.play();
+      return;
     }
-    // no manual setIsPlaying — let the listener be the single source of truth
+
+    // A player parked at the end of the track ignores `play()`. Rewinding first
+    // is what lets the recording be replayed as many times as the user wants.
+    if (isFinished) await player.seekTo(0);
+    player.play();
   };
 
-  const handleSeekBackward = function () {
-    player.seekTo(Math.max((player.currentTime || 0) - 10, 0));
+  const handleSeekBackward = async function () {
+    await player.seekTo(Math.max(currentTime - 10, 0));
   };
 
-  const handleSeekForward = function () {
-    player.seekTo(
-      Math.min((player.currentTime || 0) + 10, player.duration || 0),
-    );
+  const handleSeekForward = async function () {
+    if (!duration) return;
+    await player.seekTo(Math.min(currentTime + 10, duration));
   };
 
   const handleBack = function () {
-    if (isPlaying) {
-      player.pause();
-    }
+    if (status.playing) player.pause();
     router.back();
   };
 
-  if (isFetchingRecording) {
+  // Block on the first load only — `isFetchingRecording` also goes true for
+  // background refetches, and swapping to a spinner then would tear down the
+  // player mid-playback.
+  if (isFetchingRecording && !recording) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#3B82F6" />
@@ -100,10 +99,12 @@ export default function Playback() {
         />
 
         <PlaybackControls
-          isPlaying={isPlaying}
+          isPlaying={status.playing}
+          isFinished={isFinished}
+          isLoading={!status.isLoaded}
           progress={progress}
-          currentTime={player.currentTime || 0}
-          duration={player.duration || 0}
+          currentTime={currentTime}
+          duration={duration}
           onPlayPause={handlePlayPause}
           onSeekBackward={handleSeekBackward}
           onSeekForward={handleSeekForward}
