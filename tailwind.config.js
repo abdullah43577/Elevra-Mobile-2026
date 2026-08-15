@@ -72,10 +72,6 @@ module.exports = {
           800: "#2B2B31",
           900: "#17171A",
         },
-        // Mirrors constants/content-colors.ts — keep these two in sync by
-        // hand, or better, generate this block from that file at build time.
-        // Most usages are runtime `${color}NN` alpha-hex tints (see Home),
-        // so this exists mainly for any static className usage elsewhere.
         content: {
           note: "#5B47E8",
           recording: "#D6653D",
@@ -84,23 +80,13 @@ module.exports = {
       },
 
       borderWidth: {
-        // iOS-style hairline divider. Use on navbars, list separators, and
-        // card outlines instead of the default `border` (1px), which reads
-        // heavier/more "web" on device.
         hairline: "0.5px",
       },
 
       borderRadius: {
-        // For small icon-sized elements (~28-32px) like icon badges or
-        // small avatars — NOT for full profile photos (keep those
-        // rounded-full) and not for cards (use rounded-2xl+).
         squircle: "10px",
       },
 
-      // One key PER weight you actually registered in useFonts (AppNavigator).
-      // React Native does not synthesize bold/semibold for custom fonts —
-      // `font-bricolage-bold` layered on a single "Regular" family is a no-op. Every
-      // AppText `type` must point at the exact weight file it wants.
       fontFamily: {
         "bricolage-extralight": ["BricolageGrotesque-ExtraLight"],
         "bricolage-light": ["BricolageGrotesque-Light"],
