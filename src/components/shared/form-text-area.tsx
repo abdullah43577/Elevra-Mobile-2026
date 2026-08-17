@@ -52,7 +52,7 @@ export const FormTextArea = function <TFieldValues extends FieldValues>({
       />
 
       {errorMessage && (
-        <AppText type="subtitle" className="mt-1 text-error-500">
+        <AppText type="subtitle" className="mt-1 text-danger">
           {errorMessage}
         </AppText>
       )}

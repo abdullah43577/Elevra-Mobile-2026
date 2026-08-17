@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +25,8 @@ export function TagManager({
   onRemoveTag,
   disabled = false,
 }: TagManagerProps) {
+  const { foregroundSubtle } = useThemeColors();
+
   const [tagInput, setTagInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -83,17 +86,17 @@ export function TagManager({
       )}
 
       <View className="relative">
-        <View className="flex-row items-center gap-1 rounded-2xl border-hairline border-neutral-200 bg-neutral-50 px-4 py-2.5">
-          <AppText type="default" className="text-neutral-400">
+        <View className="flex-row items-center gap-1 rounded-2xl border-hairline border-line bg-canvas px-4 py-2.5">
+          <AppText type="default" className="text-foreground-subtle">
             #
           </AppText>
           <TextInput
-            className="flex-1 font-bricolage text-base text-primary-500"
+            className="flex-1 font-bricolage text-base text-foreground"
             placeholder="Add tag..."
             value={tagInput}
             onChangeText={handleInputChange}
             onSubmitEditing={() => handleAddTag(tagInput)}
-            placeholderTextColor="#B4B4BF"
+            placeholderTextColor={foregroundSubtle}
             editable={!disabled}
           />
           {tagInput.length > 0 && (
@@ -108,13 +111,13 @@ export function TagManager({
         </View>
 
         {showSuggestions && suggestions.length > 0 && (
-          <View className="absolute left-0 right-0 top-full z-10 mt-1.5 overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+          <View className="absolute left-0 right-0 top-full z-10 mt-1.5 overflow-hidden rounded-2xl border-hairline border-line bg-surface">
             {suggestions.map((tag, index) => (
               <Fragment key={tag.id}>
-                {index > 0 && <View className="h-px bg-neutral-100" />}
+                {index > 0 && <View className="h-px bg-line" />}
                 <Pressable
                   onPress={() => handleAddTag(tag.name)}
-                  className="px-4 py-2.5 active:bg-neutral-50"
+                  className="px-4 py-2.5 active:bg-surface-muted"
                 >
                   <AppText type="default">#{tag.name}</AppText>
                 </Pressable>

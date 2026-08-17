@@ -17,17 +17,17 @@ export function RecorderTimer({
 
   return (
     <View className="mb-10 items-center">
-      <AppText className="font-bricolage-bold text-[56px] leading-[64px] tracking-tight text-primary-500">
+      <AppText className="font-bricolage-bold text-[56px] leading-[64px] tracking-tight text-foreground">
         {formatTime(elapsedTime)}
       </AppText>
 
       <View className="mt-2 h-6 flex-row items-center gap-2">
         {isRecording && (
           <>
-            <View className="h-2 w-2 rounded-full bg-error-500" />
+            <View className="h-2 w-2 rounded-full bg-danger-solid" />
             <AppText
               type="caption"
-              className="font-bricolage-semibold text-error-500"
+              className="font-bricolage-semibold text-danger"
             >
               Recording
             </AppText>

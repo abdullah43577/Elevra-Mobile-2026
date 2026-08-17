@@ -61,12 +61,12 @@ export function Languages({
         return (
           <View
             key={field.id}
-            className="mb-6 gap-4 rounded-xl border border-gray-200 p-5"
+            className="mb-6 gap-4 rounded-xl border border-line p-5"
           >
             <View className="mb-4 flex-row items-center justify-between">
               <AppText
                 type="subtitle"
-                className="font-bricolage-medium text-gray-700"
+                className="font-bricolage-medium text-foreground"
               >
                 Language {index + 1}
               </AppText>
@@ -88,13 +88,13 @@ export function Languages({
             {/* Proficiency - Bottom Sheet Picker */}
             <TouchableOpacity
               onPress={() => setProficiencyPickerIndex(index)}
-              className="rounded-xl border border-gray-200 bg-white px-4 py-3"
+              className="rounded-xl border border-line bg-surface px-4 py-3"
             >
               <AppText
                 className={
                   proficiency
-                    ? "text-base text-gray-900"
-                    : "text-base text-gray-400"
+                    ? "text-base text-foreground"
+                    : "text-base text-foreground-subtle"
                 }
               >
                 {proficiency
@@ -111,7 +111,7 @@ export function Languages({
         className="flex-row items-center gap-2 py-3"
       >
         <Ionicons name="add-circle-outline" size={24} color="#3B82F6" />
-        <AppText className="text-blue-500">Add Language</AppText>
+        <AppText className="text-accent">Add Language</AppText>
       </TouchableOpacity>
 
       {/* Proficiency Picker */}

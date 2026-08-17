@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, Pressable, View } from "react-native";
@@ -23,13 +24,15 @@ export const NoteCardActions = function ({
   isTogglingArchive = false,
   isDeleting = false,
 }: Props) {
+  const { foregroundMuted, foregroundSubtle } = useThemeColors();
+
   return (
     <View className="flex-row items-center gap-1">
       <Pressable
         onPress={onPin}
         disabled={isTogglingPin}
         hitSlop={4}
-        className="h-8 w-8 items-center justify-center rounded-full active:bg-neutral-100"
+        className="h-8 w-8 items-center justify-center rounded-full active:bg-surface-muted"
       >
         {isTogglingPin ? (
           <ActivityIndicator size="small" color={CONTENT_COLORS.note} />
@@ -46,10 +49,10 @@ export const NoteCardActions = function ({
         onPress={onArchive}
         disabled={isTogglingArchive}
         hitSlop={4}
-        className="h-8 w-8 items-center justify-center rounded-full active:bg-neutral-100"
+        className="h-8 w-8 items-center justify-center rounded-full active:bg-surface-muted"
       >
         {isTogglingArchive ? (
-          <ActivityIndicator size="small" color="#7D7D8A" />
+          <ActivityIndicator size="small" color={foregroundMuted} />
         ) : (
           <Ionicons
             name={isArchived ? "archive" : "archive-outline"}
@@ -63,12 +66,12 @@ export const NoteCardActions = function ({
         onPress={onDelete}
         disabled={isDeleting}
         hitSlop={4}
-        className="h-8 w-8 items-center justify-center rounded-full active:bg-error-50"
+        className="h-8 w-8 items-center justify-center rounded-full active:bg-danger-muted"
       >
         {isDeleting ? (
           <ActivityIndicator size="small" color="#B93A32" />
         ) : (
-          <Ionicons name="trash-outline" size={16} color="#B4B4BF" />
+          <Ionicons name="trash-outline" size={16} color={foregroundSubtle} />
         )}
       </Pressable>
     </View>

@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useState } from "react";
 import { View, TouchableOpacity, TextInput } from "react-native";
 import {
@@ -30,6 +31,8 @@ export function Skills({
   append,
   remove,
 }: SkillsProps) {
+  const { foregroundSubtle } = useThemeColors();
+
   const [skillInput, setSkillInput] = useState("");
 
   const handleAddSkill = function () {
@@ -58,26 +61,26 @@ export function Skills({
 
   return (
     <View className="mt-4 gap-4">
-      <AppText type="subtitle" className="text-gray-500">
+      <AppText type="subtitle" className="text-foreground-muted">
         Add your professional skills
       </AppText>
 
       {/* Input Row */}
       <View className="flex-row items-center gap-2">
-        <View className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-2">
+        <View className="flex-1 rounded-xl border border-line bg-surface px-4 py-2">
           <TextInput
-            className="text-base text-gray-900"
+            className="text-base text-foreground"
             placeholder="Type a skill and press +"
             value={skillInput}
             onChangeText={setSkillInput}
             onSubmitEditing={handleAddSkill}
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={foregroundSubtle}
             returnKeyType="done"
           />
         </View>
         <TouchableOpacity
           onPress={handleAddSkill}
-          className="h-12 w-12 items-center justify-center rounded-xl bg-blue-500"
+          className="h-12 w-12 items-center justify-center rounded-xl bg-accent"
         >
           <Ionicons name="add" size={24} color="white" />
         </TouchableOpacity>
@@ -88,9 +91,9 @@ export function Skills({
         {fields.map((field, index) => (
           <View
             key={field.id}
-            className="flex-row items-center rounded-full bg-blue-50 px-3 py-2"
+            className="flex-row items-center rounded-full bg-accent-muted px-3 py-2"
           >
-            <AppText className="text-sm text-blue-700">{field.name}</AppText>
+            <AppText className="text-sm text-accent">{field.name}</AppText>
             <TouchableOpacity
               onPress={() => handleRemoveSkill(index)}
               className="ml-1"
@@ -102,7 +105,7 @@ export function Skills({
       </View>
 
       {fields.length === 0 && (
-        <AppText className="text-sm text-gray-400">
+        <AppText className="text-sm text-foreground-subtle">
           No skills added yet. Type a skill and press + to add.
         </AppText>
       )}

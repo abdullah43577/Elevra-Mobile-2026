@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppButton } from "@/components/shared/app-button";
 import { AppModal } from "@/components/shared/app-modal";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -14,6 +15,8 @@ import { RefreshControl, ScrollView, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Tags() {
+  const { foregroundSubtle } = useThemeColors();
+
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [tagName, setTagName] = useState("");
@@ -38,7 +41,7 @@ export default function Tags() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <ScreenHeader
         title="Tags"
         onBack={() => router.back()}
@@ -74,7 +77,7 @@ export default function Tags() {
             onButtonPress={() => setIsModalVisible(true)}
           />
         ) : (
-          <View className="overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+          <View className="overflow-hidden rounded-2xl border-hairline border-line bg-surface">
             {tags.map((tag, index) => (
               <TagItem key={tag.id} item={tag} withDivider={index > 0} />
             ))}
@@ -91,11 +94,11 @@ export default function Tags() {
       >
         <View className="mt-2">
           <TextInput
-            className="mb-4 rounded-2xl border-hairline border-neutral-200 bg-neutral-50 px-4 py-3.5 font-bricolage text-base text-primary-500"
+            className="mb-4 rounded-2xl border-hairline border-line bg-canvas px-4 py-3.5 font-bricolage text-base text-foreground"
             placeholder="Tag name..."
             value={tagName}
             onChangeText={setTagName}
-            placeholderTextColor="#B4B4BF"
+            placeholderTextColor={foregroundSubtle}
             editable={!isCreating}
             autoFocus
           />

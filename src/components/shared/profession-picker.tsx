@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppModal } from "@/components/shared/app-modal";
 import { AppText } from "@/components/shared/app-text";
 import { useGetProfessions } from "@/hooks/profile/use-get-professions";
@@ -17,6 +18,8 @@ export const ProfessionPicker = function ({
   onSelect,
   onClose,
 }: ProfessionPickerProps) {
+  const { foregroundMuted } = useThemeColors();
+
   const { professions, isFetchingProfessions } = useGetProfessions();
   const [query, setQuery] = useState("");
 
@@ -37,17 +40,17 @@ export const ProfessionPicker = function ({
       contentClassName="max-h-[75%]"
     >
       {/* Search */}
-      <View className="mb-3 flex-row items-center rounded-xl bg-neutral-100 px-4 py-3">
+      <View className="mb-3 flex-row items-center rounded-xl bg-surface-muted px-4 py-3">
         <TextInput
           value={query}
           onChangeText={setQuery}
           placeholder="Search professions"
-          placeholderTextColor="#74777f"
-          className="flex-1 text-base text-neutral-900"
+          placeholderTextColor={foregroundMuted}
+          className="flex-1 text-base text-foreground"
         />
         {query.length > 0 && (
           <Pressable onPress={() => setQuery("")} hitSlop={8}>
-            <AppText type="default" className="text-neutral-500">
+            <AppText type="default" className="text-foreground-muted">
               ✕
             </AppText>
           </Pressable>
@@ -57,12 +60,12 @@ export const ProfessionPicker = function ({
       {isFetchingProfessions ? (
         <View className="gap-3 py-2">
           {[...Array(6)].map((_, i) => (
-            <View key={i} className="h-12 rounded-xl bg-neutral-100" />
+            <View key={i} className="h-12 rounded-xl bg-surface-muted" />
           ))}
         </View>
       ) : filtered.length === 0 ? (
         <View className="items-center py-10">
-          <AppText type="default" className="text-neutral-500">
+          <AppText type="default" className="text-foreground-muted">
             No professions found
           </AppText>
         </View>
@@ -78,7 +81,7 @@ export const ProfessionPicker = function ({
             return (
               <Pressable
                 className={`flex-row items-center justify-between rounded-xl px-4 py-3 ${
-                  isSelected ? "bg-primary-50" : "bg-transparent"
+                  isSelected ? "bg-surface-muted" : "bg-transparent"
                 }`}
                 android_ripple={{ color: "#eeeeef" }}
                 onPress={() => {
@@ -89,17 +92,17 @@ export const ProfessionPicker = function ({
                 <AppText
                   type="default"
                   className={
-                    isSelected ? "font-bricolage-semibold text-primary-500" : ""
+                    isSelected ? "font-bricolage-semibold text-foreground" : ""
                   }
                 >
                   {item.name}
                 </AppText>
 
                 {isSelected && (
-                  <View className="h-5 w-5 items-center justify-center rounded-full bg-primary-500">
+                  <View className="h-5 w-5 items-center justify-center rounded-full bg-foreground">
                     <AppText
                       type="default"
-                      className="font-bricolage-bold text-xs text-white"
+                      className="font-bricolage-bold text-xs text-canvas"
                     >
                       ✓
                     </AppText>

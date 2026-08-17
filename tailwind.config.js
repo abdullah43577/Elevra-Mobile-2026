@@ -38,6 +38,7 @@ module.exports = {
         danger: {
           DEFAULT: "rgb(var(--danger) / <alpha-value>)",
           muted: "rgb(var(--danger-muted) / <alpha-value>)",
+          solid: "rgb(var(--danger-solid) / <alpha-value>)",
         },
 
         primary: {

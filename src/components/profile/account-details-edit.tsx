@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { ProfileFormValues } from "@/schemas/settings/profile";
 import { ChevronRight } from "lucide-react-native";
 import { Control, FieldErrors } from "react-hook-form";
@@ -26,6 +27,8 @@ export const AccountDetailsEdit = function ({
   canSave,
   onSubmit,
 }: Props) {
+  const { foregroundSubtle } = useThemeColors();
+
   return (
     <View className="gap-4">
       <FormInput
@@ -46,16 +49,16 @@ export const AccountDetailsEdit = function ({
           Profession
         </AppText>
         <Pressable
-          className="flex-row items-center justify-between rounded-2xl border-hairline border-neutral-200 bg-neutral-50 px-4 py-3.5 active:opacity-70"
+          className="flex-row items-center justify-between rounded-2xl border-hairline border-line bg-canvas px-4 py-3.5 active:opacity-70"
           onPress={onOpenProfessionPicker}
         >
           <AppText
             type="default"
-            className={selectedProfessionName ? "" : "text-neutral-400"}
+            className={selectedProfessionName ? "" : "text-foreground-subtle"}
           >
             {selectedProfessionName ?? "Select a profession"}
           </AppText>
-          <ChevronRight size={16} color="#B4B4BF" />
+          <ChevronRight size={16} color={foregroundSubtle} />
         </Pressable>
       </View>
 

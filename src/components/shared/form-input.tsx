@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { clsx } from "clsx";
 import { Eye, EyeSlash } from "iconsax-react-nativejs";
 import { useState } from "react";
@@ -35,6 +36,8 @@ export const FormInput = function <TFieldValues extends FieldValues>({
   className,
   ...rest
 }: FormInputProps<TFieldValues>) {
+  const { foregroundMuted } = useThemeColors();
+
   const [showPassword, setShowPassword] = useState(false);
   const errorMessage = get(errors, name)?.message as string | undefined;
 
@@ -70,9 +73,9 @@ export const FormInput = function <TFieldValues extends FieldValues>({
                   onPress={() => setShowPassword((prev) => !prev)}
                 >
                   {showPassword ? (
-                    <EyeSlash size={18} color="#7D7D8A" variant="Linear" />
+                    <EyeSlash size={18} color={foregroundMuted} variant="Linear" />
                   ) : (
-                    <Eye size={18} color="#7D7D8A" variant="Linear" />
+                    <Eye size={18} color={foregroundMuted} variant="Linear" />
                   )}
                 </Pressable>
               </View>
@@ -84,7 +87,7 @@ export const FormInput = function <TFieldValues extends FieldValues>({
       />
 
       {errorMessage && (
-        <AppText type="caption" className="mt-1 text-error-500">
+        <AppText type="caption" className="mt-1 text-danger">
           {errorMessage}
         </AppText>
       )}

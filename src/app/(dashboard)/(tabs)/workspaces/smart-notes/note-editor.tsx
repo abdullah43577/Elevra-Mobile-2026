@@ -127,7 +127,7 @@ export default function NoteEditor() {
   // editor mid-edit.
   if (isFetchingNote && !note) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
+      <View className="flex-1 items-center justify-center bg-surface">
         <ActivityIndicator size="large" color="#5B47E8" />
       </View>
     );
@@ -137,7 +137,7 @@ export default function NoteEditor() {
   const isSaved = !!noteId;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-surface">
       <NoteEditorHeader
         noteId={noteId}
         isSaving={isSaving}
@@ -147,7 +147,7 @@ export default function NoteEditor() {
 
       <ScrollView className="flex-1 px-5 pt-5">
         <TextInput
-          className="font-bricolage-bold text-[26px] leading-[32px] text-primary-500"
+          className="font-bricolage-bold text-[26px] leading-[32px] text-foreground"
           placeholder="Note title..."
           value={title}
           onChangeText={setTitle}
@@ -156,7 +156,7 @@ export default function NoteEditor() {
           multiline
         />
 
-        <View className="my-5 h-px bg-neutral-100" />
+        <View className="my-5 h-px bg-line" />
 
         <View className="min-h-[200px]">
           {/* Mounted only once `content` holds the real note body — see
@@ -173,7 +173,7 @@ export default function NoteEditor() {
           )}
         </View>
 
-        <View className="my-5 h-px bg-neutral-100" />
+        <View className="my-5 h-px bg-line" />
 
         <FolderPicker
           folders={folders}

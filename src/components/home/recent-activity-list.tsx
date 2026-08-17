@@ -13,10 +13,10 @@ export const RecentActivityList = function ({ items, onPressItem }: Props) {
   if (items.length === 0) return <EmptyActivity />;
 
   return (
-    <View className="overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+    <View className="overflow-hidden rounded-2xl border-hairline border-line bg-surface">
       {items.map((item, index) => (
         <Fragment key={`${item.type}-${item.id}`}>
-          {index > 0 && <View className="ml-16 h-px bg-neutral-100" />}
+          {index > 0 && <View className="ml-16 h-px bg-line" />}
           <RecentActivityRow item={item} onPress={onPressItem} />
         </Fragment>
       ))}

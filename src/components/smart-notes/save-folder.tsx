@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { COLORS } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Dispatch, SetStateAction } from "react";
@@ -29,6 +30,8 @@ export const SaveFolder = function ({
   setSelectedColor,
   handleSave,
 }: Props) {
+  const { foregroundSubtle } = useThemeColors();
+
   return (
     <AppModal
       isVisible={isModalVisible}
@@ -39,11 +42,11 @@ export const SaveFolder = function ({
     >
       <View className="mt-2">
         <TextInput
-          className="mb-5 rounded-2xl border-hairline border-neutral-200 bg-neutral-50 px-4 py-3.5 font-bricolage text-base text-primary-500"
+          className="mb-5 rounded-2xl border-hairline border-line bg-canvas px-4 py-3.5 font-bricolage text-base text-foreground"
           placeholder="Folder name..."
           value={folderName}
           onChangeText={setFolderName}
-          placeholderTextColor="#B4B4BF"
+          placeholderTextColor={foregroundSubtle}
           editable={!isSaving}
         />
 

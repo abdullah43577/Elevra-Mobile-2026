@@ -38,7 +38,7 @@ export function AIActions({
   const accent = isDisabled ? "#B4B4BF" : CONTENT_COLORS.note;
 
   return (
-    <View className="mb-6 mt-2 rounded-2xl border-hairline border-neutral-200 bg-white p-4">
+    <View className="mb-6 mt-2 rounded-2xl border-hairline border-line bg-surface p-4">
       <AppText type="label" className="mb-3">
         AI actions
       </AppText>
@@ -65,19 +65,19 @@ export function AIActions({
           isComplete={summaryComplete}
           label={isGeneratingSummary ? "Generating summary..." : "Summary"}
           labelIcon="sparkles"
-          containerClassName="mt-3 rounded-xl bg-secondary-50 p-3.5"
-          labelClassName="text-xs font-bricolage-semibold text-secondary-600"
-          textClassName="mt-1.5 text-sm leading-[20px] text-primary-500"
+          containerClassName="mt-3 rounded-xl bg-accent-muted p-3.5"
+          labelClassName="text-xs font-bricolage-semibold text-accent"
+          textClassName="mt-1.5 text-sm leading-[20px] text-foreground"
           showCursor
           onStreamComplete={onSummaryComplete}
         />
       )}
 
       {existingSummary && !summary && !isGeneratingSummary && (
-        <View className="mt-3 rounded-xl bg-secondary-50 p-3.5">
+        <View className="mt-3 rounded-xl bg-accent-muted p-3.5">
           <AppText
             type="caption"
-            className="font-bricolage-semibold text-secondary-600"
+            className="font-bricolage-semibold text-accent"
           >
             Summary
           </AppText>
@@ -96,8 +96,8 @@ export function AIActions({
       )}
 
       {summaryError && (
-        <View className="mt-3 rounded-xl bg-error-50 p-3.5">
-          <AppText type="caption" className="text-error-600">
+        <View className="mt-3 rounded-xl bg-danger-muted p-3.5">
+          <AppText type="caption" className="text-danger">
             {summaryError}
           </AppText>
         </View>

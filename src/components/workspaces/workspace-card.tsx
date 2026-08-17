@@ -15,7 +15,7 @@ export const WorkspaceCard = function ({ item, onPress }: Props) {
   return (
     <Pressable
       onPress={() => onPress(item)}
-      className="flex-row items-center gap-4 rounded-2xl border-hairline border-neutral-200 bg-white p-4 active:opacity-70"
+      className="flex-row items-center gap-4 rounded-2xl border-hairline border-line bg-surface p-4 active:opacity-70"
     >
       <View
         className="items-center justify-center rounded-squircle"

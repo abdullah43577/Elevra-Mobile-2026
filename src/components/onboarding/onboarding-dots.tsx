@@ -13,8 +13,8 @@ export function OnboardingDots({ total, activeIndex }: OnboardingDotsProps) {
           key={index}
           className={
             index === activeIndex
-              ? "h-2 w-6 rounded-full bg-blue-600"
-              : "h-2 w-2 rounded-full bg-neutral-200"
+              ? "h-2 w-6 rounded-full bg-accent"
+              : "h-2 w-2 rounded-full bg-line"
           }
         />
       ))}

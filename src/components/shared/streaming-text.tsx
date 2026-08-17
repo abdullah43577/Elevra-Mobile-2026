@@ -22,9 +22,9 @@ export function StreamingText({
   isComplete = false,
   label = "Generating...",
   labelIcon = "sparkles",
-  containerClassName = "mt-3 rounded-lg bg-blue-50 p-3",
-  labelClassName = "text-xs font-bricolage-medium text-blue-700",
-  textClassName = "mt-1 text-sm text-gray-700",
+  containerClassName = "mt-3 rounded-lg bg-accent-muted p-3",
+  labelClassName = "text-xs font-bricolage-medium text-accent",
+  textClassName = "mt-1 text-sm text-foreground",
   showCursor = true,
   onStreamComplete,
 }: StreamingTextProps) {
@@ -78,7 +78,7 @@ export function StreamingText({
         <AppText className={textClassName}>
           {text}
           {isStreaming && showCursor && (
-            <Text className="text-blue-500">▊</Text>
+            <Text className="text-accent">▊</Text>
           )}
         </AppText>
       </Animated.View>

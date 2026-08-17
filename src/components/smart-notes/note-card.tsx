@@ -36,7 +36,7 @@ export function NoteCard({
   return (
     <Pressable
       onPress={onPress}
-      className="mb-3 rounded-2xl border-hairline border-neutral-200 bg-white p-4 active:opacity-70"
+      className="mb-3 rounded-2xl border-hairline border-line bg-surface p-4 active:opacity-70"
     >
       <View className="flex-row items-start gap-3">
         <View className="flex-1">
@@ -56,7 +56,7 @@ export function NoteCard({
           {!!preview && (
             <AppText
               type="caption"
-              className="mt-1.5 leading-[17px] text-neutral-500"
+              className="mt-1.5 leading-[17px] text-foreground-muted"
               numberOfLines={2}
             >
               {preview}
@@ -93,7 +93,7 @@ export function NoteCard({
                   backgroundColor: note.folder.color || "#7D7D8A",
                 }}
               />
-              <AppText type="caption" className="text-neutral-600">
+              <AppText type="caption" className="text-foreground-muted">
                 {note.folder.name}
               </AppText>
             </View>
@@ -102,9 +102,9 @@ export function NoteCard({
           {visibleTags.map((tagItem) => (
             <View
               key={tagItem.id}
-              className="rounded-full bg-neutral-100 px-2.5 py-1"
+              className="rounded-full bg-surface-muted px-2.5 py-1"
             >
-              <AppText type="caption" className="text-neutral-600">
+              <AppText type="caption" className="text-foreground-muted">
                 #{tagItem.tag.name}
               </AppText>
             </View>

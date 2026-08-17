@@ -14,7 +14,7 @@ export const TemplateCard = function ({
       onPress={() => onSelectTemplate(item.id)}
       className="w-1/2 p-2"
     >
-      <View className="rounded-xl border border-gray-200 bg-white p-3">
+      <View className="rounded-xl border border-line bg-surface p-3">
         {/* Thumbnail */}
         {item.thumbnail ? (
           <Image
@@ -23,8 +23,8 @@ export const TemplateCard = function ({
             resizeMode="cover"
           />
         ) : (
-          <View className="h-48 w-full items-center justify-center rounded-lg bg-gray-100">
-            <AppText className="text-gray-400">No preview</AppText>
+          <View className="h-48 w-full items-center justify-center rounded-lg bg-surface-muted">
+            <AppText className="text-foreground-subtle">No preview</AppText>
           </View>
         )}
 
@@ -33,7 +33,7 @@ export const TemplateCard = function ({
           <View className="flex-row items-center justify-between">
             <AppText
               type="subtitle"
-              className="font-bricolage-semibold text-gray-900"
+              className="font-bricolage-semibold text-foreground"
             >
               {item.name}
             </AppText>
@@ -43,7 +43,7 @@ export const TemplateCard = function ({
               </View>
             )}
           </View>
-          <AppText className="text-xs capitalize text-gray-500">
+          <AppText className="text-xs capitalize text-foreground-muted">
             {item.category}
           </AppText>
         </View>

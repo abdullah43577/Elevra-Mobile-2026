@@ -54,7 +54,7 @@ export default function Folders() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <ScreenHeader
         title="Folders"
         onBack={() => router.back()}
@@ -90,7 +90,7 @@ export default function Folders() {
             onButtonPress={openCreateModal}
           />
         ) : (
-          <View className="overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+          <View className="overflow-hidden rounded-2xl border-hairline border-line bg-surface">
             {folders.map((folder, index) => (
               <FolderItem
                 key={folder.id}

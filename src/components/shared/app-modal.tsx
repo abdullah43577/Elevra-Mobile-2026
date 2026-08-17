@@ -72,7 +72,7 @@ export const AppModal = function ({
     <Modal {...resolvedProps}>
       <View
         className={clsx(
-          "bg-white",
+          "bg-surface",
           isSheet
             ? "w-full px-5 pb-8 pt-4"
             : "w-full rounded-2xl px-5 pb-6 pt-5",
@@ -84,7 +84,7 @@ export const AppModal = function ({
         {/* Handle */}
         {showHandle && isSheet && (
           <View className="mb-4 items-center">
-            <View className="h-1 w-10 rounded-full bg-neutral-300" />
+            <View className="h-1 w-10 rounded-full bg-line-strong" />
           </View>
         )}
 
@@ -97,7 +97,7 @@ export const AppModal = function ({
               className="rounded-full p-1 active:opacity-60"
               hitSlop={8}
             >
-              <AppText type="subtitle" className="text-neutral-500">
+              <AppText type="subtitle" className="text-foreground-muted">
                 ✕
               </AppText>
             </Pressable>

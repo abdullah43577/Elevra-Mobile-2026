@@ -20,16 +20,16 @@ interface OptionListProps {
 
 const OptionList = function ({ options, selected, onSelect }: OptionListProps) {
   return (
-    <View className="overflow-hidden rounded-2xl border-hairline border-neutral-200 bg-white">
+    <View className="overflow-hidden rounded-2xl border-hairline border-line bg-surface">
       {options.map((option, index) => {
         const isSelected = selected === option.toLowerCase();
 
         return (
           <Fragment key={option}>
-            {index > 0 && <View className="h-px bg-neutral-100" />}
+            {index > 0 && <View className="h-px bg-line" />}
             <Pressable
               onPress={() => onSelect(option.toLowerCase())}
-              className="flex-row items-center justify-between px-4 py-3.5 active:bg-neutral-50"
+              className="flex-row items-center justify-between px-4 py-3.5 active:bg-surface-muted"
             >
               <AppText type="default">{option}</AppText>
               <Ionicons
@@ -56,7 +56,7 @@ export default function Filter() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <ScreenHeader
         title="Filter notes"
         onBack={() => router.back()}
@@ -90,7 +90,7 @@ export default function Filter() {
         />
       </ScrollView>
 
-      <View className="border-t-hairline border-neutral-200 bg-white px-5 py-4">
+      <View className="border-t-hairline border-line bg-surface px-5 py-4">
         <AppButton
           type="submit"
           label="Apply filters"

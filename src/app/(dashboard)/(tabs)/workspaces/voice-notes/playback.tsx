@@ -64,7 +64,7 @@ export default function Playback() {
   // player mid-playback.
   if (isFetchingRecording && !recording) {
     return (
-      <View className="flex-1 items-center justify-center bg-neutral-50">
+      <View className="flex-1 items-center justify-center bg-canvas">
         <ActivityIndicator size="large" color={CONTENT_COLORS.recording} />
       </View>
     );
@@ -72,14 +72,14 @@ export default function Playback() {
 
   if (!recording) {
     return (
-      <View className="flex-1 items-center justify-center bg-neutral-50">
+      <View className="flex-1 items-center justify-center bg-canvas">
         <AppText type="subtitle">Recording not found</AppText>
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <ScreenHeader title="Playback" onBack={handleBack} />
 
       <View className="flex-1 px-5 pt-8">

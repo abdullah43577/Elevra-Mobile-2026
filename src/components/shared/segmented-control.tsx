@@ -29,7 +29,7 @@ export const SegmentedControl = function <T extends string>({
   disabled,
 }: SegmentedControlProps<T>) {
   return (
-    <View className="flex-row rounded-lg bg-primary-100 p-1">
+    <View className="flex-row rounded-lg bg-surface-muted p-1">
       {options.map((option) => {
         const isActive = option.value === value;
         return (
@@ -40,7 +40,7 @@ export const SegmentedControl = function <T extends string>({
             style={isActive ? activeShadow : undefined}
             className={clsx(
               "flex-1 items-center rounded-md py-2",
-              isActive && "bg-white",
+              isActive && "bg-surface",
               disabled && "opacity-50",
             )}
           >
@@ -48,8 +48,8 @@ export const SegmentedControl = function <T extends string>({
               type="default"
               className={
                 isActive
-                  ? "font-bricolage-medium text-primary-500"
-                  : "text-primary-300"
+                  ? "font-bricolage-medium text-foreground"
+                  : "text-foreground-subtle"
               }
             >
               {option.label}

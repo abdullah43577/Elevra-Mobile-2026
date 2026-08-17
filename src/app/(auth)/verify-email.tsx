@@ -49,7 +49,7 @@ export default function VerifyEmail() {
 
   return (
     <KeyboardAwareScrollView
-      className="flex-1 bg-white"
+      className="flex-1 bg-surface"
       contentContainerStyle={{ flexGrow: 1 }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
@@ -59,9 +59,9 @@ export default function VerifyEmail() {
       <View className="flex-1 justify-center px-6 py-10">
         {/* Header */}
         <AppText type="title">Verify your email</AppText>
-        <AppText type="subtitle" className="mt-1 text-neutral-500">
+        <AppText type="subtitle" className="mt-1 text-foreground-muted">
           Enter the 6-digit code sent to{" "}
-          <AppText className="font-bricolage-semibold text-neutral-700">
+          <AppText className="font-bricolage-semibold text-foreground">
             {email}
           </AppText>
         </AppText>
@@ -94,7 +94,7 @@ export default function VerifyEmail() {
 
         {/* Resend */}
         <View className="mt-8 flex-row justify-center gap-1">
-          <AppText type="subtitle" className="text-neutral-500">
+          <AppText type="subtitle" className="text-foreground-muted">
             Didn't receive the code?
           </AppText>
           <Pressable
@@ -103,7 +103,7 @@ export default function VerifyEmail() {
           >
             <AppText
               type="link"
-              className={cooldown > 0 ? "text-neutral-400" : undefined}
+              className={cooldown > 0 ? "text-foreground-subtle" : undefined}
             >
               {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
             </AppText>
@@ -111,7 +111,7 @@ export default function VerifyEmail() {
         </View>
 
         {/* Footer */}
-        <AppText type="subtitle" className="mt-6 text-center text-neutral-400">
+        <AppText type="subtitle" className="mt-6 text-center text-foreground-subtle">
           Elevra Workspace Environment V1.0
         </AppText>
       </View>

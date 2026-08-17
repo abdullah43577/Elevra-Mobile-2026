@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { ResumeItem } from "@/components/resume-studio/resume-item";
 import { AppText } from "@/components/shared/app-text";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -16,6 +17,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Resumes() {
+  const { foregroundSubtle } = useThemeColors();
+
   const router = useRouter();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
@@ -58,22 +61,22 @@ export default function Resumes() {
 
   if (isFetchingResumes && resumes.length === 0) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
+      <View className="flex-1 items-center justify-center bg-surface">
         <ActivityIndicator size="large" color="#3B82F6" />
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-surface">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
-        <AppText type="title" className="font-bricolage-bold text-gray-900">
+        <AppText type="title" className="font-bricolage-bold text-foreground">
           My Resumes
         </AppText>
         <TouchableOpacity
           onPress={handleCreateResume}
-          className="rounded-full bg-blue-500 p-3"
+          className="rounded-full bg-accent p-3"
         >
           <Ionicons name="add" size={24} color="white" />
         </TouchableOpacity>
@@ -101,16 +104,16 @@ export default function Resumes() {
         )}
         ListEmptyComponent={() => (
           <View className="flex-1 items-center justify-center py-16">
-            <Ionicons name="document-text-outline" size={64} color="#D1D5DB" />
-            <AppText className="mt-4 font-bricolage-semibold text-xl text-gray-700">
+            <Ionicons name="document-text-outline" size={64} color={foregroundSubtle} />
+            <AppText className="mt-4 font-bricolage-semibold text-xl text-foreground">
               No resumes yet
             </AppText>
-            <AppText className="mt-1 text-sm text-gray-400">
+            <AppText className="mt-1 text-sm text-foreground-subtle">
               Create your first resume to get started
             </AppText>
             <TouchableOpacity
               onPress={handleCreateResume}
-              className="mt-6 rounded-lg bg-blue-500 px-6 py-3"
+              className="mt-6 rounded-lg bg-accent px-6 py-3"
             >
               <AppText className="font-bricolage-semibold text-white">
                 Create Resume

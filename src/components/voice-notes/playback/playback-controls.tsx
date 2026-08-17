@@ -35,8 +35,8 @@ export function PlaybackControls({
   const clampedProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <View className="rounded-3xl border-hairline border-neutral-200 bg-white p-6">
-      <View className="h-1 w-full overflow-hidden rounded-full bg-neutral-100">
+    <View className="rounded-3xl border-hairline border-line bg-surface p-6">
+      <View className="h-1 w-full overflow-hidden rounded-full bg-surface-muted">
         <View
           className="h-full rounded-full"
           style={{ width: `${clampedProgress}%`, backgroundColor: ACCENT }}

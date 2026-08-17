@@ -21,7 +21,7 @@ export const SettingsCard = function ({
   return (
     <View
       className={clsx(
-        "overflow-hidden rounded-3xl border-hairline border-neutral-200 bg-white",
+        "overflow-hidden rounded-3xl border-hairline border-line bg-surface",
         className,
       )}
     >

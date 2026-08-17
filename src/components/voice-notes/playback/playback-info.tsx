@@ -35,7 +35,7 @@ export function PlaybackInfo({
 
       <View className="mt-2 flex-row items-center gap-1.5">
         <AppText type="caption">{formatTime(duration)}</AppText>
-        <View className="h-0.5 w-0.5 rounded-full bg-neutral-300" />
+        <View className="h-0.5 w-0.5 rounded-full bg-line-strong" />
         <AppText type="caption">
           {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
         </AppText>

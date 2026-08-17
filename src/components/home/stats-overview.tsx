@@ -14,13 +14,13 @@ export const StatsOverview = function ({ counts }: Props) {
   );
 
   return (
-    <View className="flex-row items-stretch rounded-3xl border-hairline border-neutral-200 bg-white px-2 py-5">
+    <View className="flex-row items-stretch rounded-3xl border-hairline border-line bg-surface px-2 py-5">
       {CATEGORIES.map((key, index) => {
         const meta = CONTENT_META[key];
 
         return (
           <Fragment key={key}>
-            {index > 0 && <View className="w-px bg-neutral-100" />}
+            {index > 0 && <View className="w-px bg-line" />}
 
             <View className="flex-1 items-center">
               <View

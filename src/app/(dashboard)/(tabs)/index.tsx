@@ -54,7 +54,7 @@ export default function Home() {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <ScrollView
         className="flex-1"
         contentContainerClassName="pb-10"

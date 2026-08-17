@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Certifications } from "@/components/resume-studio/resume-builder/certification";
 import { Education } from "@/components/resume-studio/resume-builder/education";
 import { Experience } from "@/components/resume-studio/resume-builder/experience";
@@ -44,6 +45,8 @@ const SECTIONS = [
 ];
 
 export default function ResumeBuilder() {
+  const { foregroundMuted } = useThemeColors();
+
   const router = useRouter();
   const params = useLocalSearchParams<{
     templateId?: string;
@@ -196,7 +199,7 @@ export default function ResumeBuilder() {
   // Loading state
   if (isFetchingTemplate || (isEditing && isFetchingResume)) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
+      <View className="flex-1 items-center justify-center bg-surface">
         <ActivityIndicator size="large" color="#3B82F6" />
       </View>
     );
@@ -204,8 +207,8 @@ export default function ResumeBuilder() {
 
   if (!template) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <AppText className="text-gray-500">Template not found</AppText>
+      <View className="flex-1 items-center justify-center bg-surface">
+        <AppText className="text-foreground-muted">Template not found</AppText>
       </View>
     );
   }
@@ -214,13 +217,13 @@ export default function ResumeBuilder() {
   const progress = ((activeSection + 1) / SECTIONS.length) * 100;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-surface">
       {/* Header */}
-      <View className="flex-row items-center justify-between border-b border-gray-100 px-4 py-3">
+      <View className="flex-row items-center justify-between border-b border-line px-4 py-3">
         <TouchableOpacity onPress={() => router.back()} className="p-1">
-          <Ionicons name="arrow-back" size={24} color="#6B7280" />
+          <Ionicons name="arrow-back" size={24} color={foregroundMuted} />
         </TouchableOpacity>
-        <AppText type="title" className="font-bricolage-semibold text-gray-900">
+        <AppText type="title" className="font-bricolage-semibold text-foreground">
           {isEditing ? "Edit Resume" : "Build Resume"}
         </AppText>
         <TouchableOpacity
@@ -238,16 +241,16 @@ export default function ResumeBuilder() {
       {/* Progress Bar */}
       <View className="px-4 py-3">
         <View className="flex-row items-center justify-between">
-          <AppText className="text-xs text-gray-500">
+          <AppText className="text-xs text-foreground-muted">
             Step {activeSection + 1} of {SECTIONS.length}
           </AppText>
-          <AppText className="text-xs text-blue-500">
+          <AppText className="text-xs text-accent">
             {Math.round(progress)}%
           </AppText>
         </View>
-        <View className="mt-1 h-1 w-full rounded-full bg-gray-200">
+        <View className="mt-1 h-1 w-full rounded-full bg-line">
           <View
-            className="h-1 rounded-full bg-blue-500"
+            className="h-1 rounded-full bg-accent"
             style={{ width: `${progress}%` }}
           />
         </View>
@@ -266,11 +269,11 @@ export default function ResumeBuilder() {
             <View className="flex-1">
               <AppText
                 type="subtitle"
-                className="mb-2 font-bricolage-medium text-sm text-gray-700"
+                className="mb-2 font-bricolage-medium text-sm text-foreground"
               >
                 Resume Preview
               </AppText>
-              <View className="overflow-hidden rounded-xl border border-gray-200">
+              <View className="overflow-hidden rounded-xl border border-line">
                 <TemplateRenderer
                   template={template}
                   data={{
@@ -289,7 +292,7 @@ export default function ResumeBuilder() {
             </View>
           ) : (
             <View>
-              <AppText className="mb-1 font-bricolage-bold text-xl text-gray-900">
+              <AppText className="mb-1 font-bricolage-bold text-xl text-foreground">
                 {currentSection.label}
               </AppText>
 
@@ -367,7 +370,7 @@ export default function ResumeBuilder() {
       </KeyboardAwareScrollView>
 
       {/* Navigation Buttons */}
-      <View className="flex-row items-center justify-between border-t border-gray-100 px-4 py-4">
+      <View className="flex-row items-center justify-between border-t border-line px-4 py-4">
         <TouchableOpacity
           onPress={handlePrevious}
           disabled={activeSection === 0}
@@ -375,7 +378,7 @@ export default function ResumeBuilder() {
             activeSection === 0 ? "opacity-50" : ""
           }`}
         >
-          <AppText className="font-bricolage-semibold text-gray-500">
+          <AppText className="font-bricolage-semibold text-foreground-muted">
             Previous
           </AppText>
         </TouchableOpacity>
@@ -384,7 +387,7 @@ export default function ResumeBuilder() {
           <TouchableOpacity
             onPress={handleSubmit(handleSave)}
             disabled={isSaving}
-            className="rounded-lg bg-blue-500 px-8 py-3"
+            className="rounded-lg bg-accent px-8 py-3"
           >
             {isSaving ? (
               <ActivityIndicator size="small" color="white" />
@@ -397,7 +400,7 @@ export default function ResumeBuilder() {
         ) : (
           <TouchableOpacity
             onPress={handleNext}
-            className="rounded-lg bg-blue-500 px-8 py-3"
+            className="rounded-lg bg-accent px-8 py-3"
           >
             <AppText className="font-bricolage-semibold text-white">
               Next

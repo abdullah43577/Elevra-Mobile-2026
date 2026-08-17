@@ -12,7 +12,7 @@ interface PersonalInfoProps {
 export function PersonalInfo({ control, errors }: PersonalInfoProps) {
   return (
     <View className="mt-4 gap-4">
-      <AppText type="subtitle" className="text-gray-500">
+      <AppText type="subtitle" className="text-foreground-muted">
         Fill in your personal details
       </AppText>
 

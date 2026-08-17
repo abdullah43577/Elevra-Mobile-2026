@@ -22,7 +22,7 @@ export default function WorkspacesHub() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <ScrollView
         className="flex-1"
         contentContainerClassName="px-5 pb-10 pt-2"

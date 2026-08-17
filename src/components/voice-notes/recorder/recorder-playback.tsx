@@ -27,7 +27,7 @@ export function RecorderPlayback({
       : 0;
 
   return (
-    <View className="mb-6 w-full items-center rounded-2xl border-hairline border-neutral-200 bg-white p-5">
+    <View className="mb-6 w-full items-center rounded-2xl border-hairline border-line bg-surface p-5">
       <Pressable
         onPress={onPlayPause}
         className="items-center justify-center rounded-full active:opacity-80"
@@ -44,7 +44,7 @@ export function RecorderPlayback({
         />
       </Pressable>
 
-      <View className="mt-4 h-1 w-full overflow-hidden rounded-full bg-neutral-100">
+      <View className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface-muted">
         <View
           className="h-full rounded-full"
           style={{

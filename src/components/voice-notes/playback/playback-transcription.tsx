@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,9 +13,11 @@ export function PlaybackTranscription({
   isTranscribed,
   transcription,
 }: PlaybackTranscriptionProps) {
+  const { foregroundSubtle } = useThemeColors();
+
   if (isTranscribed && transcription) {
     return (
-      <View className="mb-6 rounded-2xl border-hairline border-neutral-200 bg-white p-4">
+      <View className="mb-6 rounded-2xl border-hairline border-line bg-surface p-4">
         <View className="mb-2 flex-row items-center gap-1.5">
           <Ionicons
             name="document-text-outline"
@@ -37,12 +40,12 @@ export function PlaybackTranscription({
   }
 
   return (
-    <View className="mb-6 flex-row items-center gap-3 rounded-2xl border-hairline border-neutral-200 bg-white p-4">
+    <View className="mb-6 flex-row items-center gap-3 rounded-2xl border-hairline border-line bg-surface p-4">
       <View
-        className="items-center justify-center rounded-full bg-neutral-100"
+        className="items-center justify-center rounded-full bg-surface-muted"
         style={{ width: 32, height: 32 }}
       >
-        <Ionicons name="sparkles-outline" size={15} color="#B4B4BF" />
+        <Ionicons name="sparkles-outline" size={15} color={foregroundSubtle} />
       </View>
       <View className="flex-1">
         <AppText type="label">Transcription coming soon</AppText>

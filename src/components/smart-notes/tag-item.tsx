@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { useDeleteTag } from "@/hooks/smart-notes/use-delete-tag";
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export const TagItem = function ({ item, withDivider = false }: Props) {
+  const { foregroundSubtle } = useThemeColors();
+
   const { deleteTag, isDeleting } = useDeleteTag({ tagId: item.id });
 
   const noteCount = item._count?.notes || 0;
@@ -18,7 +21,7 @@ export const TagItem = function ({ item, withDivider = false }: Props) {
   return (
     <View
       className={`flex-row items-center gap-3 px-4 py-3.5 ${
-        withDivider ? "border-t-hairline border-neutral-100" : ""
+        withDivider ? "border-t-hairline border-line" : ""
       }`}
     >
       <View
@@ -43,12 +46,12 @@ export const TagItem = function ({ item, withDivider = false }: Props) {
         onPress={() => deleteTag(null)}
         disabled={isDeleting}
         hitSlop={8}
-        className="h-8 w-8 items-center justify-center rounded-full active:bg-error-50"
+        className="h-8 w-8 items-center justify-center rounded-full active:bg-danger-muted"
       >
         {isDeleting ? (
           <ActivityIndicator size="small" color="#B93A32" />
         ) : (
-          <Ionicons name="trash-outline" size={16} color="#B4B4BF" />
+          <Ionicons name="trash-outline" size={16} color={foregroundSubtle} />
         )}
       </Pressable>
     </View>

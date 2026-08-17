@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { FileSelectionStatus } from "@/components/voice-notes/recorder/file-selection-status";
 import { RecorderActions } from "@/components/voice-notes/recorder/recorder-actions";
@@ -22,6 +23,8 @@ import { TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Recorder() {
+  const { foregroundSubtle } = useThemeColors();
+
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -329,7 +332,7 @@ export default function Recorder() {
   const hasRecording = !!audioRecorder.uri && !isRecording;
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <RecorderHeader
         onBack={handleBack}
         onSave={handleSaveRecording}
@@ -340,11 +343,11 @@ export default function Recorder() {
       <View className="flex-1 items-center justify-center px-6">
         {/* Title Input */}
         <TextInput
-          className="mb-8 w-full rounded-2xl border-hairline border-neutral-200 bg-white px-4 py-3.5 text-center font-bricolage-medium text-[17px] text-primary-500"
+          className="mb-8 w-full rounded-2xl border-hairline border-line bg-surface px-4 py-3.5 text-center font-bricolage-medium text-[17px] text-foreground"
           placeholder="Recording title..."
           value={title}
           onChangeText={setTitle}
-          placeholderTextColor="#B4B4BF"
+          placeholderTextColor={foregroundSubtle}
           editable={!isSaving}
         />
 

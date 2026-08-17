@@ -22,13 +22,13 @@ export const ToggleSwitch = function ({
       }}
       className={clsx(
         "h-6 w-11 justify-center rounded-full p-0.5",
-        value ? "bg-secondary-500" : "bg-primary-200",
+        value ? "bg-accent" : "bg-line-strong",
         disabled && "opacity-50",
       )}
     >
       <View
         className={clsx(
-          "h-5 w-5 rounded-full bg-white shadow",
+          "h-5 w-5 rounded-full bg-surface shadow",
           value ? "self-end" : "self-start",
         )}
       />

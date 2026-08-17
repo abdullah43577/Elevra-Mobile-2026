@@ -81,7 +81,7 @@ export default function GenerateThumbnails() {
 
   if (isFetchingTemplates) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
+      <View className="flex-1 items-center justify-center bg-surface">
         <ActivityIndicator size="large" color="#3B82F6" />
       </View>
     );
@@ -90,19 +90,19 @@ export default function GenerateThumbnails() {
   const activeTemplate = templates[currentIndex - 1];
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-surface">
       <View className="p-4">
         <AppText className="font-bricolage-bold text-2xl">
           Generate Thumbnails
         </AppText>
-        <AppText className="text-gray-500">
+        <AppText className="text-foreground-muted">
           This will generate thumbnails for all templates
         </AppText>
 
         <TouchableOpacity
           onPress={generateAllThumbnails}
           disabled={generating}
-          className="mt-4 rounded-lg bg-blue-500 py-3"
+          className="mt-4 rounded-lg bg-accent py-3"
         >
           {generating ? (
             <ActivityIndicator size="small" color="white" />
@@ -132,12 +132,12 @@ export default function GenerateThumbnails() {
 
         {generating && (
           <View className="mt-4">
-            <AppText className="text-gray-600">
+            <AppText className="text-foreground-muted">
               Progress: {currentIndex} / {templates.length}
             </AppText>
-            <View className="mt-2 h-2 w-full rounded-full bg-gray-200">
+            <View className="mt-2 h-2 w-full rounded-full bg-line">
               <View
-                className="h-2 rounded-full bg-blue-500"
+                className="h-2 rounded-full bg-accent"
                 style={{ width: `${(currentIndex / templates.length) * 100}%` }}
               />
             </View>
@@ -149,16 +149,16 @@ export default function GenerateThumbnails() {
             {results.map((result, index) => (
               <View
                 key={index}
-                className="flex-row items-center justify-between border-b border-gray-100 py-2"
+                className="flex-row items-center justify-between border-b border-line py-2"
               >
-                <AppText className="text-sm text-gray-700">
+                <AppText className="text-sm text-foreground">
                   {result.name}
                 </AppText>
                 <AppText
                   className={
                     result.status === "✅ Success"
                       ? "text-green-500"
-                      : "text-red-500"
+                      : "text-danger"
                   }
                 >
                   {result.status}

@@ -28,7 +28,7 @@ export default function ResetPassword() {
 
   return (
     <KeyboardAwareScrollView
-      className="flex-1 bg-white"
+      className="flex-1 bg-surface"
       contentContainerStyle={{ flexGrow: 1 }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
@@ -38,7 +38,7 @@ export default function ResetPassword() {
       <View className="flex-1 justify-center px-6 py-10">
         {/* Header */}
         <AppText type="title">Reset password</AppText>
-        <AppText type="subtitle" className="mt-1 text-neutral-500">
+        <AppText type="subtitle" className="mt-1 text-foreground-muted">
           Enter the code we sent you and choose a new password
         </AppText>
 
@@ -91,7 +91,7 @@ export default function ResetPassword() {
 
         {/* Resend code */}
         <View className="mt-8 flex-row justify-center gap-1">
-          <AppText type="subtitle" className="text-neutral-500">
+          <AppText type="subtitle" className="text-foreground-muted">
             Didn't receive a code?
           </AppText>
           <Pressable onPress={() => router.push("/(auth)/forgot-password")}>
@@ -100,7 +100,7 @@ export default function ResetPassword() {
         </View>
 
         {/* Footer */}
-        <AppText type="subtitle" className="mt-6 text-center text-neutral-400">
+        <AppText type="subtitle" className="mt-6 text-center text-foreground-subtle">
           Elevra Workspace Environment V1.0
         </AppText>
       </View>

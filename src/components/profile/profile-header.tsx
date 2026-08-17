@@ -1,5 +1,6 @@
 import { Badge } from "@/components/shared/badge";
 import { useGetProfile } from "@/hooks/use-get-profile";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, Image, Pressable, View } from "react-native";
 import { AppText } from "../shared/app-text";
@@ -18,6 +19,7 @@ export const ProfileHeader = function ({
   isEditing,
 }: Props) {
   const { profile } = useGetProfile();
+  const { canvas } = useThemeColors();
 
   const initials =
     `${profile?.first_name?.[0] ?? ""}${profile?.last_name?.[0] ?? ""}`.toUpperCase() ||
@@ -31,7 +33,7 @@ export const ProfileHeader = function ({
     <View className="px-5 pt-2">
       <AppText type="display">Profile</AppText>
 
-      <View className="mt-5 flex-row items-center gap-4 rounded-3xl border-hairline border-neutral-200 bg-white p-5">
+      <View className="mt-5 flex-row items-center gap-4 rounded-3xl border-hairline border-line bg-surface p-5">
         <Pressable onPress={onChangePicture} className="relative">
           {displayUri ? (
             <Image
@@ -39,8 +41,8 @@ export const ProfileHeader = function ({
               className="h-16 w-16 rounded-full"
             />
           ) : (
-            <View className="h-16 w-16 items-center justify-center rounded-full bg-neutral-100">
-              <AppText type="title" className="text-neutral-500">
+            <View className="h-16 w-16 items-center justify-center rounded-full bg-surface-muted">
+              <AppText type="title" className="text-foreground-muted">
                 {initials}
               </AppText>
             </View>
@@ -52,8 +54,8 @@ export const ProfileHeader = function ({
             </View>
           )}
 
-          <View className="absolute -bottom-0.5 -right-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-primary-500">
-            <Ionicons name="camera" size={13} color="#ffffff" />
+          <View className="absolute -bottom-0.5 -right-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-surface bg-foreground">
+            <Ionicons name="camera" size={13} color={canvas} />
           </View>
         </Pressable>
 

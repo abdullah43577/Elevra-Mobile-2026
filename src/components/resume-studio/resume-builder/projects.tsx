@@ -34,12 +34,12 @@ export function Projects({
       {fields.map((field, index) => (
         <View
           key={field.id}
-          className="mb-4 gap-4 rounded-xl border border-gray-200 p-4"
+          className="mb-4 gap-4 rounded-xl border border-line p-4"
         >
           <View className="mb-3 flex-row items-center justify-between">
             <AppText
               type="subtitle"
-              className="font-bricolage-medium text-gray-700"
+              className="font-bricolage-medium text-foreground"
             >
               Project {index + 1}
             </AppText>
@@ -83,7 +83,7 @@ export function Projects({
         className="flex-row items-center gap-2 py-2"
       >
         <Ionicons name="add-circle-outline" size={24} color="#3B82F6" />
-        <AppText className="text-blue-500">Add Project</AppText>
+        <AppText className="text-accent">Add Project</AppText>
       </TouchableOpacity>
     </View>
   );

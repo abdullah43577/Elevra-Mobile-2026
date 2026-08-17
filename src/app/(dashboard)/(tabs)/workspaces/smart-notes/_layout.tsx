@@ -1,12 +1,15 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Stack } from "expo-router";
 
 export default function SmartNotesLayout() {
+  const { surface, foreground } = useThemeColors();
+
   return (
     <Stack
       screenOptions={{
         headerShown: false,
-        headerStyle: { backgroundColor: "#FFFFFF" },
-        headerTintColor: "#17171C",
+        headerStyle: { backgroundColor: surface },
+        headerTintColor: foreground,
         headerTitleStyle: { fontWeight: "600", fontSize: 16 },
         headerShadowVisible: false,
       }}

@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { clsx } from "clsx";
 import { TextInput, type TextInputProps } from "react-native";
 
@@ -13,13 +14,16 @@ export const TextArea = function ({
   className,
   ...rest
 }: TextAreaProps) {
+  const { foregroundSubtle } = useThemeColors();
+
   return (
     <TextInput
       {...rest}
       className={clsx(
-        "w-full rounded-lg border border-neutral-400 bg-white px-4 py-3 text-sm focus:border-primary-500",
+        "w-full rounded-lg border border-line-strong bg-surface px-4 py-3 font-bricolage text-sm text-foreground focus:border-accent",
         className,
       )}
+      placeholderTextColor={foregroundSubtle}
       placeholder={placeholder}
       onChangeText={onChangeText}
       multiline

@@ -19,8 +19,8 @@ const chipClass = function (isSelected: boolean) {
   return clsx(
     "flex-row items-center gap-1.5 rounded-full border-hairline px-3.5 py-1.5 active:opacity-70",
     isSelected
-      ? "border-primary-500 bg-primary-500"
-      : "border-neutral-200 bg-white",
+      ? "border-foreground bg-foreground"
+      : "border-line bg-surface",
   );
 };
 
@@ -41,8 +41,8 @@ export function FilterChips({
           type="caption"
           className={
             !selectedFolder
-              ? "font-bricolage-semibold text-white"
-              : "text-neutral-600"
+              ? "font-bricolage-semibold text-canvas"
+              : "text-foreground-muted"
           }
         >
           All
@@ -70,8 +70,8 @@ export function FilterChips({
               type="caption"
               className={
                 isSelected
-                  ? "font-bricolage-semibold text-white"
-                  : "text-neutral-600"
+                  ? "font-bricolage-semibold text-canvas"
+                  : "text-foreground-muted"
               }
             >
               {folder.name}

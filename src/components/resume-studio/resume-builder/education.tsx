@@ -63,12 +63,12 @@ export function Education({
         return (
           <View
             key={field.id}
-            className="mb-6 gap-4 rounded-xl border border-gray-200 p-5"
+            className="mb-6 gap-4 rounded-xl border border-line p-5"
           >
             <View className="mb-4 flex-row items-center justify-between">
               <AppText
                 type="subtitle"
-                className="font-bricolage-medium text-gray-700"
+                className="font-bricolage-medium text-foreground"
               >
                 Education {index + 1}
               </AppText>
@@ -90,12 +90,12 @@ export function Education({
             {/* Degree - Bottom Sheet Picker */}
             <TouchableOpacity
               onPress={() => setDegreePickerIndex(index)}
-              className="rounded-xl border border-gray-200 bg-white px-4 py-3"
+              className="rounded-xl border border-line bg-surface px-4 py-3"
             >
-              <AppText className="text-xs text-gray-500">Degree</AppText>
+              <AppText className="text-xs text-foreground-muted">Degree</AppText>
               <AppText
                 className={
-                  degree ? "text-base text-gray-900" : "text-base text-gray-400"
+                  degree ? "text-base text-foreground" : "text-base text-foreground-subtle"
                 }
               >
                 {degree ? getDegreeLabel(degree) : "Select degree"}
@@ -105,16 +105,16 @@ export function Education({
             {/* Field - Bottom Sheet Picker */}
             <TouchableOpacity
               onPress={() => setFieldPickerIndex(index)}
-              className="rounded-xl border border-gray-200 bg-white px-4 py-3"
+              className="rounded-xl border border-line bg-surface px-4 py-3"
             >
-              <AppText className="text-xs text-gray-500">
+              <AppText className="text-xs text-foreground-muted">
                 Field of Study
               </AppText>
               <AppText
                 className={
                   fieldOfStudy
-                    ? "text-base text-gray-900"
-                    : "text-base text-gray-400"
+                    ? "text-base text-foreground"
+                    : "text-base text-foreground-subtle"
                 }
               >
                 {fieldOfStudy ? getFieldLabel(fieldOfStudy) : "Select field"}
@@ -158,7 +158,7 @@ export function Education({
         className="flex-row items-center gap-2 py-3"
       >
         <Ionicons name="add-circle-outline" size={24} color="#3B82F6" />
-        <AppText className="text-blue-500">Add Education</AppText>
+        <AppText className="text-accent">Add Education</AppText>
       </TouchableOpacity>
 
       {/* Degree Picker */}

@@ -16,7 +16,7 @@ export const RecentActivityRow = function ({ item, onPress }: Props) {
   return (
     <Pressable
       onPress={() => onPress(item)}
-      className="flex-row items-center gap-3 px-4 py-3.5 active:bg-neutral-50"
+      className="flex-row items-center gap-3 px-4 py-3.5 active:bg-surface-muted"
     >
       <View
         className="items-center justify-center rounded-full"
@@ -35,7 +35,7 @@ export const RecentActivityRow = function ({ item, onPress }: Props) {
         </AppText>
         <View className="mt-0.5 flex-row items-center gap-1.5">
           <AppText type="caption">{item.type}</AppText>
-          <View className="h-0.5 w-0.5 rounded-full bg-neutral-300" />
+          <View className="h-0.5 w-0.5 rounded-full bg-line-strong" />
           <AppText type="caption">{formatRelativeDate(item.date)}</AppText>
         </View>
       </View>

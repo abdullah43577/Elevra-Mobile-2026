@@ -47,7 +47,7 @@ export default function Onboarding() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-surface">
       {/* Skip */}
       <View className="flex-row justify-end px-6 pt-2">
         <Pressable onPress={handleFinish} className="active:opacity-60">
@@ -82,7 +82,7 @@ export default function Onboarding() {
             </AppText>
             <AppText
               type="subtitle"
-              className="mt-2 text-center text-neutral-500"
+              className="mt-2 text-center text-foreground-muted"
             >
               {item.subtitle}
             </AppText>

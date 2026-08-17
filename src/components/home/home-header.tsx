@@ -32,12 +32,12 @@ export const HomeHeader = function ({
 
       <Pressable
         onPress={onPressAvatar}
-        className="h-11 w-11 items-center justify-center overflow-hidden rounded-full border-hairline border-neutral-200 bg-white active:opacity-70"
+        className="h-11 w-11 items-center justify-center overflow-hidden rounded-full border-hairline border-line bg-surface active:opacity-70"
       >
         {avatarUri ? (
           <Image source={{ uri: avatarUri }} className="h-full w-full" />
         ) : (
-          <AppText type="label" className="text-neutral-500">
+          <AppText type="label" className="text-foreground-muted">
             {initials}
           </AppText>
         )}

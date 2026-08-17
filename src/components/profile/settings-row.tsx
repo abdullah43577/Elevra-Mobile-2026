@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
 import { clsx } from "clsx";
 import { ChevronRight } from "lucide-react-native";
@@ -22,6 +23,8 @@ export const SettingsRow = function ({
   destructive = false,
   withDivider = false,
 }: Props) {
+  const { foregroundSubtle } = useThemeColors();
+
   const content = (
     <>
       <AppText
@@ -29,8 +32,8 @@ export const SettingsRow = function ({
         className={clsx(
           "flex-1",
           destructive
-            ? "text-center font-bricolage-semibold text-error-500"
-            : "text-neutral-500",
+            ? "text-center font-bricolage-semibold text-danger"
+            : "text-foreground-muted",
         )}
       >
         {label}
@@ -43,14 +46,14 @@ export const SettingsRow = function ({
           </AppText>
         ))}
 
-      {onPress && !destructive && <ChevronRight size={16} color="#B4B4BF" />}
+      {onPress && !destructive && <ChevronRight size={16} color={foregroundSubtle} />}
     </>
   );
 
   const className = clsx(
     "flex-row items-center gap-3 px-5 py-4",
-    withDivider && "border-t-hairline border-neutral-100",
-    onPress && "active:bg-neutral-50",
+    withDivider && "border-t-hairline border-line",
+    onPress && "active:bg-surface-muted",
   );
 
   if (onPress) {

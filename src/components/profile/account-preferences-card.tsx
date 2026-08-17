@@ -27,7 +27,7 @@ export const AccountPreferencesCard = function ({
   return (
     <SettingsCard title="Preferences">
       <View className="px-5 pb-4 pt-4">
-        <AppText type="default" className="mb-2.5 text-neutral-500">
+        <AppText type="default" className="mb-2.5 text-foreground-muted">
           Appearance
         </AppText>
         <SegmentedControl

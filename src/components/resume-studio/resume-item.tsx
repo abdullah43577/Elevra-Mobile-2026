@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
 import { useDeleteResume } from "@/hooks/resume/use-delete-resume";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,6 +20,8 @@ export function ResumeItem({
   onDelete,
   formatDate,
 }: ResumeItemProps) {
+  const { foregroundMuted } = useThemeColors();
+
   const { deleteResume, isDeleting } = useDeleteResume({
     resumeId: resume.id,
   });
@@ -29,23 +32,23 @@ export function ResumeItem({
   };
 
   return (
-    <View className="mx-4 mb-4 rounded-xl border border-gray-200 bg-white p-4">
+    <View className="mx-4 mb-4 rounded-xl border border-line bg-surface p-4">
       {/* Title */}
       <AppText
         type="subtitle"
-        className="font-bricolage-semibold text-gray-900"
+        className="font-bricolage-semibold text-foreground"
       >
         {resume.title}
       </AppText>
 
       {/* Template & Date */}
       <View className="mt-1 flex-row items-center gap-3">
-        <View className="rounded-full bg-gray-100 px-2 py-0.5">
-          <AppText className="text-xs text-gray-600">
+        <View className="rounded-full bg-surface-muted px-2 py-0.5">
+          <AppText className="text-xs text-foreground-muted">
             {resume.template?.name || "No template"}
           </AppText>
         </View>
-        <AppText className="text-xs text-gray-400">
+        <AppText className="text-xs text-foreground-subtle">
           Updated {formatDate(resume.updatedAt)}
         </AppText>
       </View>
@@ -57,15 +60,15 @@ export function ResumeItem({
           className="flex-row items-center gap-1"
         >
           <Ionicons name="create-outline" size={18} color="#3B82F6" />
-          <AppText className="text-sm text-blue-500">Edit</AppText>
+          <AppText className="text-sm text-accent">Edit</AppText>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => onExport(resume.id)}
           className="flex-row items-center gap-1"
         >
-          <Ionicons name="download-outline" size={18} color="#6B7280" />
-          <AppText className="text-sm text-gray-500">Export</AppText>
+          <Ionicons name="download-outline" size={18} color={foregroundMuted} />
+          <AppText className="text-sm text-foreground-muted">Export</AppText>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -78,7 +81,7 @@ export function ResumeItem({
           ) : (
             <>
               <Ionicons name="trash-outline" size={18} color="#EF4444" />
-              <AppText className="text-sm text-red-500">Delete</AppText>
+              <AppText className="text-sm text-danger">Delete</AppText>
             </>
           )}
         </TouchableOpacity>

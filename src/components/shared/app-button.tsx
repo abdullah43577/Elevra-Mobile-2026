@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { clsx } from "clsx";
 import * as Haptics from "expo-haptics";
 import {
@@ -29,21 +30,22 @@ const hapticMap: Partial<
 };
 
 const typeStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
-  default: "bg-primary-500",
-  submit: "bg-secondary-500",
-  secondary: "bg-neutral-100",
-  delete: "bg-error-500",
+  default: "bg-foreground",
+  submit: "bg-accent",
+  secondary: "bg-surface-muted",
+  delete: "bg-danger-solid",
 };
 
-// Mirrors tailwind.config.js's `primary/secondary/error.foreground` tokens.
-// AppButton previously never applied these, so button text color depended
-// entirely on the consumer remembering to set it correctly per type.
+// `default` is the inverted button — near-black on light, near-white on dark —
+// so its label has to be the canvas, not a fixed white. The filled colour
+// variants keep white in both schemes because their fills stay saturated.
 const textStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
-  default: "text-primary-foreground",
-  submit: "text-secondary-foreground",
-  secondary: "text-primary-500",
-  delete: "text-error-foreground",
+  default: "text-canvas",
+  submit: "text-white",
+  secondary: "text-foreground",
+  delete: "text-white",
 };
+
 
 export const AppButton = function ({
   className,
@@ -56,6 +58,12 @@ export const AppButton = function ({
   ...rest
 }: AppButtonProps) {
   const isDisabled = disabled || isLoading;
+  const { canvas, foreground } = useThemeColors();
+
+  // A white spinner is invisible on the secondary fill, and wrong on the
+  // inverted default button once the scheme flips.
+  const spinnerColor =
+    type === "default" ? canvas : type === "secondary" ? foreground : "#ffffff";
 
   const handlePress = () => {
     if (isDisabled) return;
@@ -76,7 +84,7 @@ export const AppButton = function ({
       onPress={handlePress}
     >
       {isLoading ? (
-        <ActivityIndicator color="#ffffff" />
+        <ActivityIndicator color={spinnerColor} />
       ) : label ? (
         <AppText type="label" className={textStyles[type]}>
           {label}

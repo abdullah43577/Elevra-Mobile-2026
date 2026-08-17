@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { StyleSheet, type ColorValue } from "react-native";
@@ -43,16 +44,17 @@ const makeTabIcon = function (key: keyof typeof TAB_ICONS) {
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const { accent, foregroundSubtle, surface, line } = useThemeColors();
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#5B47E8",
-        tabBarInactiveTintColor: "#B4B4BF",
+        tabBarActiveTintColor: accent,
+        tabBarInactiveTintColor: foregroundSubtle,
         tabBarStyle: {
-          backgroundColor: "#FFFFFF",
-          borderTopColor: "#EAEAEE",
+          backgroundColor: surface,
+          borderTopColor: line,
           borderTopWidth: StyleSheet.hairlineWidth,
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom + 8,

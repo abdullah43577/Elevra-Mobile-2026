@@ -47,7 +47,7 @@ export default function SmartNotes() {
   const isFirstLoad = isFetchingNotes && notes.length === 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <View className="flex-row items-start justify-between px-5 pb-4 pt-2">
         <View className="flex-1 pr-3">
           <AppText type="display">Smart Notes</AppText>

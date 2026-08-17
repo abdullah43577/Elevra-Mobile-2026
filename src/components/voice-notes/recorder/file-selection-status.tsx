@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,6 +13,8 @@ export function FileSelectionStatus({
   fileName,
   onClearFile,
 }: FileSelectionStatusProps) {
+  const { foregroundMuted } = useThemeColors();
+
   return (
     <View
       className="mb-4 w-full flex-row items-center gap-2.5 rounded-2xl px-4 py-3"
@@ -26,7 +29,7 @@ export function FileSelectionStatus({
         {fileName}
       </AppText>
       <Pressable onPress={onClearFile} hitSlop={8}>
-        <Ionicons name="close" size={16} color="#7D7D8A" />
+        <Ionicons name="close" size={16} color={foregroundMuted} />
       </Pressable>
     </View>
   );

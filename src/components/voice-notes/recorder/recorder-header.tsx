@@ -28,7 +28,7 @@ export function RecorderHeader({
           <Pressable onPress={onSave} disabled={!hasFile} hitSlop={8}>
             <AppText
               type="link"
-              className={hasFile ? "" : "text-neutral-300"}
+              className={hasFile ? "" : "text-foreground-subtle"}
               style={hasFile ? { color: CONTENT_COLORS.recording } : undefined}
             >
               Save

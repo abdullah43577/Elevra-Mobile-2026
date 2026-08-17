@@ -14,10 +14,10 @@ const variantStyles: Record<
   NonNullable<BadgeProps["variant"]>,
   { container: string; text: string }
 > = {
-  default: { container: "bg-neutral-100", text: "text-neutral-700" },
-  primary: { container: "bg-primary-50", text: "text-primary-500" },
-  secondary: { container: "bg-secondary-50", text: "text-secondary-500" },
-  error: { container: "bg-error-50", text: "text-error-500" },
+  default: { container: "bg-surface-muted", text: "text-foreground" },
+  primary: { container: "bg-surface-muted", text: "text-foreground" },
+  secondary: { container: "bg-accent-muted", text: "text-accent" },
+  error: { container: "bg-danger-muted", text: "text-danger" },
 };
 
 export const Badge = function ({

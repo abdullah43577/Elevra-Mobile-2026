@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useState } from "react";
 import { View, FlatList, TouchableOpacity, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -70,6 +71,8 @@ const NOTIFICATIONS_DATA = [
 ];
 
 export default function Notifications() {
+  const { foregroundSubtle } = useThemeColors();
+
   const [refreshing, setRefreshing] = useState(false);
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
 
@@ -99,8 +102,8 @@ export default function Notifications() {
     return (
       <TouchableOpacity
         onPress={() => handleMarkAsRead(item.id)}
-        className={`mx-4 mb-2 rounded-xl border border-gray-100 p-4 ${
-          item.read ? "bg-white" : "bg-blue-50"
+        className={`mx-4 mb-2 rounded-xl border border-line p-4 ${
+          item.read ? "bg-surface" : "bg-accent-muted"
         }`}
       >
         <View className="flex-row items-start gap-3">
@@ -121,21 +124,21 @@ export default function Notifications() {
               <AppText
                 type="default"
                 className={`font-bricolage-medium ${
-                  item.read ? "text-gray-700" : "text-gray-900"
+                  item.read ? "text-foreground" : "text-foreground"
                 }`}
               >
                 {item.title}
               </AppText>
               {!item.read && (
-                <View className="h-2 w-2 rounded-full bg-blue-500" />
+                <View className="h-2 w-2 rounded-full bg-accent" />
               )}
             </View>
 
-            <AppText type="subtitle" className="mt-0.5 text-gray-500">
+            <AppText type="subtitle" className="mt-0.5 text-foreground-muted">
               {item.message}
             </AppText>
 
-            <AppText type="subtitle" className="mt-1 text-xs text-gray-400">
+            <AppText type="subtitle" className="mt-1 text-xs text-foreground-subtle">
               {item.time}
             </AppText>
           </View>
@@ -145,21 +148,21 @@ export default function Notifications() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-surface">
       {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-4">
-        <AppText type="title" className="text-gray-900">
+        <AppText type="title" className="text-foreground">
           Notifications
         </AppText>
         <View className="flex-row items-center gap-3">
           {unreadCount > 0 && (
             <TouchableOpacity onPress={handleMarkAllAsRead}>
-              <AppText type="link" className="text-blue-500">
+              <AppText type="link" className="text-accent">
                 Mark all as read
               </AppText>
             </TouchableOpacity>
           )}
-          <View className="rounded-full bg-blue-500 px-2.5 py-0.5">
+          <View className="rounded-full bg-accent px-2.5 py-0.5">
             <AppText type="default" className="text-xs text-white">
               {unreadCount}
             </AppText>
@@ -189,12 +192,12 @@ export default function Notifications() {
             <Ionicons
               name="notifications-off-outline"
               size={64}
-              color="#D1D5DB"
+              color={foregroundSubtle}
             />
-            <AppText type="title" className="mt-4 text-gray-700">
+            <AppText type="title" className="mt-4 text-foreground">
               No notifications
             </AppText>
-            <AppText type="subtitle" className="mt-1 text-gray-400">
+            <AppText type="subtitle" className="mt-1 text-foreground-subtle">
               You're all caught up! Check back later for updates.
             </AppText>
           </View>

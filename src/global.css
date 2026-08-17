@@ -30,6 +30,7 @@
   --accent-muted: 239 237 254;
   --danger: 185 58 50;
   --danger-muted: 251 234 234;
+  --danger-solid: 185 58 50;
 }
 
 .dark:root {
@@ -46,4 +47,10 @@
   --accent-muted: 36 31 69;
   --danger: 224 138 131;
   --danger-muted: 58 26 24;
+  /*
+    Not lightened like --danger. That token is for destructive *text*, which
+    must lift off a dark background. This one is a destructive *fill* carrying
+    white text, so it has to stay dark enough for that text to read.
+  */
+  --danger-solid: 185 58 50;
 }

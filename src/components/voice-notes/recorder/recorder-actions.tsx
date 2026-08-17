@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,6 +23,8 @@ export function RecorderActions({
   onStopRecording,
   onPickAudio,
 }: RecorderActionsProps) {
+  const { foregroundMuted } = useThemeColors();
+
   const statusText = isRecording
     ? "Tap to stop recording"
     : isUploadedFile
@@ -59,7 +62,7 @@ export function RecorderActions({
         <Pressable
           onPress={onPickAudio}
           disabled={isSaving || isRecording || isPicking}
-          className="items-center justify-center rounded-full border-hairline border-neutral-200 bg-white active:opacity-70"
+          className="items-center justify-center rounded-full border-hairline border-line bg-surface active:opacity-70"
           style={{
             width: 64,
             height: 64,
@@ -67,7 +70,7 @@ export function RecorderActions({
           }}
         >
           {isPicking ? (
-            <ActivityIndicator size="small" color="#7D7D8A" />
+            <ActivityIndicator size="small" color={foregroundMuted} />
           ) : (
             <Ionicons
               name={isUploadedFile ? "checkmark" : "cloud-upload-outline"}

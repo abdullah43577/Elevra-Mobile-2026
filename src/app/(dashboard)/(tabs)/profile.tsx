@@ -1,3 +1,4 @@
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AccountDetailsEdit } from "@/components/profile/account-details-edit";
 import { AccountDetailsView } from "@/components/profile/account-details-view";
 import { AccountPreferencesCard } from "@/components/profile/account-preferences-card";
@@ -27,6 +28,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
+  const { foreground } = useThemeColors();
+
   const { profile, isFetchingProfile, refetch, logout } = useGetProfile();
   const [isEditing, setIsEditing] = useState(false);
   const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
@@ -109,8 +112,8 @@ export default function Profile() {
 
   if (isFetchingProfile && !profile) {
     return (
-      <View className="flex-1 items-center justify-center bg-neutral-50">
-        <ActivityIndicator color="#17171C" />
+      <View className="flex-1 items-center justify-center bg-canvas">
+        <ActivityIndicator color={foreground} />
       </View>
     );
   }
@@ -118,7 +121,7 @@ export default function Profile() {
   const displayUri = previewUri || profile?.profile_pic;
 
   return (
-    <SafeAreaView className="flex-1 bg-neutral-50">
+    <SafeAreaView className="flex-1 bg-canvas">
       <ScrollView
         className="flex-1"
         contentContainerClassName="pb-10"
@@ -171,7 +174,7 @@ export default function Profile() {
             onNotificationsToggle={handleNotificationsToggle}
           />
 
-          <View className="overflow-hidden rounded-3xl border-hairline border-neutral-200 bg-white">
+          <View className="overflow-hidden rounded-3xl border-hairline border-line bg-surface">
             <SettingsRow
               label="Log out"
               destructive
@@ -179,7 +182,7 @@ export default function Profile() {
             />
           </View>
 
-          <AppText type="caption" className="mt-1 text-center text-neutral-300">
+          <AppText type="caption" className="mt-1 text-center text-foreground-subtle">
             Elevra v{Constants.expoConfig?.version ?? "1.0.0"}
           </AppText>
         </View>
