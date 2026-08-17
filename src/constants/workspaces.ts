@@ -6,6 +6,7 @@ import {
   Sparkles,
   StickyNote,
   Briefcase,
+  ClipboardList,
   LucideIcon,
 } from "lucide-react-native";
 
@@ -29,6 +30,16 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     icon: FileText,
     comingSoonIcon: "document-text-outline",
     route: "resume-studio",
+    locked: false,
+  },
+  {
+    id: "job-tracker",
+    color: CONTENT_COLORS.application,
+    title: "Job Tracker",
+    description: "Track applications, interviews, and offers",
+    icon: ClipboardList,
+    comingSoonIcon: "briefcase-outline",
+    route: "job-tracker",
     locked: false,
   },
   {

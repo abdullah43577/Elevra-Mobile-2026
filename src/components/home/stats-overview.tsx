@@ -5,12 +5,14 @@ import { Fragment } from "react";
 import { View } from "react-native";
 
 interface Props {
-  counts: Record<ContentCategory, number>;
+  counts: Partial<Record<ContentCategory, number>>;
 }
 
-const CATEGORIES = Object.keys(CONTENT_META) as ContentCategory[];
-
 export const StatsOverview = function ({ counts }: Props) {
+  const CATEGORIES = (Object.keys(CONTENT_META) as ContentCategory[]).filter(
+    (key) => counts[key] !== undefined,
+  );
+
   return (
     <View className="flex-row items-stretch rounded-3xl border-hairline border-neutral-200 bg-white px-2 py-5">
       {CATEGORIES.map((key, index) => {

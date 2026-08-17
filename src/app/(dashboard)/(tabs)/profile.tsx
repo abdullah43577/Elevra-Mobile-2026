@@ -11,6 +11,8 @@ import { useUpdateProfile } from "@/hooks/profile/use-update-profile";
 import { useUpdateSettings } from "@/hooks/profile/use-update-settings";
 import { useGetProfile } from "@/hooks/use-get-profile";
 import { useImagePicker } from "@/hooks/use-image-picker";
+import { useTheme } from "@/hooks/use-theme";
+import { ThemePreference } from "@/constants/theme";
 import { ProfileFormValues, profileSchema } from "@/schemas/settings/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Constants from "expo-constants";
@@ -64,6 +66,7 @@ export default function Profile() {
   });
 
   const { updateSettings, isUpdatingSettings } = useUpdateSettings();
+  const { preference, setPreference } = useTheme();
 
   const [previewUri, setPreviewUri] = useState("");
   const { pickImage } = useImagePicker();
@@ -77,8 +80,10 @@ export default function Profile() {
       professionId: selectedProfessionId ?? undefined,
     });
 
-  const handleThemeChange = (theme: "SYSTEM" | "LIGHT" | "DARK") =>
+  const handleThemeChange = function (theme: ThemePreference) {
+    setPreference(theme);
     updateSettings({ theme });
+  };
 
   const handleNotificationsToggle = (notifications: boolean) =>
     updateSettings({ notifications });
@@ -160,6 +165,7 @@ export default function Profile() {
           </SettingsCard>
 
           <AccountPreferencesCard
+            theme={preference}
             onThemeChange={handleThemeChange}
             isUpdatingSettings={isUpdatingSettings}
             onNotificationsToggle={handleNotificationsToggle}

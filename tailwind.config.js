@@ -5,9 +5,41 @@ module.exports = {
     "./src/components/**/*.{js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
+        // Semantic tokens — named for their role, resolved from the CSS
+        // variables in src/global.css, which swap under .dark:root. Prefer
+        // these over the raw ramps below: a screen written with them works in
+        // both schemes with no dark: variants. The ramps stay because the
+        // semantic values are *defined from* them.
+        canvas: "rgb(var(--canvas) / <alpha-value>)",
+        surface: {
+          DEFAULT: "rgb(var(--surface) / <alpha-value>)",
+          muted: "rgb(var(--surface-muted) / <alpha-value>)",
+        },
+        // Not named "hairline" — that is already a borderWidth utility and the
+        // two would collide on `border-hairline`.
+        line: {
+          DEFAULT: "rgb(var(--line) / <alpha-value>)",
+          strong: "rgb(var(--line-strong) / <alpha-value>)",
+        },
+        foreground: {
+          DEFAULT: "rgb(var(--foreground) / <alpha-value>)",
+          muted: "rgb(var(--foreground-muted) / <alpha-value>)",
+          subtle: "rgb(var(--foreground-subtle) / <alpha-value>)",
+          inverse: "rgb(var(--foreground-inverse) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          muted: "rgb(var(--accent-muted) / <alpha-value>)",
+        },
+        danger: {
+          DEFAULT: "rgb(var(--danger) / <alpha-value>)",
+          muted: "rgb(var(--danger-muted) / <alpha-value>)",
+        },
+
         primary: {
           50: "#F7F7F9",
           100: "#EDEDF1",
@@ -76,6 +108,7 @@ module.exports = {
           note: "#5B47E8",
           recording: "#D6653D",
           resume: "#0F9B7A",
+          application: "#2E6FD1",
         },
       },
 

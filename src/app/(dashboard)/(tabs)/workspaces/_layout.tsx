@@ -35,6 +35,13 @@ export default function WorkspacesLayout() {
         }}
       />
       <Stack.Screen
+        name="job-tracker"
+        options={{
+          title: "Job Tracker",
+          headerBackTitle: "Back",
+        }}
+      />
+      <Stack.Screen
         name="ai-rewriter"
         options={{
           title: "AI Rewriter",

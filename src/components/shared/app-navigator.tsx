@@ -17,6 +17,7 @@ import { useAuthStore } from "@/store/auth";
 import { ErrorBoundary } from "./error-boundary";
 import useNotifications from "@/hooks/use-notification";
 import { StatusBar } from "expo-status-bar";
+import { useSyncTheme, useTheme } from "@/hooks/use-theme";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
@@ -32,6 +33,9 @@ export const AppNavigator = function () {
   const { expoPushToken } = useNotifications();
   const { isFetchingProfile, profile } = useGetProfile();
   const isAuthenticated = !!profile && hasToken === true;
+
+  useSyncTheme();
+  const { scheme, colors } = useTheme();
 
   console.log(expoPushToken, "expo push token");
 
@@ -58,9 +62,9 @@ export const AppNavigator = function () {
 
   return (
     <ErrorBoundary>
-      <StatusBar style="dark" />
+      <StatusBar style={scheme === "dark" ? "light" : "dark"} />
 
-      <Stack screenOptions={{ contentStyle: { backgroundColor: "#ffffff" } }}>
+      <Stack screenOptions={{ contentStyle: { backgroundColor: colors.canvas } }}>
         {/* <Stack.Screen name="(dev)/generate-thumnails" /> */}
         <Stack.Protected guard={isAuthenticated}>
           <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />

@@ -6,7 +6,10 @@ module.exports = ({ config }) => ({
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "elevra",
-    userInterfaceStyle: "light",
+    // "automatic", not "light" — with light forced, iOS reports a light color
+    // scheme unconditionally and the SYSTEM theme preference can never resolve
+    // to dark. Requires a native rebuild to take effect in the dev client.
+    userInterfaceStyle: "automatic",
     ios: {
       icon: "./assets/expo.icon",
     },

@@ -4,6 +4,7 @@ export const CONTENT_COLORS = {
   note: "#5B47E8", // matches secondary-500 — the app's core brand color
   recording: "#D6653D",
   resume: "#0F9B7A",
+  application: "#2E6FD1",
 } as const;
 
 export type ContentType = keyof typeof CONTENT_COLORS;
@@ -23,6 +24,11 @@ export const CONTENT_META = {
     color: CONTENT_COLORS.resume,
     icon: "document-outline",
     plural: "Resumes",
+  },
+  Application: {
+    color: CONTENT_COLORS.application,
+    icon: "briefcase-outline",
+    plural: "Applications",
   },
 } as const satisfies Record<
   string,

@@ -53,6 +53,23 @@ export const API_ENDPOINTS = {
     transcribe: (id: string) => `/voice-notes/${id}/transcribe`,
   },
 
+  jobApplications: {
+    list: "/job-applications",
+    stats: "/job-applications/stats",
+    detail: (id: string) => `/job-applications/${id}`,
+    create: "/job-applications",
+    update: (id: string) => `/job-applications/${id}`,
+    delete: (id: string) => `/job-applications/${id}`,
+
+    linkNote: (id: string) => `/job-applications/${id}/notes`,
+    unlinkNote: (id: string, noteId: string) =>
+      `/job-applications/${id}/notes/${noteId}`,
+
+    linkRecording: (id: string) => `/job-applications/${id}/recordings`,
+    unlinkRecording: (id: string, recordingId: string) =>
+      `/job-applications/${id}/recordings/${recordingId}`,
+  },
+
   resume: {
     // Templates
     templatesList: "/resume/templates",

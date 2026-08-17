@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { router } from "expo-router";
 import { User } from "../../types/auth";
+import { JobApplication } from "../../types/job-application";
 import { Note } from "../../types/notes";
 import { Resume } from "../../types/resume/resume";
 import { VoiceRecording } from "../../types/voice-notes";
@@ -66,6 +67,16 @@ export const quickActions = [
     color: CONTENT_COLORS.resume,
     onPress: () => router.push("/(dashboard)/(tabs)/workspaces/resume-studio"),
   },
+  {
+    id: "application",
+    label: "Application",
+    icon: "briefcase-outline",
+    color: CONTENT_COLORS.application,
+    onPress: () =>
+      router.push(
+        "/(dashboard)/(tabs)/workspaces/job-tracker/application-form",
+      ),
+  },
 ] satisfies {
   id: string;
   label: string;
@@ -78,12 +89,24 @@ export const getRecentItems = function ({
   notes,
   resumes,
   recordings,
+  applications,
 }: {
   notes: Note[];
   resumes: Resume[];
   recordings: VoiceRecording[];
+  applications: JobApplication[];
 }) {
   const items: RecentItem[] = [];
+
+  applications.slice(0, 2).forEach((application) => {
+    items.push({
+      id: application.id,
+      title: `${application.role} · ${application.company}`,
+      type: "Application",
+      date: application.updatedAt,
+      route: "/(dashboard)/(tabs)/workspaces/job-tracker/application-detail",
+    });
+  });
 
   // Add recent notes
   notes.slice(0, 3).forEach((note) => {

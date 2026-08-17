@@ -23,7 +23,7 @@ export const HomeHeader = function ({
       <View className="flex-1 pr-4">
         <AppText type="subtitle">{greeting}</AppText>
         <AppText type="display" className="mt-1.5" numberOfLines={1}>
-          {name}
+          Welcome, {name}
         </AppText>
         <AppText type="caption" className="mt-1">
           {date}

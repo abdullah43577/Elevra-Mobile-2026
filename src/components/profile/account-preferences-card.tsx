@@ -1,4 +1,5 @@
 import { useGetProfile } from "@/hooks/use-get-profile";
+import { ThemePreference } from "@/constants/theme";
 import { toTitleCase } from "@/provider/utils";
 import { View } from "react-native";
 import { AppText } from "../shared/app-text";
@@ -9,12 +10,14 @@ import { SettingsCard } from "./settings-card";
 import { SettingsRow } from "./settings-row";
 
 interface Props {
-  onThemeChange: (str: "SYSTEM" | "LIGHT" | "DARK") => void;
+  theme: ThemePreference;
+  onThemeChange: (str: ThemePreference) => void;
   isUpdatingSettings: boolean;
   onNotificationsToggle: (arg: boolean) => void;
 }
 
 export const AccountPreferencesCard = function ({
+  theme,
   onThemeChange,
   isUpdatingSettings,
   onNotificationsToggle,
@@ -33,9 +36,8 @@ export const AccountPreferencesCard = function ({
             { label: "Light", value: "LIGHT" },
             { label: "Dark", value: "DARK" },
           ]}
-          value={profile?.settings?.theme ?? "SYSTEM"}
+          value={theme}
           onChange={onThemeChange}
-          disabled={isUpdatingSettings}
         />
       </View>
 

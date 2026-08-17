@@ -10,6 +10,7 @@ import {
   getRecentItems,
   RecentItem,
 } from "@/constants/dashboard";
+import { useGetApplications } from "@/hooks/job-applications/use-get-applications";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
 import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
 import { useGetProfile } from "@/hooks/use-get-profile";
@@ -27,13 +28,17 @@ export default function Home() {
   const { notes, refetchNotes } = useGetNotes();
   const { resumes, refetchResumes } = useGetResumes();
   const { recordings, refetchRecordings } = useGetRecordings();
+  const { applications, refetchApplications } = useGetApplications();
 
-  const handleRefresh = function () {
+  const handleRefresh = async function () {
     setRefreshing(true);
-    refetchProfile();
-    refetchNotes();
-    refetchResumes();
-    refetchRecordings();
+    await Promise.all([
+      refetchProfile(),
+      refetchNotes(),
+      refetchResumes(),
+      refetchRecordings(),
+      refetchApplications(),
+    ]);
     setRefreshing(false);
   };
 
@@ -41,7 +46,12 @@ export default function Home() {
     router.push({ pathname: item.route as any, params: { id: item.id } });
   };
 
-  const recentItems = getRecentItems({ notes, resumes, recordings });
+  const recentItems = getRecentItems({
+    notes,
+    resumes,
+    recordings,
+    applications,
+  });
 
   return (
     <SafeAreaView className="flex-1 bg-neutral-50">
@@ -68,6 +78,7 @@ export default function Home() {
               Note: notes.length,
               Recording: recordings.length,
               Resume: resumes.length,
+              Application: applications.length,
             }}
           />
         </View>

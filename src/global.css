@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+  Semantic theme variables. Values are RGB triplets so Tailwind's
+  <alpha-value> works (bg-surface/50).
+
+  Keep these in sync with THEME in src/constants/theme.ts — that file is the
+  source of truth for the same palette in JS, needed for the icon `color` and
+  inline tint props that never pass through a className. CSS cannot import TS,
+  so the two lists are duplicated by necessity.
+
+  These blocks must stay OUTSIDE @layer base. Inside it, Tailwind tree-shakes
+  `.dark:root` away entirely — the `dark` class never appears in the scanned
+  content, so the rule looks unused — and dark mode then silently resolves to
+  the light values with no error anywhere.
+*/
+:root {
+  --canvas: 250 250 251;
+  --surface: 255 255 255;
+  --surface-muted: 243 243 246;
+  --line: 234 234 238;
+  --line-strong: 213 213 222;
+  --foreground: 23 23 26;
+  --foreground-muted: 125 125 138;
+  --foreground-subtle: 180 180 191;
+  --foreground-inverse: 255 255 255;
+  --accent: 91 71 232;
+  --accent-muted: 239 237 254;
+  --danger: 185 58 50;
+  --danger-muted: 251 234 234;
+}
+
+.dark:root {
+  --canvas: 15 15 18;
+  --surface: 23 23 27;
+  --surface-muted: 31 31 36;
+  --line: 42 42 49;
+  --line-strong: 58 58 67;
+  --foreground: 244 244 246;
+  --foreground-muted: 156 156 168;
+  --foreground-subtle: 110 110 122;
+  --foreground-inverse: 255 255 255;
+  --accent: 139 123 245;
+  --accent-muted: 36 31 69;
+  --danger: 224 138 131;
+  --danger-muted: 58 26 24;
+}
