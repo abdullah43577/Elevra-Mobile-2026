@@ -6,6 +6,7 @@ export const CONTENT_COLORS = {
   resume: "#0F9B7A",
   application: "#2E6FD1",
   profile: "#B23A6B",
+  letter: "#A8761C",
 } as const;
 
 export type ContentType = keyof typeof CONTENT_COLORS;

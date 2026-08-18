@@ -23,9 +23,11 @@ interface Props {
   status: ApplicationStatus;
   workArrangement?: WorkArrangement | null;
   resumeLabel: string | null;
+  coverLetterLabel: string | null;
   accentColor: string;
   onOpenStatusPicker: () => void;
   onOpenResumePicker: () => void;
+  onOpenCoverLetterPicker: () => void;
   onSelectWorkArrangement: (value: WorkArrangement | null) => void;
 }
 
@@ -72,9 +74,11 @@ export const ApplicationFormFields = function ({
   status,
   workArrangement,
   resumeLabel,
+  coverLetterLabel,
   accentColor,
   onOpenStatusPicker,
   onOpenResumePicker,
+  onOpenCoverLetterPicker,
   onSelectWorkArrangement,
 }: Props) {
   return (
@@ -218,6 +222,13 @@ export const ApplicationFormFields = function ({
             value={resumeLabel}
             placeholder="None selected"
             onPress={onOpenResumePicker}
+          />
+
+          <SelectRow
+            label="Cover letter sent"
+            value={coverLetterLabel}
+            placeholder="None selected"
+            onPress={onOpenCoverLetterPicker}
           />
 
           <FormTextArea<JobApplicationFormValues>

@@ -1,5 +1,11 @@
 import { ResumeData } from "../../../../types/resume/data";
 import { AnyTemplate } from "../../../../types/resume/template";
+import {
+  buildDocumentHeader,
+  buildShellCss,
+  escape,
+  layoutFlags,
+} from "./document-shell";
 
 /*
   Builds the printable HTML for a resume. expo-print hands this to the OS
@@ -16,14 +22,6 @@ import { AnyTemplate } from "../../../../types/resume/template";
   everywhere and never falls back to something unexpected.
 */
 
-const escape = function (value: unknown): string {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-};
-
 const dateRange = function (start?: string, end?: string, current?: boolean) {
   if (!start) return current ? "Present" : "";
   return `${start} – ${current ? "Present" : (end ?? "Present")}`;
@@ -38,8 +36,6 @@ const toBullets = function (description?: string, achievements?: string[]) {
     .map((line) => line.replace(/^[-•*]\s*/, "").trim())
     .filter(Boolean);
 };
-
-const SPACING = { COMPACT: 12, NORMAL: 17, SPACIOUS: 23 } as const;
 
 const section = function (label: string, body: string) {
   if (!body.trim()) return "";
@@ -173,104 +169,14 @@ const buildBody = function (data: ResumeData) {
   ].join("");
 };
 
-const buildHeader = function (template: AnyTemplate, data: ResumeData) {
-  const name = [data.personalInfo?.firstName, data.personalInfo?.lastName]
-    .filter(Boolean)
-    .join(" ");
-  const title = data.personalInfo?.title;
-  const contact = [
-    data.personalInfo?.email,
-    data.personalInfo?.phone,
-    data.personalInfo?.location,
-  ].filter(Boolean);
-
-  const contactLine = contact.length
-    ? `<div class="contact">${contact.map(escape).join("&nbsp;&nbsp;|&nbsp;&nbsp;")}</div>`
-    : "";
-
-  const inner = `
-    <h1>${escape(name)}</h1>
-    ${title ? `<div class="role">${escape(title)}</div>` : ""}
-    ${contactLine}`;
-
-  switch (template.layoutKey) {
-    case "MODERN_BANNER":
-      return `<header class="banner">${inner}</header>`;
-    case "ATS_CLEAN":
-    case "PROFESSIONAL_CLASSIC":
-    case "EXECUTIVE_FORMAL":
-      return `<header class="centered">${inner}</header><hr class="head-rule" />`;
-    default:
-      return `<header>${inner}</header>`;
-  }
-};
-
 const buildCss = function (template: AnyTemplate) {
-  const theme = template.theme;
-  // Not every legacy theme variant declares accentColor.
-  const accent =
-    ("accentColor" in theme ? theme.accentColor : undefined) ?? theme.primaryColor;
-  const gap = SPACING[theme.spacing] ?? SPACING.NORMAL;
-  const layout = template.layoutKey;
+  const { theme, accent, layout, gap, dense } = layoutFlags(template);
 
   const boxedTitles = layout === "TECH_FOCUSED";
   const ruledTitles = ["ATS_ACCENT", "MODERN_BANNER", "PROFESSIONAL_SLEEK"].includes(layout);
   const timeline = layout === "TIMELINE_ACCENT" || layout === "CREATIVE_SPLIT";
-  const dense = layout === "COMPACT_DENSE" || layout === "MINIMAL_COMPACT";
 
-  return `
-    @page { size: A4; margin: ${dense ? "13mm" : "16mm"}; }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Helvetica, Arial, "Helvetica Neue", sans-serif;
-      font-size: ${dense ? 10.5 : 11}pt;
-      line-height: 1.42;
-      color: ${theme.textColor ?? "#1F2328"};
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: ${dense ? 20 : 23}pt;
-      letter-spacing: 0.2px;
-      color: ${theme.primaryColor};
-    }
-
-    .role {
-      margin-top: 2px;
-      font-size: 11.5pt;
-      font-weight: 600;
-      color: ${layout === "ATS_CLEAN" ? "#5B6169" : accent};
-    }
-
-    .contact {
-      margin-top: 5px;
-      font-size: 9.5pt;
-      color: #5B6169;
-    }
-
-    header { margin-bottom: ${gap}px; }
-    header.centered { text-align: center; margin-bottom: 8px; }
-
-    .head-rule {
-      border: 0;
-      border-top: 1px solid #D8DCE1;
-      margin: 0 0 ${gap}px 0;
-    }
-
-    header.banner {
-      background: ${theme.primaryColor};
-      color: #FFFFFF;
-      padding: 20px 22px;
-      margin: -${dense ? 13 : 16}mm -${dense ? 13 : 16}mm ${gap}px -${dense ? 13 : 16}mm;
-    }
-    header.banner h1, header.banner .role, header.banner .contact { color: #FFFFFF; }
-    header.banner .contact { opacity: 0.85; }
-
+  return `${buildShellCss(template)}
     .section { margin-bottom: ${gap}px; ${timeline ? `padding-left: 14px; border-left: 3px solid ${accent};` : ""} }
 
     h2 {
@@ -319,7 +225,7 @@ export const buildResumeHtml = function (template: AnyTemplate, data: ResumeData
 <style>${buildCss(template)}</style>
 </head>
 <body>
-${buildHeader(template, data)}
+${buildDocumentHeader(template, data.personalInfo)}
 ${buildBody(data)}
 </body>
 </html>`;

@@ -89,6 +89,15 @@ export const API_ENDPOINTS = {
     delete: "/career-profile",
   },
 
+  coverLetters: {
+    list: "/cover-letters",
+    detail: (id: string) => `/cover-letters/${id}`,
+    create: "/cover-letters",
+    update: (id: string) => `/cover-letters/${id}`,
+    delete: (id: string) => `/cover-letters/${id}`,
+    export: (id: string) => `/cover-letters/${id}/export`,
+  },
+
   resume: {
     // Templates
     templatesList: "/resume/templates",

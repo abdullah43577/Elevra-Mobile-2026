@@ -41,6 +41,7 @@ export const jobApplicationSchema = z
     ]),
     notes: z.string().optional(),
     resumeId: z.string().nullable().optional(),
+    coverLetterId: z.string().nullable().optional(),
   })
   .refine(
     (values) => {

@@ -41,6 +41,14 @@ export interface LinkedRecording {
   };
 }
 
+export interface LinkedCoverLetter {
+  id: string;
+  title: string;
+  company?: string;
+  role?: string;
+  updatedAt?: string;
+}
+
 export interface JobApplication {
   id: string;
   company: string;
@@ -59,6 +67,8 @@ export interface JobApplication {
   userId: string;
   resumeId?: string | null;
   resume?: LinkedResume | null;
+  coverLetterId?: string | null;
+  coverLetter?: LinkedCoverLetter | null;
   linkedNotes?: LinkedNote[];
   linkedRecordings?: LinkedRecording[];
   _count?: {
@@ -88,12 +98,17 @@ export interface CreateApplicationRequest {
   status?: ApplicationStatus;
   notes?: string;
   resumeId?: string;
+  coverLetterId?: string;
 }
 
 export interface UpdateApplicationRequest
-  extends Partial<Omit<CreateApplicationRequest, "resumeId">> {
+  extends Partial<
+    Omit<CreateApplicationRequest, "resumeId" | "coverLetterId">
+  > {
   // Nullable, not just optional: JSON.stringify drops undefined keys, so
-  // detaching a resume has to send an explicit null for the server to clear it.
+  // detaching a resume or a cover letter has to send an explicit null for the
+  // server to clear it.
   resumeId?: string | null;
+  coverLetterId?: string | null;
   isArchived?: boolean;
 }

@@ -55,6 +55,7 @@ export const CONTENT_COLORS_BY_SCHEME = {
     resume: "#0F9B7A",
     application: "#2E6FD1",
     profile: "#B23A6B",
+    letter: "#A8761C",
   },
   dark: {
     note: "#8B7BF5",
@@ -62,6 +63,7 @@ export const CONTENT_COLORS_BY_SCHEME = {
     resume: "#2FC49E",
     application: "#6BA0F0",
     profile: "#E27FA8",
+    letter: "#D9A544",
   },
 } as const;
 

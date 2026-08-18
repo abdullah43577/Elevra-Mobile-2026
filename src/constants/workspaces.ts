@@ -8,6 +8,7 @@ import {
   Briefcase,
   ClipboardList,
   BookUser,
+  Mail,
   LucideIcon,
 } from "lucide-react-native";
 
@@ -31,6 +32,16 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     icon: FileText,
     comingSoonIcon: "document-text-outline",
     route: "resume-studio",
+    locked: false,
+  },
+  {
+    id: "cover-letters",
+    color: CONTENT_COLORS.letter,
+    title: "Cover Letters",
+    description: "Letters that match the resume you send",
+    icon: Mail,
+    comingSoonIcon: "mail-outline",
+    route: "cover-letters",
     locked: false,
   },
   {

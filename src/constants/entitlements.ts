@@ -1,5 +1,6 @@
 export const PRO_FEATURES = {
   RESUME_EXPORT: "resume_export",
+  COVER_LETTER_EXPORT: "cover_letter_export",
   AI_NOTE_SUMMARY: "ai_note_summary",
   AI_REWRITER: "ai_rewriter",
   AI_CHAT: "ai_chat",
@@ -23,6 +24,10 @@ export const PRO_FEATURE_COPY: Record<ProFeature, { title: string; blurb: string
   [PRO_FEATURES.RESUME_EXPORT]: {
     title: "Export as PDF with Pro",
     blurb: "Download an ATS-ready PDF of any resume and send it straight to employers.",
+  },
+  [PRO_FEATURES.COVER_LETTER_EXPORT]: {
+    title: "Export as PDF with Pro",
+    blurb: "Download your cover letter as a PDF that matches the resume you send with it.",
   },
   [PRO_FEATURES.AI_NOTE_SUMMARY]: {
     title: "AI summaries with Pro",

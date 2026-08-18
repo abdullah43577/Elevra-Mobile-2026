@@ -177,6 +177,27 @@ export default function ApplicationDetail() {
           />
 
           <LinkedItemsSection
+            title="Cover letter sent"
+            icon="mail-outline"
+            color={CONTENT_COLORS.letter}
+            addLabel={application.coverLetter ? "Change" : "Attach"}
+            emptyLabel="No cover letter attached to this application yet"
+            items={
+              application.coverLetter
+                ? [
+                    {
+                      id: application.coverLetter.id,
+                      title: application.coverLetter.title,
+                    },
+                  ]
+                : []
+            }
+            onAdd={handleEdit}
+            onRemove={() => saveApplication({ coverLetterId: null })}
+            disabled={isSavingApplication}
+          />
+
+          <LinkedItemsSection
             title="Notes"
             icon="document-text-outline"
             color={CONTENT_COLORS.note}

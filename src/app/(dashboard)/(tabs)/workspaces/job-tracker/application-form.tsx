@@ -9,6 +9,7 @@ import {
 } from "@/constants/job-applications";
 import { useGetApplicationById } from "@/hooks/job-applications/use-get-application-by-id";
 import { useSaveApplication } from "@/hooks/job-applications/use-save-application";
+import { useGetCoverLetters } from "@/hooks/cover-letters/use-get-cover-letters";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import {
@@ -28,7 +29,7 @@ import {
   WorkArrangement,
 } from "../../../../../../types/job-application";
 
-type PickerTarget = "status" | "resume" | null;
+type PickerTarget = "status" | "resume" | "coverLetter" | null;
 
 const trimmed = function (value?: string) {
   const next = value?.trim();
@@ -50,6 +51,7 @@ export default function ApplicationForm() {
   });
 
   const { resumes } = useGetResumes();
+  const { coverLetters } = useGetCoverLetters();
 
   const { saveApplication, isSavingApplication } = useSaveApplication({
     ...(id && { applicationId: id }),
@@ -78,6 +80,7 @@ export default function ApplicationForm() {
       status: "SAVED",
       notes: "",
       resumeId: null,
+      coverLetterId: null,
     },
   });
 
@@ -102,15 +105,20 @@ export default function ApplicationForm() {
       status: application.status,
       notes: application.notes ?? "",
       resumeId: application.resumeId ?? null,
+      coverLetterId: application.coverLetterId ?? null,
     });
   }, [application]);
 
   const status = watch("status");
   const workArrangement = watch("workArrangement");
   const resumeId = watch("resumeId");
+  const coverLetterId = watch("coverLetterId");
 
   const resumeLabel =
     resumes.find((resume) => resume.id === resumeId)?.title ?? null;
+
+  const coverLetterLabel =
+    coverLetters.find((letter) => letter.id === coverLetterId)?.title ?? null;
 
   const onSubmit = function (values: JobApplicationFormValues) {
     const payload: CreateApplicationRequest = {
@@ -128,6 +136,7 @@ export default function ApplicationForm() {
       }),
       ...(trimmed(values.notes) && { notes: trimmed(values.notes) }),
       ...(values.resumeId && { resumeId: values.resumeId }),
+      ...(values.coverLetterId && { coverLetterId: values.coverLetterId }),
     };
 
     saveApplication(payload);
@@ -163,9 +172,11 @@ export default function ApplicationForm() {
           status={status}
           workArrangement={workArrangement}
           resumeLabel={resumeLabel}
+          coverLetterLabel={coverLetterLabel}
           accentColor={accent}
           onOpenStatusPicker={() => setPicker("status")}
           onOpenResumePicker={() => setPicker("resume")}
+          onOpenCoverLetterPicker={() => setPicker("coverLetter")}
           onSelectWorkArrangement={(value) =>
             setValue("workArrangement", value, { shouldDirty: true })
           }
@@ -210,6 +221,23 @@ export default function ApplicationForm() {
           value: resume.id,
         }))}
         onSelect={(value) => setValue("resumeId", value, { shouldDirty: true })}
+        onClose={() => setPicker(null)}
+      />
+
+      <BottomSheetPicker
+        visible={picker === "coverLetter"}
+        title="Attach a cover letter"
+        selectedValue={coverLetterId ?? null}
+        accentColor={CONTENT_COLORS.letter}
+        searchPlaceholder="Search cover letters..."
+        emptyLabel="You have no cover letters yet"
+        options={coverLetters.map((letter) => ({
+          label: letter.title,
+          value: letter.id,
+        }))}
+        onSelect={(value) =>
+          setValue("coverLetterId", value, { shouldDirty: true })
+        }
         onClose={() => setPicker(null)}
       />
     </SafeAreaView>
