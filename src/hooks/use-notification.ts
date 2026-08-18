@@ -48,17 +48,22 @@ export default function useNotifications() {
     return () => subscription.remove();
   }, []);
 
-  const handleRegisterForPushNotification = async function () {
+  const handleRegisterForPushNotification = async function (
+    promptIfNeeded = false,
+  ) {
     try {
-      const token = await registerForPushNotificationsAsync();
+      const token = await registerForPushNotificationsAsync({ promptIfNeeded });
       setExpoPushToken(token ?? "");
+      return !!token;
     } catch (error) {
       setExpoPushTokenError(`${error}`);
-      // handleErrors(error);
+      return false;
     }
   };
 
   useEffect(() => {
+    // Silent: picks the token up if permission was already granted, and asks
+    // for nothing if it was not. The ask belongs to the setup flow.
     handleRegisterForPushNotification();
 
     notificationListener.current =

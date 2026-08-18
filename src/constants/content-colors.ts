@@ -64,3 +64,19 @@ export const CONTENT_META = {
 >;
 
 export type ContentCategory = keyof typeof CONTENT_META;
+
+/*
+  The bridge between the two vocabularies: CONTENT_META is keyed by the model
+  name a result or activity row carries, while the theme's per-scheme colours are
+  keyed by the accent name. Anything that needs a *scheme-aware* colour —
+  useThemeColors().contentTint — has to cross from one to the other, since
+  CONTENT_META.color is the light-mode hex only.
+*/
+export const CONTENT_TYPE_BY_CATEGORY = {
+  Note: "note",
+  Recording: "recording",
+  Resume: "resume",
+  Application: "application",
+  CoverLetter: "letter",
+  InterviewQuestion: "interview",
+} as const satisfies Record<ContentCategory, ContentType>;

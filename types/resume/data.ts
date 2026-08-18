@@ -76,5 +76,4 @@ export interface ResumeData {
   certifications?: Certification[];
   projects?: Project[];
   references?: Reference[];
-  sectionOrder?: string[];
 }

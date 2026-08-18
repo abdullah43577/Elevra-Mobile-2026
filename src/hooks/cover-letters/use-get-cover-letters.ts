@@ -5,6 +5,7 @@ import { useGetData } from "../use-get-data";
 
 interface UseGetCoverLettersOptions {
   search?: string;
+  shouldFetch?: boolean;
 }
 
 export const useGetCoverLetters = function (
@@ -18,6 +19,7 @@ export const useGetCoverLetters = function (
     APIResponse<CoverLetter[]>
   >({
     url: `${API_ENDPOINTS.coverLetters.list}${query}`,
+    ...(options.shouldFetch !== undefined && { shouldFetch: options.shouldFetch }),
   });
 
   return {

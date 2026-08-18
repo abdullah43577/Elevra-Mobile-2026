@@ -6,7 +6,18 @@ import {
 import { APIResponse } from "../../../types/response";
 import { useGetData } from "../use-get-data";
 
-export const useGetQuestions = function (filters: QuestionFilters = {}) {
+interface UseGetQuestionsOptions {
+  shouldFetch?: boolean;
+}
+
+/*
+  `options` is separate from `filters` because QuestionFilters mirrors the
+  server's query params one for one — a client-only flag does not belong in it.
+*/
+export const useGetQuestions = function (
+  filters: QuestionFilters = {},
+  options: UseGetQuestionsOptions = {},
+) {
   const params = new URLSearchParams();
   if (filters.category) params.set("category", filters.category);
   if (filters.status) params.set("status", filters.status);
@@ -20,6 +31,7 @@ export const useGetQuestions = function (filters: QuestionFilters = {}) {
     APIResponse<InterviewQuestion[]>
   >({
     url: `${API_ENDPOINTS.interviewPrep.questions}${query ? `?${query}` : ""}`,
+    ...(options.shouldFetch !== undefined && { shouldFetch: options.shouldFetch }),
   });
 
   return {

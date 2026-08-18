@@ -6,10 +6,11 @@ import { API_ENDPOINTS } from "@/provider/endpoints";
 interface UseGetRecordingsOptions {
   search?: string;
   isTranscribed?: boolean;
+  shouldFetch?: boolean;
 }
 
 export const useGetRecordings = function (options?: UseGetRecordingsOptions) {
-  const { search, isTranscribed } = options || {};
+  const { search, isTranscribed, shouldFetch } = options || {};
 
   const queryParams = new URLSearchParams();
   if (search) queryParams.append("search", search);
@@ -24,6 +25,7 @@ export const useGetRecordings = function (options?: UseGetRecordingsOptions) {
     APIResponse<VoiceRecording[]>
   >({
     url,
+    ...(shouldFetch !== undefined && { shouldFetch }),
   });
 
   return {

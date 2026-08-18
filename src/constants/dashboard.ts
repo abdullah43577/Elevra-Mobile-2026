@@ -9,6 +9,7 @@ import { Note } from "../../types/notes";
 import { Resume } from "../../types/resume/resume";
 import { VoiceRecording } from "../../types/voice-notes";
 import { CONTENT_COLORS, ContentCategory } from "./content-colors";
+import { contentTarget } from "./content-routes";
 
 export interface RecentItem {
   id: string;
@@ -16,13 +17,7 @@ export interface RecentItem {
   type: ContentCategory;
   date: string;
   route: string;
-  /*
-    Carried per item rather than assumed to be `{ id }`. The detail screens do
-    not agree on a param name — the resume builder reads `resumeId`, the letter
-    editor `coverLetterId`, question detail `questionId` — so a single hardcoded
-    `id` opened the resume builder with nothing in it and rendered
-    "Template not found".
-  */
+  // Carried per item rather than assumed to be `{ id }` — see CONTENT_ROUTES.
   params: Record<string, string>;
 }
 
@@ -141,8 +136,7 @@ export const getRecentItems = function ({
       title: `${application.role} · ${application.company}`,
       type: "Application",
       date: application.updatedAt,
-      route: "/(dashboard)/(tabs)/workspaces/job-tracker/application-detail",
-      params: { id: application.id },
+      ...contentTarget("Application", application.id),
     });
   });
 
@@ -153,8 +147,7 @@ export const getRecentItems = function ({
       title: note.title,
       type: "Note",
       date: note.updatedAt,
-      route: "/(dashboard)/(tabs)/workspaces/smart-notes/note-editor",
-      params: { id: note.id },
+      ...contentTarget("Note", note.id),
     });
   });
 
@@ -165,8 +158,7 @@ export const getRecentItems = function ({
       title: resume.title,
       type: "Resume",
       date: resume.updatedAt,
-      route: "/(dashboard)/(tabs)/workspaces/resume-studio/resume-builder",
-      params: { resumeId: resume.id },
+      ...contentTarget("Resume", resume.id),
     });
   });
 
@@ -177,8 +169,7 @@ export const getRecentItems = function ({
       title: recording.title,
       type: "Recording",
       date: recording.createdAt,
-      route: "/(dashboard)/(tabs)/workspaces/voice-notes/playback",
-      params: { id: recording.id },
+      ...contentTarget("Recording", recording.id),
     });
   });
 
@@ -188,8 +179,7 @@ export const getRecentItems = function ({
       title: letter.title,
       type: "CoverLetter",
       date: letter.updatedAt,
-      route: "/(dashboard)/(tabs)/workspaces/cover-letters/letter-editor",
-      params: { coverLetterId: letter.id },
+      ...contentTarget("CoverLetter", letter.id),
     });
   });
 
@@ -212,8 +202,7 @@ export const getRecentItems = function ({
         title: question.text,
         type: "InterviewQuestion",
         date: question.answers![0]!.updatedAt,
-        route: "/(dashboard)/(tabs)/workspaces/interview-prep/question-detail",
-        params: { questionId: question.id },
+        ...contentTarget("InterviewQuestion", question.id),
       });
     });
 

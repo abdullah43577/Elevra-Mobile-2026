@@ -17,10 +17,11 @@ interface Props {
 }
 
 /*
-  Renders the real template rather than a stored image. Thumbnails used to come
-  from Cloudinary via the (dev) generator, which meant a template with no
-  generated thumbnail showed "No preview", and any design change left the stored
-  image stale. Rendering live is always accurate and costs little at this size.
+  Renders the real template rather than a stored image. Previews were once
+  Cloudinary images produced by a (dev) generator screen: a template that had
+  never been through it showed "No preview", and any design change left every
+  stored image stale. Rendering live is always accurate and costs little at this
+  size. The generator, the upload endpoint and the column are all gone.
 */
 export const TemplatePreview = function ({ template, width, data }: Props) {
   const scale = width / LAYOUT_WIDTH;

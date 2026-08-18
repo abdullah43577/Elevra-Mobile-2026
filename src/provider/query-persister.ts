@@ -1,3 +1,5 @@
+import { RECENT_SEARCHES_KEY } from "@/constants/search";
+import { SETUP_STATE_KEY } from "@/store/setup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import Constants from "expo-constants";
@@ -24,7 +26,17 @@ export const CACHE_BUSTER = Constants.expoConfig?.version ?? "1.0.0";
 */
 export const clearPersistedCache = async function () {
   try {
-    await AsyncStorage.removeItem(CACHE_KEY);
+    /*
+      Recent searches and the first-run setup flag go with it. All three are
+      per-device: a search history is a more direct read of what someone was
+      working on than the cache is, and a setup flag left behind would skip
+      setup for the next account to sign in here.
+    */
+    await AsyncStorage.multiRemove([
+      CACHE_KEY,
+      RECENT_SEARCHES_KEY,
+      SETUP_STATE_KEY,
+    ]);
   } catch {
     // A failed wipe must not block sign-out.
   }

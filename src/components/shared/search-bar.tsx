@@ -8,6 +8,7 @@ interface Props {
   onClear: () => void;
   placeholder?: string;
   autoFocus?: boolean;
+  onSubmitEditing?: () => void;
 }
 
 export const SearchBar = function ({
@@ -16,6 +17,7 @@ export const SearchBar = function ({
   onClear,
   placeholder = "Search...",
   autoFocus = false,
+  onSubmitEditing,
 }: Props) {
   const { foregroundSubtle } = useThemeColors();
 
@@ -30,6 +32,8 @@ export const SearchBar = function ({
         onChangeText={onChangeText}
         autoFocus={autoFocus}
         placeholderTextColor={foregroundSubtle}
+        returnKeyType={onSubmitEditing ? "search" : undefined}
+        onSubmitEditing={onSubmitEditing}
       />
 
       {value.length > 0 && (

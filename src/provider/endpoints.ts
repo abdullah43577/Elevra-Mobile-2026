@@ -12,6 +12,10 @@ export const API_ENDPOINTS = {
     updateSettings: "/auth/profile/settings",
   },
 
+  search: {
+    query: "/search",
+  },
+
   professions: {
     list: "/professions",
   },
@@ -119,7 +123,6 @@ export const API_ENDPOINTS = {
     // Templates
     templatesList: "/resume/templates",
     templateDetail: (id: string) => `/resume/templates/${id}`,
-    uploadThumbnail: (id: string) => `/resume/templates/${id}/thumbnail`,
 
     // Resumes
     list: "/resume",

@@ -3,11 +3,16 @@ import { Resume } from "../../../types/resume/resume";
 import { useGetData } from "../use-get-data";
 import { API_ENDPOINTS } from "@/provider/endpoints";
 
-export const useGetResumes = function () {
+interface UseGetResumesOptions {
+  shouldFetch?: boolean;
+}
+
+export const useGetResumes = function (options: UseGetResumesOptions = {}) {
   const { data, isFetching, error, refetch } = useGetData<
     APIResponse<Resume[]>
   >({
     url: API_ENDPOINTS.resume.list,
+    ...(options.shouldFetch !== undefined && { shouldFetch: options.shouldFetch }),
   });
 
   return {

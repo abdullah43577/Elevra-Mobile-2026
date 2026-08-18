@@ -10,12 +10,13 @@ interface UseGetApplicationsOptions {
   status?: ApplicationStatus;
   search?: string;
   isArchived?: boolean;
+  shouldFetch?: boolean;
 }
 
 export const useGetApplications = function (
   options?: UseGetApplicationsOptions,
 ) {
-  const { status, search, isArchived } = options || {};
+  const { status, search, isArchived, shouldFetch } = options || {};
 
   const queryParams = new URLSearchParams();
   if (status) queryParams.append("status", status);
@@ -30,7 +31,7 @@ export const useGetApplications = function (
 
   const { data, isFetching, error, refetch } = useGetData<
     APIResponse<JobApplication[]>
-  >({ url });
+  >({ url, ...(shouldFetch !== undefined && { shouldFetch }) });
 
   return {
     applications: data?.data || [],

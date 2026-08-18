@@ -1,4 +1,5 @@
 import { OnboardingDots } from "@/components/onboarding/onboarding-dots";
+import { OnboardingSlide } from "@/components/onboarding/onboarding-slide";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { onboardingSlides } from "@/constants/onboarding";
@@ -8,7 +9,6 @@ import { useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
-  Image,
   Pressable,
   View,
   type NativeScrollEvent,
@@ -35,6 +35,7 @@ export default function Onboarding() {
       handleFinish();
       return;
     }
+
     flatListRef.current?.scrollToIndex({
       index: activeIndex + 1,
       animated: true,
@@ -47,15 +48,13 @@ export default function Onboarding() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-surface">
-      {/* Skip */}
+    <SafeAreaView className="flex-1 bg-canvas">
       <View className="flex-row justify-end px-6 pt-2">
         <Pressable onPress={handleFinish} className="active:opacity-60">
           <AppText type="link">Skip</AppText>
         </Pressable>
       </View>
 
-      {/* Slides */}
       <FlatList
         ref={flatListRef}
         data={onboardingSlides}
@@ -65,43 +64,21 @@ export default function Onboarding() {
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={handleScroll}
         renderItem={({ item }) => (
-          <View
-            style={{ width: SCREEN_WIDTH }}
-            className="flex-1 items-center justify-center px-8"
-          >
-            <Image
-              source={item.image}
-              style={{
-                width: SCREEN_WIDTH * 0.75,
-                height: SCREEN_WIDTH * 0.75,
-              }}
-              resizeMode="contain"
-            />
-            <AppText type="title" className="mt-8 text-center">
-              {item.title}
-            </AppText>
-            <AppText
-              type="subtitle"
-              className="mt-2 text-center text-foreground-muted"
-            >
-              {item.subtitle}
-            </AppText>
-          </View>
+          <OnboardingSlide slide={item} width={SCREEN_WIDTH} />
         )}
       />
 
-      {/* Footer: dots + CTA */}
       <View className="gap-6 px-6 pb-8">
         <OnboardingDots
           total={onboardingSlides.length}
           activeIndex={activeIndex}
         />
 
-        <AppButton type="submit" onPress={handleNext}>
-          <AppText className="font-bricolage-semibold text-white">
-            {isLastSlide ? "Get Started" : "Continue"}
-          </AppText>
-        </AppButton>
+        <AppButton
+          type="submit"
+          label={isLastSlide ? "Get started" : "Continue"}
+          onPress={handleNext}
+        />
       </View>
     </SafeAreaView>
   );

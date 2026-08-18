@@ -10,7 +10,6 @@ export interface Template<K extends LayoutKey = LayoutKey> {
   themeId: string;
   theme: ThemeFor<K>;
   defaultData: ResumeData;
-  thumbnail?: string;
   isPremium: boolean;
   isActive: boolean;
   createdAt: string;

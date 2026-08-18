@@ -3,7 +3,18 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 
-export async function registerForPushNotificationsAsync() {
+/*
+  `promptIfNeeded` decides whether this is allowed to raise the OS permission
+  dialog. It defaults to false because this used to run at app launch, which
+  asked a stranger for notification access before they had signed in or seen
+  what the app does — and a denial there is close to permanent, since the user
+  then has to go to Settings to undo it. Application reminders depend on this
+  permission, so it is now requested from the setup flow, in context, where the
+  ask can explain itself.
+*/
+export async function registerForPushNotificationsAsync(
+  options: { promptIfNeeded?: boolean } = {},
+) {
   if (Platform.OS === "android") {
     Notifications.setNotificationChannelAsync("default", {
       name: "default",
@@ -18,6 +29,8 @@ export async function registerForPushNotificationsAsync() {
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== "granted") {
+      if (!options.promptIfNeeded) return undefined;
+
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
