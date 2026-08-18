@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     refreshToken: "/auth/token",
     updateProfile: "/auth/profile",
     updateSettings: "/auth/profile/settings",
+    deleteAccount: "/auth/account",
   },
 
   search: {

@@ -7,6 +7,8 @@ import { SettingsCard } from "@/components/profile/settings-card";
 import { SettingsRow } from "@/components/profile/settings-row";
 import { AppText } from "@/components/shared/app-text";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { DeleteAccountDialog } from "@/components/profile/delete-account-dialog";
+import { useDeleteAccount } from "@/hooks/profile/use-delete-account";
 import { ProfessionPicker } from "@/components/shared/profession-picker";
 import { useUpdateProfile } from "@/hooks/profile/use-update-profile";
 import { useUpdateSettings } from "@/hooks/profile/use-update-settings";
@@ -33,6 +35,7 @@ export default function Profile() {
   const { profile, isFetchingProfile, refetch, logout } = useGetProfile();
   const [isEditing, setIsEditing] = useState(false);
   const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
   const [professionPickerVisible, setProfessionPickerVisible] = useState(false);
   const [selectedProfessionId, setSelectedProfessionId] = useState<
     string | null
@@ -110,6 +113,23 @@ export default function Profile() {
     logout();
   };
 
+  /*
+    Deletion signs the user out through the same path as Log out. The tokens are
+    now attached to a row that no longer exists, so the next authenticated call
+    would 401 into the session-expired handler — and logout() is also what wipes
+    the persisted cache, which still holds everything that was just deleted.
+  */
+  const { deleteAccount, isDeletingAccount } = useDeleteAccount({
+    onSuccess: () => {
+      setDeleteDialogVisible(false);
+      logout();
+    },
+  });
+
+  const handleDeleteAccount = function (password: string) {
+    deleteAccount({ password });
+  };
+
   if (isFetchingProfile && !profile) {
     return (
       <View className="flex-1 items-center justify-center bg-canvas">
@@ -182,6 +202,18 @@ export default function Profile() {
             />
           </View>
 
+          {/*
+            Its own card, below Log out, so the two destructive rows are never
+            adjacent inside one container — a mis-tap here has no undo.
+          */}
+          <View className="overflow-hidden rounded-3xl border-hairline border-line bg-surface">
+            <SettingsRow
+              label="Delete account"
+              destructive
+              onPress={() => setDeleteDialogVisible(true)}
+            />
+          </View>
+
           <AppText type="caption" className="mt-1 text-center text-foreground-subtle">
             Elevra v{Constants.expoConfig?.version ?? "1.0.0"}
           </AppText>
@@ -196,6 +228,13 @@ export default function Profile() {
           setSelectedProfessionName(name);
         }}
         onClose={() => setProfessionPickerVisible(false)}
+      />
+
+      <DeleteAccountDialog
+        visible={deleteDialogVisible}
+        isDeleting={isDeletingAccount}
+        onConfirm={handleDeleteAccount}
+        onCancel={() => setDeleteDialogVisible(false)}
       />
 
       <ConfirmDialog
