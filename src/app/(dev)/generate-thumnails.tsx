@@ -47,9 +47,11 @@ export default function GenerateThumbnails() {
 
         const uri = await captureRef(previewRef, {
           format: "png",
-          quality: 0.9,
+          quality: 0.95,
+          // A4 proportions. The old 400x500 squashed every template, which is
+          // a large part of why the generated thumbnails looked wrong.
           width: 400,
-          height: 500,
+          height: 566,
         });
 
         const formData = new FormData();
@@ -113,13 +115,23 @@ export default function GenerateThumbnails() {
           )}
         </TouchableOpacity>
 
-        {/* Renders ONE template at a time — whichever is currently being captured */}
-        <View className="absolute -z-10 opacity-0" pointerEvents="none">
+        {/*
+          Renders ONE template at a time — whichever is currently being captured.
+
+          Positioned off-screen rather than hidden with opacity: captureRef
+          renders what is actually on screen, so an opacity-0 subtree captures
+          blank or washed-out. The explicit white background matters too — a
+          transparent PNG shows as black in most image viewers.
+        */}
+        <View
+          style={{ position: "absolute", left: -10000, top: 0 }}
+          pointerEvents="none"
+        >
           {generating && activeTemplate && (
             <View
               ref={previewRef}
               collapsable={false}
-              style={{ width: 400, height: 500 }}
+              style={{ width: 400, height: 566, backgroundColor: "#FFFFFF" }}
             >
               <TemplateRenderer
                 template={activeTemplate}

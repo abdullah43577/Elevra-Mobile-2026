@@ -22,7 +22,7 @@ export const useSaveResume = function ({
 }: { resumeId?: string } = {}) {
   const isUpdate = !!resumeId;
 
-  const { mutate, isPending } = useSubmitData<
+  const { mutateAsync, isPending } = useSubmitData<
     SaveResumeData,
     APIResponse<Resume>
   >({
@@ -37,7 +37,7 @@ export const useSaveResume = function ({
   });
 
   return {
-    saveResume: mutate,
+    saveResume: mutateAsync,
     isSaving: isPending,
     isUpdate,
   };

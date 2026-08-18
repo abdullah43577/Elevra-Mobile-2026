@@ -3,6 +3,16 @@
 // ============================================
 
 export type LayoutKey =
+  // ATS-first set. All single-column; they differ in header and section-title
+  // treatment only.
+  | "ATS_CLEAN"
+  | "ATS_ACCENT"
+  | "MODERN_BANNER"
+  | "COMPACT_DENSE"
+  | "TIMELINE_ACCENT"
+  | "TECH_FOCUSED"
+  // Original four, kept so existing Resume rows still resolve. Deactivated in
+  // the catalogue; do not build on them.
   | "PROFESSIONAL_CLASSIC"
   | "PROFESSIONAL_SLEEK"
   | "CREATIVE_SPLIT"
@@ -74,7 +84,19 @@ export interface ExecutiveFormalTheme extends BaseTheme {
 // Theme Mapping by Layout
 // ============================================
 
+// The ATS layouts all take the same theme shape — they vary in chrome, not in
+// the knobs they expose. Only the original four need bespoke theme types.
+export interface AtsTheme extends BaseTheme {
+  accentColor?: string;
+}
+
 export interface ThemeByLayout {
+  ATS_CLEAN: AtsTheme;
+  ATS_ACCENT: AtsTheme;
+  MODERN_BANNER: AtsTheme;
+  COMPACT_DENSE: AtsTheme;
+  TIMELINE_ACCENT: AtsTheme;
+  TECH_FOCUSED: AtsTheme;
   PROFESSIONAL_CLASSIC: ProfessionalClassicTheme;
   PROFESSIONAL_SLEEK: ProfessionalSleekTheme;
   CREATIVE_SPLIT: CreativeSplitTheme;
@@ -121,7 +143,13 @@ export interface LayoutConfig {
 // Layout Configs
 // ============================================
 
-export const LAYOUT_CONFIGS: Record<LayoutKey, LayoutConfig> = {
+/*
+  Currently unused — nothing imports LAYOUT_CONFIGS. It looks like scaffolding
+  for user-reorderable sections (ResumeData.sectionOrder is also unused). Typed
+  Partial so the ATS layouts do not have to add dead entries; delete both if the
+  reordering idea is dropped.
+*/
+export const LAYOUT_CONFIGS: Partial<Record<LayoutKey, LayoutConfig>> = {
   PROFESSIONAL_CLASSIC: {
     id: "PROFESSIONAL_CLASSIC",
     name: "Professional Classic",

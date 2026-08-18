@@ -1,27 +1,24 @@
-import { useThemeColors } from "@/hooks/use-theme-colors";
-import { TemplateRenderer } from "@/components/resume/template-renderer";
+import { TemplatePreview } from "@/components/resume-studio/template-preview";
+import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
+import { Badge } from "@/components/shared/badge";
+import { ScreenHeader } from "@/components/shared/screen-header";
 import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
-import { Ionicons } from "@expo/vector-icons";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  ActivityIndicator,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, ScrollView, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TemplateDetail() {
-  const { foregroundMuted } = useThemeColors();
-
   const router = useRouter();
+  const { contentColor } = useThemeColors();
+  const accent = contentColor("resume");
+  const { width } = useWindowDimensions();
+
   const params = useLocalSearchParams<{ id: string }>();
   const templateId = params.id;
 
-  const { template, isFetchingTemplate } = useGetTemplateById({
-    templateId,
-  });
+  const { template, isFetchingTemplate } = useGetTemplateById({ templateId });
 
   const handleUseTemplate = function () {
     router.push({
@@ -30,71 +27,84 @@ export default function TemplateDetail() {
     });
   };
 
-  if (isFetchingTemplate || !template) {
+  if (isFetchingTemplate && !template) {
     return (
-      <View className="flex-1 items-center justify-center bg-surface">
-        <ActivityIndicator size="large" color="#3B82F6" />
-      </View>
+      <SafeAreaView className="flex-1 items-center justify-center bg-canvas">
+        <ActivityIndicator color={accent} />
+      </SafeAreaView>
+    );
+  }
+
+  if (!template) {
+    return (
+      <SafeAreaView className="flex-1 bg-canvas">
+        <ScreenHeader title="Template" onBack={() => router.back()} />
+        <View className="flex-1 items-center justify-center px-10">
+          <AppText type="title" className="text-center">
+            Template not found
+          </AppText>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-surface">
-      {/* Header */}
-      <View className="flex-row items-center justify-between border-b border-line px-4 py-3">
-        <TouchableOpacity onPress={() => router.back()} className="p-1">
-          <Ionicons name="arrow-back" size={24} color={foregroundMuted} />
-        </TouchableOpacity>
-        <AppText type="title" className="font-bricolage-semibold text-foreground">
-          Template Preview
-        </AppText>
-        <View className="w-10" />
-      </View>
+    <SafeAreaView className="flex-1 bg-canvas">
+      <ScreenHeader title={template.name} onBack={() => router.back()} />
 
-      <ScrollView className="flex-1">
-        {/* Preview */}
-        <View className="p-4">
-          <View className="overflow-hidden rounded-xl border border-line">
-            <TemplateRenderer
-              template={template}
-              data={template.defaultData}
-              isThumbnail={false}
-            />
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/*
+          The preview must sit on its own white page regardless of app theme —
+          this wrapper previously had no background, so in dark mode the resume
+          rendered dark grey text straight onto the dark surface.
+        */}
+        <View className="items-center px-5 pt-5">
+          <View className="overflow-hidden rounded-2xl border-hairline border-line bg-white">
+            <TemplatePreview template={template} width={width - 40} />
           </View>
         </View>
 
-        {/* Info */}
-        <View className="px-4">
-          <AppText className="font-bricolage-bold text-xl text-foreground">
-            {template.name}
-          </AppText>
-          <AppText type="subtitle" className="mt-1 text-foreground-muted">
+        <View className="px-5 pt-6">
+          <AppText type="title">{template.name}</AppText>
+          <AppText type="subtitle" className="mt-1.5">
             {template.description}
           </AppText>
-          <View className="mt-2 flex-row items-center gap-2">
-            <View className="rounded-full bg-surface-muted px-3 py-1">
-              <AppText className="text-xs capitalize text-foreground-muted">
+
+          <View className="mt-3 flex-row items-center gap-2">
+            <View
+              className="rounded-full px-3 py-1"
+              style={{ backgroundColor: `${accent}1F` }}
+            >
+              <AppText type="caption" className="capitalize" style={{ color: accent }}>
                 {template.category}
               </AppText>
             </View>
-            {template.isPremium && (
-              <View className="rounded-full bg-yellow-100 px-3 py-1">
-                <AppText className="text-xs text-yellow-700">★ Premium</AppText>
-              </View>
-            )}
+            {template.isPremium && <Badge label="Pro" variant="secondary" />}
           </View>
-        </View>
 
-        {/* Use Template Button */}
-        <View className="p-4 pb-8">
-          <TouchableOpacity
-            onPress={handleUseTemplate}
-            className="rounded-lg bg-accent py-4"
+          <View
+            className="mt-6 rounded-2xl border-hairline border-line bg-surface p-4"
+            style={{ borderLeftWidth: 3, borderLeftColor: accent }}
           >
-            <AppText className="text-center font-bricolage-semibold text-white">
-              Use This Template
+            <AppText type="label">ATS-friendly</AppText>
+            <AppText type="subtitle" className="mt-1">
+              Single column, standard section headings, and selectable text
+              throughout — the three things applicant tracking systems need to
+              read a resume correctly.
             </AppText>
-          </TouchableOpacity>
+          </View>
+
+          <AppButton
+            type="submit"
+            label="Use this template"
+            onPress={handleUseTemplate}
+            className="mt-6"
+            style={{ backgroundColor: accent }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

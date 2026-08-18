@@ -1,35 +1,41 @@
-import { useThemeColors } from "@/hooks/use-theme-colors";
-import { TemplateCard } from "@/components/resume-studio/template-card";
 import { AppText } from "@/components/shared/app-text";
+import { EmptyState } from "@/components/shared/empty-state";
+import { IconButton } from "@/components/shared/icon-button";
+import { SearchBar } from "@/components/shared/search-bar";
+import { SegmentedControl } from "@/components/shared/segmented-control";
+import { TemplateCard } from "@/components/resume-studio/template-card";
+import { useDebounce } from "@/hooks/use-debounce";
 import { useGetTemplates } from "@/hooks/resume/use-get-templates";
-import { Ionicons } from "@expo/vector-icons";
+import { useThemeColors } from "@/hooks/use-theme-colors";
+import { clsx } from "clsx";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Resumes from "./resumes";
 
-const CATEGORIES = ["All", "professional", "creative", "minimal", "executive"];
+const CATEGORIES = [
+  { label: "All", value: "all" },
+  { label: "ATS", value: "ats" },
+  { label: "Modern", value: "modern" },
+  { label: "Minimal", value: "minimal" },
+  { label: "Technical", value: "technical" },
+];
 
 export default function ResumeStudio() {
-  const { foregroundSubtle } = useThemeColors();
-
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"templates" | "resumes">(
-    "templates",
-  );
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const { contentColor } = useThemeColors();
+  const accent = contentColor("resume");
+
+  const [activeTab, setActiveTab] = useState("templates");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const debouncedSearch = useDebounce(searchQuery, 400);
 
   const { templates, isFetchingTemplates } = useGetTemplates({
-    category: selectedCategory === "All" ? undefined : selectedCategory,
-    search: searchQuery || undefined,
+    ...(selectedCategory !== "all" && { category: selectedCategory }),
+    ...(debouncedSearch && { search: debouncedSearch }),
   });
 
   const handleSelectTemplate = function (templateId: string) {
@@ -39,148 +45,129 @@ export default function ResumeStudio() {
     });
   };
 
-  return (
-    <SafeAreaView className="flex-1 bg-surface">
-      {/* Header with Tab Switcher */}
-      <View className="px-4 pb-2 pt-4">
-        <AppText type="title" className="font-bricolage-bold text-foreground">
-          Resume Studio
-        </AppText>
-        <AppText type="subtitle" className="text-foreground-muted">
-          Create and manage your resumes
-        </AppText>
+  const handleToggleSearch = function () {
+    setIsSearchVisible((prev) => !prev);
+    if (isSearchVisible) setSearchQuery("");
+  };
 
-        {/* Tab Switcher */}
-        <View className="mt-4 flex-row rounded-lg bg-surface-muted p-1">
-          <TouchableOpacity
-            onPress={() => setActiveTab("templates")}
-            className={`flex-1 rounded-lg py-2 ${
-              activeTab === "templates" ? "bg-surface" : ""
-            }`}
-            style={
-              activeTab === "templates"
-                ? {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 0, height: 1 },
-                    shadowOpacity: 0.05,
-                    shadowRadius: 2,
-                    elevation: 2,
-                  }
-                : undefined
-            }
-          >
-            <AppText
-              className={`text-center font-bricolage-medium ${
-                activeTab === "templates" ? "text-accent" : "text-foreground-muted"
-              }`}
-            >
-              Templates
-            </AppText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveTab("resumes")}
-            className={`flex-1 rounded-lg py-2 ${
-              activeTab === "resumes" ? "bg-surface" : ""
-            }`}
-            style={
-              activeTab === "resumes"
-                ? {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 0, height: 1 },
-                    shadowOpacity: 0.05,
-                    shadowRadius: 2,
-                    elevation: 2,
-                  }
-                : undefined
-            }
-          >
-            <AppText
-              className={`text-center font-bricolage-medium ${
-                activeTab === "resumes" ? "text-accent" : "text-foreground-muted"
-              }`}
-            >
-              My Resumes
-            </AppText>
-          </TouchableOpacity>
+  const isFirstLoad = isFetchingTemplates && templates.length === 0;
+  const isFiltering = !!debouncedSearch || selectedCategory !== "all";
+
+  return (
+    <SafeAreaView className="flex-1 bg-canvas">
+      <View className="flex-row items-start justify-between px-5 pb-4 pt-2">
+        <View className="flex-1 pr-3">
+          <AppText type="display">Resume Studio</AppText>
+          <AppText type="subtitle" className="mt-1">
+            ATS-friendly templates you can edit and export
+          </AppText>
         </View>
+
+        {activeTab === "templates" && (
+          <IconButton
+            icon={isSearchVisible ? "close-outline" : "search-outline"}
+            onPress={handleToggleSearch}
+          />
+        )}
+      </View>
+
+      <View className="px-5">
+        <SegmentedControl
+          options={[
+            { label: "Templates", value: "templates" },
+            { label: "My Resumes", value: "resumes" },
+          ]}
+          value={activeTab}
+          onChange={setActiveTab}
+        />
       </View>
 
       {activeTab === "resumes" ? (
-        <Resumes />
+        <View className="mt-4 flex-1">
+          <Resumes />
+        </View>
       ) : (
         <>
-          {/* Search */}
-          <View className="px-4 pb-2">
-            <View className="flex-row items-center rounded-xl bg-surface-muted px-4 py-2">
-              <Ionicons name="search-outline" size={20} color={foregroundSubtle} />
-              <TextInput
-                className="ml-2 flex-1 text-base text-foreground"
-                placeholder="Search templates..."
+          {isSearchVisible && (
+            <View className="px-5 pt-3">
+              <SearchBar
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                placeholderTextColor={foregroundSubtle}
+                onClear={() => setSearchQuery("")}
+                placeholder="Search templates..."
+                autoFocus
               />
-              {searchQuery.length > 0 && (
-                <TouchableOpacity onPress={() => setSearchQuery("")}>
-                  <Ionicons name="close-circle" size={20} color={foregroundSubtle} />
-                </TouchableOpacity>
-              )}
             </View>
-          </View>
+          )}
 
-          {/* Category Filters */}
-          <View className="px-4 py-2">
-            <FlatList
+          <View className="pt-4">
+            <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              data={CATEGORIES}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => setSelectedCategory(item)}
-                  className={`mr-2 rounded-full px-4 py-1.5 ${
-                    selectedCategory === item ? "bg-accent" : "bg-line"
-                  }`}
-                >
-                  <AppText
-                    className={`text-sm capitalize ${
-                      selectedCategory === item ? "text-white" : "text-foreground"
-                    }`}
+              contentContainerClassName="gap-2 px-5"
+            >
+              {CATEGORIES.map((category) => {
+                const isSelected = selectedCategory === category.value;
+
+                return (
+                  <Pressable
+                    key={category.value}
+                    onPress={() => setSelectedCategory(category.value)}
+                    className={clsx(
+                      "rounded-full border-hairline px-3.5 py-1.5 active:opacity-70",
+                      isSelected ? "border-transparent" : "border-line bg-surface",
+                    )}
+                    style={isSelected ? { backgroundColor: accent } : undefined}
                   >
-                    {item}
-                  </AppText>
-                </TouchableOpacity>
-              )}
-            />
+                    <AppText
+                      type="caption"
+                      className={
+                        isSelected
+                          ? "font-bricolage-semibold text-foreground-inverse"
+                          : "text-foreground-muted"
+                      }
+                    >
+                      {category.label}
+                    </AppText>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
           </View>
 
-          {/* Templates Grid */}
-          {isFetchingTemplates && templates.length === 0 ? (
+          {isFirstLoad ? (
             <View className="flex-1 items-center justify-center">
-              <ActivityIndicator size="large" color="#3B82F6" />
+              <ActivityIndicator color={accent} />
             </View>
           ) : (
             <FlatList
               data={templates}
               keyExtractor={(item) => item.id}
               numColumns={2}
+              columnWrapperStyle={{ gap: 12 }}
               renderItem={({ item }) => (
-                <TemplateCard
-                  item={item}
-                  onSelectTemplate={handleSelectTemplate}
-                />
+                <TemplateCard item={item} onSelectTemplate={handleSelectTemplate} />
               )}
               contentContainerStyle={{
-                paddingHorizontal: 8,
-                paddingBottom: 100,
+                paddingHorizontal: 20,
+                paddingTop: 16,
+                paddingBottom: 110,
+                gap: 20,
+                flexGrow: 1,
               }}
-              ListEmptyComponent={() => (
-                <View className="flex-1 items-center justify-center py-12">
-                  <AppText className="text-foreground-muted">
-                    No templates found
-                  </AppText>
-                </View>
-              )}
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={
+                <EmptyState
+                  icon="document-outline"
+                  accentColor={accent}
+                  title="No templates found"
+                  subtitle={
+                    isFiltering
+                      ? "Try a different category or search term"
+                      : "Templates will appear here once they are available"
+                  }
+                />
+              }
             />
           )}
         </>

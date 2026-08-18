@@ -1,83 +1,62 @@
-import { useThemeColors } from "@/hooks/use-theme-colors";
-import { Certifications } from "@/components/resume-studio/resume-builder/certification";
-import { Education } from "@/components/resume-studio/resume-builder/education";
-import { Experience } from "@/components/resume-studio/resume-builder/experience";
-import { Languages } from "@/components/resume-studio/resume-builder/languages";
-import { PersonalInfo } from "@/components/resume-studio/resume-builder/personal-info";
-import { Projects } from "@/components/resume-studio/resume-builder/projects";
-import { References } from "@/components/resume-studio/resume-builder/references";
-import { Skills } from "@/components/resume-studio/resume-builder/skills";
-import { TemplateRenderer } from "@/components/resume/template-renderer";
+import { BuilderFooter } from "@/components/resume-studio/builder/builder-footer";
+import { BuilderPreview } from "@/components/resume-studio/builder/builder-preview";
+import { BUILDER_STEPS } from "@/components/resume-studio/builder/builder-steps";
+import { BuilderStepContent } from "@/components/resume-studio/builder/builder-step-content";
+import { StepNav } from "@/components/resume-studio/builder/step-nav";
 import { AppText } from "@/components/shared/app-text";
+import { IconButton } from "@/components/shared/icon-button";
+import { ScreenHeader } from "@/components/shared/screen-header";
 import { useGetResumeById } from "@/hooks/resume/use-get-resume-by-id";
 import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
 import { useSaveResume } from "@/hooks/resume/use-save-resume";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import {
-  DEFAULT_CERTIFICATION,
   DEFAULT_EDUCATION,
   DEFAULT_EXPERIENCE,
-  DEFAULT_LANGUAGE,
-  DEFAULT_PROJECT,
-  DEFAULT_REFERENCE,
   DEFAULT_SKILL,
   ResumeBuilderFormValues,
   resumeBuilderSchema,
 } from "@/schemas/resume-builder/resume-builder";
 import { showToast } from "@/utils/show-toast";
-import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const SECTIONS = [
-  { id: "personal", label: "Personal Info", icon: "person-outline" },
-  { id: "experience", label: "Experience", icon: "briefcase-outline" },
-  { id: "education", label: "Education", icon: "school-outline" },
-  { id: "skills", label: "Skills", icon: "bulb-outline" },
-  { id: "languages", label: "Languages", icon: "chatbubbles-outline" },
-  { id: "certifications", label: "Certifications", icon: "ribbon-outline" },
-  { id: "projects", label: "Projects", icon: "folder-open-outline" },
-  { id: "references", label: "References", icon: "people-outline" },
-];
-
 export default function ResumeBuilder() {
-  const { foregroundMuted } = useThemeColors();
-
   const router = useRouter();
+  const { contentColor } = useThemeColors();
+  const accent = contentColor("resume");
+
   const params = useLocalSearchParams<{
     templateId?: string;
     resumeId?: string;
   }>();
-  const templateId = params.templateId;
-  const resumeId = params.resumeId;
-
-  const [activeSection, setActiveSection] = useState(0);
-  const [showPreview, setShowPreview] = useState(false);
+  const { templateId, resumeId } = params;
   const isEditing = !!resumeId;
 
-  // Fetch template
+  const [activeStep, setActiveStep] = useState(0);
+  const [furthestStep, setFurthestStep] = useState(0);
+  const [showPreview, setShowPreview] = useState(false);
+
   const { template, isFetchingTemplate } = useGetTemplateById({
     templateId: templateId || "",
   });
-
-  // Fetch resume if editing
   const { resume, isFetchingResume } = useGetResumeById({
     resumeId: resumeId || "",
   });
-
   const { saveResume, isSaving } = useSaveResume({ resumeId });
 
   const {
     control,
     handleSubmit,
     watch,
-    setValue,
-    getValues,
     reset,
+    setValue,
+    trigger,
     formState: { errors },
   } = useForm<ResumeBuilderFormValues>({
     resolver: zodResolver(resumeBuilderSchema),
@@ -94,61 +73,50 @@ export default function ResumeBuilder() {
       experience: [DEFAULT_EXPERIENCE],
       education: [DEFAULT_EDUCATION],
       skills: [DEFAULT_SKILL],
-      languages: [DEFAULT_LANGUAGE],
-      certifications: [DEFAULT_CERTIFICATION],
-      projects: [DEFAULT_PROJECT],
-      references: [DEFAULT_REFERENCE],
+      // Optional sections start empty. A blank row is an invalid row — each
+      // item schema requires its fields, so seeding one blank entry per
+      // optional section made saving impossible until every section was filled.
+      languages: [],
+      certifications: [],
+      projects: [],
+      references: [],
     },
   });
 
-  const watchValues = watch();
+  // Guarded by id: the query object changes identity on every background
+  // refetch, and re-running this would wipe whatever the user has typed.
+  const hydratedId = useRef<string | null>(null);
 
-  // Pre-fill form with resume data when editing
   useEffect(() => {
-    if (resume && isEditing && resume) {
-      reset({
-        personalInfo: {
-          firstName: resume.personalInfo?.firstName || "",
-          lastName: resume.personalInfo?.lastName || "",
-          email: resume.personalInfo?.email || "",
-          phone: resume.personalInfo?.phone || "",
-          location: resume.personalInfo?.location || "",
-          title: resume.personalInfo?.title || "",
-          summary: resume.personalInfo?.summary || "",
-        },
-        experience:
-          resume.experience && resume.experience.length > 0
-            ? resume.experience
-            : [DEFAULT_EXPERIENCE],
-        education:
-          resume.education && resume.education.length > 0
-            ? resume.education
-            : [DEFAULT_EDUCATION],
-        skills:
-          resume.skills && resume.skills.length > 0
-            ? resume.skills
-            : [DEFAULT_SKILL],
-        languages:
-          resume.languages && resume.languages.length > 0
-            ? resume.languages
-            : [DEFAULT_LANGUAGE],
-        certifications:
-          resume.certifications && resume.certifications.length > 0
-            ? resume.certifications
-            : [DEFAULT_CERTIFICATION],
-        projects:
-          resume.projects && resume.projects.length > 0
-            ? resume.projects
-            : [DEFAULT_PROJECT],
-        references:
-          resume.references && resume.references.length > 0
-            ? resume.references
-            : [DEFAULT_REFERENCE],
-      });
-    }
+    if (!resume || !isEditing || hydratedId.current === resume.id) return;
+    hydratedId.current = resume.id;
+
+    reset({
+      personalInfo: {
+        firstName: resume.personalInfo?.firstName || "",
+        lastName: resume.personalInfo?.lastName || "",
+        email: resume.personalInfo?.email || "",
+        phone: resume.personalInfo?.phone || "",
+        location: resume.personalInfo?.location || "",
+        title: resume.personalInfo?.title || "",
+        summary: resume.personalInfo?.summary || "",
+      },
+      experience: resume.experience?.length
+        ? resume.experience
+        : [DEFAULT_EXPERIENCE],
+      education: resume.education?.length
+        ? resume.education
+        : [DEFAULT_EDUCATION],
+      skills: resume.skills?.length ? resume.skills : [DEFAULT_SKILL],
+      languages: resume.languages ?? [],
+      certifications: resume.certifications ?? [],
+      projects: resume.projects ?? [],
+      references: resume.references ?? [],
+    });
+
+    setFurthestStep(BUILDER_STEPS.length - 1);
   }, [resume, isEditing]);
 
-  // Field arrays
   const experience = useFieldArray({ control, name: "experience" });
   const education = useFieldArray({ control, name: "education" });
   const skills = useFieldArray({ control, name: "skills" });
@@ -157,34 +125,48 @@ export default function ResumeBuilder() {
   const projects = useFieldArray({ control, name: "projects" });
   const references = useFieldArray({ control, name: "references" });
 
-  const handleNext = function () {
-    if (activeSection < SECTIONS.length - 1) {
-      setActiveSection(activeSection + 1);
-    }
+  const goToStep = function (index: number) {
+    setActiveStep(index);
+    setFurthestStep((previous) => Math.max(previous, index));
   };
 
-  const handlePrevious = function () {
-    if (activeSection > 0) {
-      setActiveSection(activeSection - 1);
+  /*
+    Validate only the current step before advancing. Without this a user could
+    walk through every step with an empty form and only discover the problem at
+    Save, with the errors sitting on steps they had already left behind.
+  */
+  const handleNext = async function () {
+    const step = BUILDER_STEPS[activeStep];
+    const isValid = await trigger(step.id);
+
+    if (!isValid) {
+      showToast("error", `Check the ${step.label.toLowerCase()} section`);
+      return;
     }
+
+    goToStep(Math.min(activeStep + 1, BUILDER_STEPS.length - 1));
   };
 
-  const handleSave = function (data: ResumeBuilderFormValues) {
-    if (!templateId) {
+  const handleSkip = function () {
+    goToStep(Math.min(activeStep + 1, BUILDER_STEPS.length - 1));
+  };
+
+  const handleSave = async function (data: ResumeBuilderFormValues) {
+    const resolvedTemplateId = templateId ?? resume?.templateId;
+
+    if (!resolvedTemplateId) {
       showToast("error", "Template not found");
       return;
     }
 
-    const title = isEditing
-      ? data.personalInfo?.firstName
-        ? `${data.personalInfo.firstName} ${data.personalInfo.lastName || ""}'s Resume`.trim()
-        : "My Resume"
-      : `${data.personalInfo?.firstName || ""} ${data.personalInfo?.lastName || ""}'s Resume`.trim() ||
-        "My Resume";
+    const name = [data.personalInfo?.firstName, data.personalInfo?.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
 
-    saveResume({
-      title,
-      templateId,
+    await saveResume({
+      title: name ? `${name} Resume` : "My Resume",
+      templateId: resolvedTemplateId,
       personalInfo: data.personalInfo,
       experience: data.experience,
       education: data.education,
@@ -194,220 +176,129 @@ export default function ResumeBuilder() {
       projects: data.projects,
       references: data.references,
     });
+
+    const msg = isEditing
+      ? "Resume updated successfully"
+      : "Resume created successfully";
+
+    showToast("success", msg);
   };
 
-  // Loading state
-  if (isFetchingTemplate || (isEditing && isFetchingResume)) {
+  // Jump to the first step that actually has an error, rather than leaving the
+  // save button looking like it did nothing.
+  const handleInvalid = function () {
+    const firstBad = BUILDER_STEPS.findIndex((step) => !!errors[step.id]);
+    if (firstBad >= 0) {
+      goToStep(firstBad);
+      showToast(
+        "error",
+        `Check the ${BUILDER_STEPS[firstBad].label.toLowerCase()} section`,
+      );
+    }
+  };
+
+  if (isFetchingTemplate || (isEditing && isFetchingResume && !resume)) {
     return (
-      <View className="flex-1 items-center justify-center bg-surface">
-        <ActivityIndicator size="large" color="#3B82F6" />
-      </View>
+      <SafeAreaView className="bg-canvas flex-1 items-center justify-center">
+        <ActivityIndicator color={accent} />
+      </SafeAreaView>
     );
   }
 
   if (!template) {
     return (
-      <View className="flex-1 items-center justify-center bg-surface">
-        <AppText className="text-foreground-muted">Template not found</AppText>
-      </View>
+      <SafeAreaView className="bg-canvas flex-1">
+        <ScreenHeader title="Resume" onBack={() => router.back()} />
+        <View className="flex-1 items-center justify-center px-10">
+          <AppText type="title" className="text-center">
+            Template not found
+          </AppText>
+        </View>
+      </SafeAreaView>
     );
   }
 
-  const currentSection = SECTIONS[activeSection];
-  const progress = ((activeSection + 1) / SECTIONS.length) * 100;
+  const step = BUILDER_STEPS[activeStep];
+  const values = watch();
 
   return (
-    <SafeAreaView className="flex-1 bg-surface">
-      {/* Header */}
-      <View className="flex-row items-center justify-between border-b border-line px-4 py-3">
-        <TouchableOpacity onPress={() => router.back()} className="p-1">
-          <Ionicons name="arrow-back" size={24} color={foregroundMuted} />
-        </TouchableOpacity>
-        <AppText type="title" className="font-bricolage-semibold text-foreground">
-          {isEditing ? "Edit Resume" : "Build Resume"}
-        </AppText>
-        <TouchableOpacity
-          onPress={() => setShowPreview(!showPreview)}
-          className="p-1"
-        >
-          <Ionicons
-            name={showPreview ? "close-outline" : "eye-outline"}
-            size={24}
-            color="#3B82F6"
+    <SafeAreaView className="bg-canvas flex-1">
+      <ScreenHeader
+        title={isEditing ? "Edit resume" : "Build resume"}
+        onBack={() => router.back()}
+        right={
+          <IconButton
+            icon={showPreview ? "create-outline" : "eye-outline"}
+            color={accent}
+            onPress={() => setShowPreview((previous) => !previous)}
           />
-        </TouchableOpacity>
-      </View>
+        }
+      />
 
-      {/* Progress Bar */}
-      <View className="px-4 py-3">
-        <View className="flex-row items-center justify-between">
-          <AppText className="text-xs text-foreground-muted">
-            Step {activeSection + 1} of {SECTIONS.length}
-          </AppText>
-          <AppText className="text-xs text-accent">
-            {Math.round(progress)}%
-          </AppText>
-        </View>
-        <View className="mt-1 h-1 w-full rounded-full bg-line">
-          <View
-            className="h-1 rounded-full bg-accent"
-            style={{ width: `${progress}%` }}
-          />
-        </View>
-      </View>
+      {showPreview ? (
+        <BuilderPreview template={template} data={values} />
+      ) : (
+        <>
+          <View className="py-4">
+            <StepNav
+              steps={BUILDER_STEPS}
+              activeIndex={activeStep}
+              furthestIndex={furthestStep}
+              accent={accent}
+              onSelectStep={goToStep}
+            />
+          </View>
 
-      <KeyboardAwareScrollView
-        className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        enableOnAndroid
-        extraScrollHeight={20}
-      >
-        <View className="flex-1 p-4">
-          {showPreview ? (
-            // Preview Mode
-            <View className="flex-1">
-              <AppText
-                type="subtitle"
-                className="mb-2 font-bricolage-medium text-sm text-foreground"
-              >
-                Resume Preview
-              </AppText>
-              <View className="overflow-hidden rounded-xl border border-line">
-                <TemplateRenderer
-                  template={template}
-                  data={{
-                    personalInfo: watchValues.personalInfo,
-                    experience: watchValues.experience,
-                    education: watchValues.education,
-                    skills: watchValues.skills,
-                    languages: watchValues.languages,
-                    certifications: watchValues.certifications,
-                    projects: watchValues.projects,
-                    references: watchValues.references,
-                  }}
-                  isThumbnail={false}
-                />
-              </View>
-            </View>
-          ) : (
-            <View>
-              <AppText className="mb-1 font-bricolage-bold text-xl text-foreground">
-                {currentSection.label}
-              </AppText>
-
-              {activeSection === 0 && (
-                <PersonalInfo control={control} errors={errors} />
-              )}
-              {activeSection === 1 && (
-                <Experience
-                  control={control}
-                  errors={errors}
-                  fields={experience.fields}
-                  append={experience.append}
-                  remove={experience.remove}
-                />
-              )}
-              {activeSection === 2 && (
-                <Education
-                  control={control}
-                  errors={errors}
-                  fields={education.fields}
-                  append={education.append}
-                  remove={education.remove}
-                  setValue={setValue}
-                />
-              )}
-              {activeSection === 3 && (
-                <Skills
-                  control={control}
-                  errors={errors}
-                  fields={skills.fields}
-                  append={skills.append}
-                  remove={skills.remove}
-                />
-              )}
-              {activeSection === 4 && (
-                <Languages
-                  control={control}
-                  errors={errors}
-                  fields={languages.fields}
-                  append={languages.append}
-                  remove={languages.remove}
-                  setValue={setValue}
-                />
-              )}
-              {activeSection === 5 && (
-                <Certifications
-                  control={control}
-                  errors={errors}
-                  fields={certifications.fields}
-                  append={certifications.append}
-                  remove={certifications.remove}
-                />
-              )}
-              {activeSection === 6 && (
-                <Projects
-                  control={control}
-                  errors={errors}
-                  fields={projects.fields}
-                  append={projects.append}
-                  remove={projects.remove}
-                />
-              )}
-              {activeSection === 7 && (
-                <References
-                  control={control}
-                  errors={errors}
-                  fields={references.fields}
-                  append={references.append}
-                  remove={references.remove}
-                />
+          <KeyboardAwareScrollView
+            className="flex-1"
+            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 32 }}
+            keyboardShouldPersistTaps="handled"
+            enableOnAndroid
+            extraScrollHeight={20}
+            showsVerticalScrollIndicator={false}
+          >
+            <View className="flex-row items-center gap-2">
+              <AppText type="title">{step.label}</AppText>
+              {step.optional && (
+                <View className="bg-surface-muted rounded-full px-2 py-0.5">
+                  <AppText type="caption">Optional</AppText>
+                </View>
               )}
             </View>
-          )}
-        </View>
-      </KeyboardAwareScrollView>
 
-      {/* Navigation Buttons */}
-      <View className="flex-row items-center justify-between border-t border-line px-4 py-4">
-        <TouchableOpacity
-          onPress={handlePrevious}
-          disabled={activeSection === 0}
-          className={`rounded-lg px-6 py-3 ${
-            activeSection === 0 ? "opacity-50" : ""
-          }`}
-        >
-          <AppText className="font-bricolage-semibold text-foreground-muted">
-            Previous
-          </AppText>
-        </TouchableOpacity>
-
-        {activeSection === SECTIONS.length - 1 ? (
-          <TouchableOpacity
-            onPress={handleSubmit(handleSave)}
-            disabled={isSaving}
-            className="rounded-lg bg-accent px-8 py-3"
-          >
-            {isSaving ? (
-              <ActivityIndicator size="small" color="white" />
-            ) : (
-              <AppText className="font-bricolage-semibold text-white">
-                {isEditing ? "Update Resume" : "Create Resume"}
-              </AppText>
-            )}
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={handleNext}
-            className="rounded-lg bg-accent px-8 py-3"
-          >
-            <AppText className="font-bricolage-semibold text-white">
-              Next
+            <AppText type="caption" className="mb-4 mt-1">
+              Step {activeStep + 1} of {BUILDER_STEPS.length}
             </AppText>
-          </TouchableOpacity>
-        )}
-      </View>
+
+            <BuilderStepContent
+              step={step}
+              control={control}
+              errors={errors}
+              setValue={setValue}
+              experience={experience}
+              education={education}
+              skills={skills}
+              projects={projects}
+              certifications={certifications}
+              languages={languages}
+              references={references}
+            />
+          </KeyboardAwareScrollView>
+
+          <BuilderFooter
+            isFirst={activeStep === 0}
+            isLast={activeStep === BUILDER_STEPS.length - 1}
+            isOptionalStep={step.optional}
+            isSaving={isSaving}
+            isEditing={isEditing}
+            accent={accent}
+            onPrevious={() => goToStep(Math.max(activeStep - 1, 0))}
+            onNext={handleNext}
+            onSkip={handleSkip}
+            onSave={handleSubmit(handleSave, handleInvalid)}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }

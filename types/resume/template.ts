@@ -19,12 +19,7 @@ export interface Template<K extends LayoutKey = LayoutKey> {
 
 // The type your API actually returns: a template that could be any one of the 5,
 // with layoutKey and theme correctly paired per-variant.
-export type AnyTemplate =
-  | Template<"PROFESSIONAL_CLASSIC">
-  | Template<"PROFESSIONAL_SLEEK">
-  | Template<"CREATIVE_SPLIT">
-  | Template<"MINIMAL_COMPACT">
-  | Template<"EXECUTIVE_FORMAL">;
+export type AnyTemplate = Template<LayoutKey>;
 
 export interface TemplateFilters {
   category?: string;

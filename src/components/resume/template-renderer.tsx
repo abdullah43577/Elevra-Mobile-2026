@@ -1,9 +1,11 @@
-import { AnyTemplate } from "../../../types/resume/template";
 import { ResumeData } from "../../../types/resume/data";
-import { ProfessionalClassicLayout } from "./profession-classic-layout";
-import { CreativeSplitLayout } from "./creative-split-layout";
-import { MinimalCompactLayout } from "./minimal-compact-layout";
-import { ExecutiveFormalLayout } from "./executive-formal-layout";
+import { AnyTemplate } from "../../../types/resume/template";
+import { AtsAccentLayout } from "./layouts/ats-accent";
+import { AtsCleanLayout } from "./layouts/ats-clean";
+import { CompactDenseLayout } from "./layouts/compact-dense";
+import { ModernBannerLayout } from "./layouts/modern-banner";
+import { TechFocusedLayout } from "./layouts/tech-focused";
+import { TimelineAccentLayout } from "./layouts/timeline-accent";
 
 interface TemplateRendererProps {
   template: AnyTemplate;
@@ -11,55 +13,34 @@ interface TemplateRendererProps {
   isThumbnail?: boolean;
 }
 
+const LAYOUTS = {
+  ATS_CLEAN: AtsCleanLayout,
+  ATS_ACCENT: AtsAccentLayout,
+  MODERN_BANNER: ModernBannerLayout,
+  COMPACT_DENSE: CompactDenseLayout,
+  TIMELINE_ACCENT: TimelineAccentLayout,
+  TECH_FOCUSED: TechFocusedLayout,
+
+  /*
+    The four originals were retired for being hard to maintain and, in the case
+    of CREATIVE_SPLIT, actively ATS-hostile (a sidebar breaks reading order for
+    most parsers). Existing Resume rows may still point at them, so they resolve
+    to the closest surviving equivalent rather than rendering nothing.
+  */
+  PROFESSIONAL_CLASSIC: AtsCleanLayout,
+  PROFESSIONAL_SLEEK: AtsAccentLayout,
+  CREATIVE_SPLIT: TimelineAccentLayout,
+  MINIMAL_COMPACT: CompactDenseLayout,
+  EXECUTIVE_FORMAL: AtsCleanLayout,
+} as const;
+
 export function TemplateRenderer({
   template,
   data,
   isThumbnail = false,
 }: TemplateRendererProps) {
-  switch (template.layoutKey) {
-    case "PROFESSIONAL_CLASSIC":
-    case "PROFESSIONAL_SLEEK":
-      return (
-        <ProfessionalClassicLayout
-          theme={template.theme}
-          data={data}
-          isThumbnail={isThumbnail}
-        />
-      );
+  const Layout = LAYOUTS[template.layoutKey];
+  if (!Layout) return null;
 
-    case "CREATIVE_SPLIT":
-      return (
-        <CreativeSplitLayout
-          theme={template.theme}
-          data={data}
-          isThumbnail={isThumbnail}
-        />
-      );
-
-    case "MINIMAL_COMPACT":
-      return (
-        <MinimalCompactLayout
-          theme={template.theme}
-          data={data}
-          isThumbnail={isThumbnail}
-        />
-      );
-
-    case "EXECUTIVE_FORMAL":
-      return (
-        <ExecutiveFormalLayout
-          theme={template.theme}
-          data={data}
-          isThumbnail={isThumbnail}
-        />
-      );
-
-    default: {
-      // Exhaustiveness check — if a new LayoutKey is ever added without a
-      // matching case above, this line fails to compile, catching the gap
-      // at build time instead of silently rendering nothing at runtime.
-      const _exhaustive: never = template;
-      return null;
-    }
-  }
+  return <Layout theme={template.theme} data={data} isThumbnail={isThumbnail} />;
 }

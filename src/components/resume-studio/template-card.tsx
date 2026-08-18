@@ -1,6 +1,8 @@
-import { Image, TouchableOpacity, View } from "react-native";
+import { Pressable, View, useWindowDimensions } from "react-native";
 import { AnyTemplate } from "../../../types/resume/template";
 import { AppText } from "../shared/app-text";
+import { Badge } from "../shared/badge";
+import { TemplatePreview } from "./template-preview";
 
 export const TemplateCard = function ({
   item,
@@ -9,45 +11,32 @@ export const TemplateCard = function ({
   item: AnyTemplate;
   onSelectTemplate: (val: string) => void;
 }) {
-  return (
-    <TouchableOpacity
-      onPress={() => onSelectTemplate(item.id)}
-      className="w-1/2 p-2"
-    >
-      <View className="rounded-xl border border-line bg-surface p-3">
-        {/* Thumbnail */}
-        {item.thumbnail ? (
-          <Image
-            source={{ uri: item.thumbnail }}
-            className="h-48 w-full rounded-lg"
-            resizeMode="cover"
-          />
-        ) : (
-          <View className="h-48 w-full items-center justify-center rounded-lg bg-surface-muted">
-            <AppText className="text-foreground-subtle">No preview</AppText>
-          </View>
-        )}
+  const { width: screenWidth } = useWindowDimensions();
 
-        {/* Info */}
-        <View className="mt-2">
-          <View className="flex-row items-center justify-between">
-            <AppText
-              type="subtitle"
-              className="font-bricolage-semibold text-foreground"
-            >
-              {item.name}
-            </AppText>
-            {item.isPremium && (
-              <View className="rounded-full bg-yellow-100 px-2 py-0.5">
-                <AppText className="text-xs text-yellow-700">★</AppText>
-              </View>
-            )}
-          </View>
-          <AppText className="text-xs capitalize text-foreground-muted">
-            {item.category}
-          </AppText>
-        </View>
+  // Two columns inside a 20px gutter with a 12px gap between cards.
+  const cardWidth = (screenWidth - 40 - 12) / 2;
+  const previewWidth = cardWidth - 2;
+
+  return (
+    <Pressable
+      onPress={() => onSelectTemplate(item.id)}
+      style={{ width: cardWidth }}
+      className="active:opacity-70"
+    >
+      <View className="overflow-hidden rounded-2xl border-hairline border-line">
+        <TemplatePreview template={item} width={previewWidth} />
       </View>
-    </TouchableOpacity>
+
+      <View className="mt-2 flex-row items-center justify-between gap-2">
+        <AppText type="label" numberOfLines={1} className="flex-1">
+          {item.name}
+        </AppText>
+        {item.isPremium && <Badge label="Pro" variant="secondary" />}
+      </View>
+
+      <AppText type="caption" numberOfLines={2} className="mt-0.5">
+        {item.description}
+      </AppText>
+    </Pressable>
   );
 };
