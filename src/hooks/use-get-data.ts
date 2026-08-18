@@ -43,11 +43,12 @@ export const useGetData = function <T>({
   const { isFetching, error, data, refetch } = useQuery({
     queryKey: [url],
     queryFn,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 mintues
+    // staleTime, gcTime, and retry come from the client defaults in
+    // src/utils/queryClient.ts. gcTime in particular must NOT be set here — a
+    // short value silently evicts the restored offline cache and every screen
+    // goes empty without signal.
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    retry: 5,
     enabled: shouldFetch,
   });
 

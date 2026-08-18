@@ -4,6 +4,7 @@ import { getBaseUrl } from "./client";
 import { tokenStorage } from "./token-storage";
 import { router } from "expo-router";
 import { queryClient } from "@/utils/queryClient";
+import { clearPersistedCache } from "./query-persister";
 import { APIResponse } from "../../types/response";
 
 const CONFIG = {
@@ -41,7 +42,12 @@ function onRefreshed(token: string | null) {
 
 const handleSessionExpired = async () => {
   await tokenStorage.clearTokens();
+
+  // queryClient.clear() only empties memory — the persisted copy on disk has to
+  // go too, or it rehydrates on next launch.
   queryClient.clear();
+  await clearPersistedCache();
+
   router.replace("/(auth)/sign-in");
 };
 
