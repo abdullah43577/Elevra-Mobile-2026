@@ -2,10 +2,17 @@ import { AppText } from "@/components/shared/app-text";
 import { Ionicons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { Pressable, ScrollView, View } from "react-native";
-import { BuilderStep } from "./builder-steps";
+
+// Structural rather than BuilderStep, so the career profile editor can drive
+// the same nav from PROFILE_SECTIONS without inventing builder steps.
+export interface StepNavItem {
+  id: string;
+  short: string;
+  icon: keyof typeof Ionicons.glyphMap;
+}
 
 interface Props {
-  steps: BuilderStep[];
+  steps: StepNavItem[];
   activeIndex: number;
   furthestIndex: number;
   accent: string;

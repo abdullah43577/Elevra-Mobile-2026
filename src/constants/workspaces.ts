@@ -7,6 +7,7 @@ import {
   StickyNote,
   Briefcase,
   ClipboardList,
+  BookUser,
   LucideIcon,
 } from "lucide-react-native";
 
@@ -30,6 +31,16 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     icon: FileText,
     comingSoonIcon: "document-text-outline",
     route: "resume-studio",
+    locked: false,
+  },
+  {
+    id: "career-profile",
+    color: CONTENT_COLORS.profile,
+    title: "Career Profile",
+    description: "Your history once — resumes prefill from it",
+    icon: BookUser,
+    comingSoonIcon: "person-outline",
+    route: "career-profile",
     locked: false,
   },
   {

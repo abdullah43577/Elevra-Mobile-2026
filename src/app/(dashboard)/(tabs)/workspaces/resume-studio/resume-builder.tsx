@@ -1,11 +1,15 @@
+import { PrefillCard } from "@/components/resume-studio/builder/prefill-card";
 import { BuilderFooter } from "@/components/resume-studio/builder/builder-footer";
 import { BuilderPreview } from "@/components/resume-studio/builder/builder-preview";
 import { BUILDER_STEPS } from "@/components/resume-studio/builder/builder-steps";
 import { BuilderStepContent } from "@/components/resume-studio/builder/builder-step-content";
 import { StepNav } from "@/components/resume-studio/builder/step-nav";
 import { AppText } from "@/components/shared/app-text";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { IconButton } from "@/components/shared/icon-button";
 import { ScreenHeader } from "@/components/shared/screen-header";
+import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profile";
+import { useSaveCareerProfile } from "@/hooks/career-profile/use-save-career-profile";
 import { useGetResumeById } from "@/hooks/resume/use-get-resume-by-id";
 import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
 import { useSaveResume } from "@/hooks/resume/use-save-resume";
@@ -17,6 +21,7 @@ import {
   ResumeBuilderFormValues,
   resumeBuilderSchema,
 } from "@/schemas/resume-builder/resume-builder";
+import { toResumeFormValues } from "@/utils/career-profile";
 import { showToast } from "@/utils/show-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -41,6 +46,9 @@ export default function ResumeBuilder() {
   const [activeStep, setActiveStep] = useState(0);
   const [furthestStep, setFurthestStep] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
+  const [isPrefillConfirmVisible, setIsPrefillConfirmVisible] = useState(false);
+  const [pendingResume, setPendingResume] =
+    useState<ResumeBuilderFormValues | null>(null);
 
   const { template, isFetchingTemplate } = useGetTemplateById({
     templateId: templateId || "",
@@ -50,6 +58,11 @@ export default function ResumeBuilder() {
   });
   const { saveResume, isSaving } = useSaveResume({ resumeId });
 
+  const { careerProfile, hasCareerProfile } = useGetCareerProfile();
+  const { saveCareerProfile, isSavingCareerProfile } = useSaveCareerProfile({
+    silent: true,
+  });
+
   const {
     control,
     handleSubmit,
@@ -57,7 +70,7 @@ export default function ResumeBuilder() {
     reset,
     setValue,
     trigger,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<ResumeBuilderFormValues>({
     resolver: zodResolver(resumeBuilderSchema),
     defaultValues: {
@@ -151,7 +164,29 @@ export default function ResumeBuilder() {
     goToStep(Math.min(activeStep + 1, BUILDER_STEPS.length - 1));
   };
 
-  const handleSave = async function (data: ResumeBuilderFormValues) {
+  const handlePrefill = function () {
+    if (!careerProfile) return;
+
+    reset(toResumeFormValues(careerProfile));
+    setFurthestStep(BUILDER_STEPS.length - 1);
+    setIsPrefillConfirmVisible(false);
+    showToast("success", "Prefilled from your career profile");
+  };
+
+  const handlePrefillPress = function () {
+    if (isDirty) {
+      setIsPrefillConfirmVisible(true);
+      return;
+    }
+
+    handlePrefill();
+  };
+
+  const handleSetUpProfile = function () {
+    router.push("/(dashboard)/(tabs)/workspaces/career-profile");
+  };
+
+  const persistResume = async function (data: ResumeBuilderFormValues) {
     const resolvedTemplateId = templateId ?? resume?.templateId;
 
     if (!resolvedTemplateId) {
@@ -182,6 +217,50 @@ export default function ResumeBuilder() {
       : "Resume created successfully";
 
     showToast("success", msg);
+  };
+
+  /*
+    Someone building their first resume has just typed out their whole history.
+    Offering to keep it as their career profile means the next one starts
+    filled in — and the offer has to come before the save, not after, because a
+    successful create redirects off this screen.
+  */
+  const handleSave = async function (data: ResumeBuilderFormValues) {
+    if (!isEditing && !hasCareerProfile) {
+      setPendingResume(data);
+      return;
+    }
+
+    await persistResume(data);
+  };
+
+  const handleSaveBoth = async function () {
+    if (!pendingResume) return;
+
+    const data = pendingResume;
+    setPendingResume(null);
+
+    await saveCareerProfile({
+      personalInfo: data.personalInfo,
+      experience: data.experience,
+      education: data.education,
+      skills: data.skills,
+      languages: data.languages,
+      certifications: data.certifications,
+      projects: data.projects,
+      references: data.references,
+    });
+
+    await persistResume(data);
+  };
+
+  const handleResumeOnly = async function () {
+    if (!pendingResume) return;
+
+    const data = pendingResume;
+    setPendingResume(null);
+
+    await persistResume(data);
   };
 
   // Jump to the first step that actually has an error, rather than leaving the
@@ -271,7 +350,16 @@ export default function ResumeBuilder() {
             </AppText>
 
             <BuilderStepContent
-              step={step}
+              stepId={step.id}
+              {...(!isEditing && {
+                prefill: (
+                  <PrefillCard
+                    hasProfile={hasCareerProfile}
+                    onPrefill={handlePrefillPress}
+                    onSetUpProfile={handleSetUpProfile}
+                  />
+                ),
+              })}
               control={control}
               errors={errors}
               setValue={setValue}
@@ -299,6 +387,27 @@ export default function ResumeBuilder() {
           />
         </>
       )}
+
+      <ConfirmDialog
+        visible={isPrefillConfirmVisible}
+        title="Replace what you have typed?"
+        message="Prefilling overwrites every section of this resume with your saved career profile."
+        confirmLabel="Prefill"
+        cancelLabel="Keep editing"
+        onConfirm={handlePrefill}
+        onCancel={() => setIsPrefillConfirmVisible(false)}
+      />
+
+      <ConfirmDialog
+        visible={!!pendingResume}
+        title="Save this as your career profile?"
+        message="Keep these details on file and every resume you build after this one starts already filled in."
+        confirmLabel="Save both"
+        cancelLabel="Just the resume"
+        isLoading={isSaving || isSavingCareerProfile}
+        onConfirm={handleSaveBoth}
+        onCancel={handleResumeOnly}
+      />
     </SafeAreaView>
   );
 }

@@ -7,6 +7,7 @@ import { Projects } from "@/components/resume-studio/resume-builder/projects";
 import { References } from "@/components/resume-studio/resume-builder/references";
 import { Skills } from "@/components/resume-studio/resume-builder/skills";
 import { ResumeBuilderFormValues } from "@/schemas/resume-builder/resume-builder";
+import { ReactNode } from "react";
 import {
   Control,
   FieldErrors,
@@ -19,7 +20,7 @@ type Arr<K extends "experience" | "education" | "skills" | "projects" | "certifi
   UseFieldArrayReturn<ResumeBuilderFormValues, K>;
 
 interface Props {
-  step: BuilderStep;
+  stepId: BuilderStep["id"];
   control: Control<ResumeBuilderFormValues>;
   errors: FieldErrors<ResumeBuilderFormValues>;
   setValue: UseFormSetValue<ResumeBuilderFormValues>;
@@ -30,15 +31,20 @@ interface Props {
   certifications: Arr<"certifications">;
   languages: Arr<"languages">;
   references: Arr<"references">;
+  /** Rendered above the first step. The career profile prefill lives here. */
+  prefill?: ReactNode;
 }
 
 /*
   Kept out of the screen so the screen stays an orchestrator rather than a
   400-line switch. Each field array is passed with its own concrete key — a
   generic Record<string, ...> erases the per-field typing and forces `any`.
+
+  Takes the step id rather than a whole BuilderStep so the career profile
+  editor can reuse it without inventing builder steps it has no use for.
 */
 export const BuilderStepContent = function ({
-  step,
+  stepId,
   control,
   errors,
   setValue,
@@ -49,10 +55,16 @@ export const BuilderStepContent = function ({
   certifications,
   languages,
   references,
+  prefill,
 }: Props) {
-  switch (step.id) {
+  switch (stepId) {
     case "personalInfo":
-      return <PersonalInfo control={control} errors={errors} />;
+      return (
+        <>
+          {prefill}
+          <PersonalInfo control={control} errors={errors} />
+        </>
+      );
 
     case "experience":
       return (

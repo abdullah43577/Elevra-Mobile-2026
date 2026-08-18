@@ -80,6 +80,15 @@ export const API_ENDPOINTS = {
       `/job-applications/${id}/recordings/${recordingId}`,
   },
 
+  careerProfile: {
+    // One row per user, so there is no id in the path. The save URL matching
+    // the fetch URL is deliberate: useSubmitData refetches the resolved URL
+    // key, which is exactly the key useGetData reads from.
+    detail: "/career-profile",
+    save: "/career-profile",
+    delete: "/career-profile",
+  },
+
   resume: {
     // Templates
     templatesList: "/resume/templates",

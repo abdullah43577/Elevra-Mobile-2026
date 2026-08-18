@@ -54,12 +54,14 @@ export const CONTENT_COLORS_BY_SCHEME = {
     recording: "#D6653D",
     resume: "#0F9B7A",
     application: "#2E6FD1",
+    profile: "#B23A6B",
   },
   dark: {
     note: "#8B7BF5",
     recording: "#E8896A",
     resume: "#2FC49E",
     application: "#6BA0F0",
+    profile: "#E27FA8",
   },
 } as const;
 

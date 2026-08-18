@@ -21,6 +21,13 @@ export default function WorkspacesLayout() {
         }}
       />
       <Stack.Screen
+        name="career-profile"
+        options={{
+          title: "Career Profile",
+          headerBackTitle: "Back",
+        }}
+      />
+      <Stack.Screen
         name="voice-notes"
         options={{
           title: "Voice Notes",
