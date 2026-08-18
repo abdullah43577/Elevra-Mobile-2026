@@ -7,12 +7,14 @@ import {
   type ResetPasswordFormValues,
 } from "@/schemas/auth/reset-password";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useForm } from "react-hook-form";
 import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function ResetPassword() {
+  const { email } = useLocalSearchParams<{ email?: string }>();
+
   const {
     control,
     handleSubmit,
@@ -22,7 +24,7 @@ export default function ResetPassword() {
     defaultValues: { otp: "", password: "", confirmPassword: "" },
   });
 
-  const { mutate, isPending } = useResetPassword();
+  const { mutate, isPending } = useResetPassword({ email: email ?? "" });
 
   const onSubmit = async (_data: ResetPasswordFormValues) => mutate(_data);
 

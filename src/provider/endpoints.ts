@@ -5,7 +5,7 @@ export const API_ENDPOINTS = {
     verifyEmail: "/auth/verify-email",
     resendVerificationOtp: "/auth/resend-verification-otp",
     forgotPassword: "/auth/forgot-password",
-    resetPassword: "",
+    resetPassword: "/auth/reset-password",
     getProfile: "/auth/profile",
     refreshToken: "/auth/token",
     updateProfile: "/auth/profile",
