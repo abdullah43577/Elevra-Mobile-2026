@@ -2,13 +2,14 @@ export type AuthProvider = "PASSWORD" | "GOOGLE" | "APPLE";
 export type Gender = "MALE" | "FEMALE" | "OTHER";
 export type AccountStatus = "ACTIVE" | "DEACTIVATED";
 export type Theme = "SYSTEM" | "LIGHT" | "DARK";
+export type SubscriptionTier = "FREE" | "PRO";
 
 export interface UserSettings {
   id: string;
   userId: string;
   theme: Theme;
   notifications: boolean;
-  subscriptionTier: string;
+  subscriptionTier: SubscriptionTier;
 }
 
 export interface Profession {

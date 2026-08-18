@@ -1,6 +1,7 @@
+import { useEntitlements } from "@/hooks/use-entitlements";
+import { router } from "expo-router";
 import { useGetProfile } from "@/hooks/use-get-profile";
 import { ThemePreference } from "@/constants/theme";
-import { toTitleCase } from "@/provider/utils";
 import { View } from "react-native";
 import { AppText } from "../shared/app-text";
 import { Badge } from "../shared/badge";
@@ -22,6 +23,7 @@ export const AccountPreferencesCard = function ({
   isUpdatingSettings,
   onNotificationsToggle,
 }: Props) {
+  const { isPro } = useEntitlements();
   const { profile } = useGetProfile();
 
   return (
@@ -56,12 +58,8 @@ export const AccountPreferencesCard = function ({
       <SettingsRow
         label="Subscription"
         withDivider
-        right={
-          <Badge
-            label={toTitleCase(profile?.settings?.subscriptionTier, "Free")}
-            variant="secondary"
-          />
-        }
+        onPress={() => router.push("/(dashboard)/paywall")}
+        right={<Badge label={isPro ? "Pro" : "Free"} variant="secondary" />}
       />
     </SettingsCard>
   );

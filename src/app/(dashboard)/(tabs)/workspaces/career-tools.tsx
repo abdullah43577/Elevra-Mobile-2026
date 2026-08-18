@@ -1,5 +1,11 @@
-import { Text, View } from "react-native";
+import { ComingSoon } from "@/components/shared/coming-soon";
 
 export default function CareerTools() {
-  return <Text>Career tools</Text>;
+  return (
+    <ComingSoon
+      icon="briefcase-outline"
+      title="Career Tools"
+      description="Tailored career advice and profile optimisation. Landing as part of Elevra Pro."
+    />
+  );
 }
