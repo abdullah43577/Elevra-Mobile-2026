@@ -1,32 +1,30 @@
-import { useThemeColors } from "@/hooks/use-theme-colors";
 import { ResumeItem } from "@/components/resume-studio/resume-item";
-import { AppText } from "@/components/shared/app-text";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { EmptyState } from "@/components/shared/empty-state";
+import { useDeleteResume } from "@/hooks/resume/use-delete-resume";
+import { useExportResume } from "@/hooks/resume/use-export-resume";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { showToast } from "@/utils/show-toast";
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, FlatList, RefreshControl, View } from "react-native";
+import { Resume } from "../../../../../../types/resume/resume";
 
 export default function Resumes() {
-  const { foregroundSubtle } = useThemeColors();
-
   const router = useRouter();
-  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const { contentColor } = useThemeColors();
+  const accent = contentColor("resume");
+
+  const [deleteTarget, setDeleteTarget] = useState<Resume | null>(null);
+  const [exportingId, setExportingId] = useState<string | null>(null);
 
   const { resumes, isFetchingResumes, refetchResumes } = useGetResumes();
+  const { exportResume } = useExportResume();
 
-  const handleCreateResume = function () {
-    router.push("/(dashboard)/(tabs)/workspaces/resume-studio");
-  };
+  const { deleteResume, isDeleting } = useDeleteResume({
+    resumeId: deleteTarget?.id ?? "",
+  });
 
   const handleEditResume = function (resumeId: string) {
     router.push({
@@ -35,109 +33,94 @@ export default function Resumes() {
     });
   };
 
-  const handleExportResume = function (resumeId: string) {
-    // TODO: Implement export
-    showToast("info", "Export feature coming soon");
-  };
+  const handleExportResume = async function (resume: Resume) {
+    if (!resume.template?.theme) {
+      showToast("error", "This resume is missing its template");
+      return;
+    }
 
-  const handleDeleteResume = function (resumeId: string) {
-    setDeleteTargetId(resumeId);
-  };
+    setExportingId(resume.id);
 
-  const confirmDelete = function () {
-    if (!deleteTargetId) return;
-    refetchResumes();
-    setDeleteTargetId(null);
-  };
-
-  const formatDate = function (dateString: string) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+    await exportResume({
+      template: resume.template,
+      title: resume.title,
+      data: {
+        personalInfo: resume.personalInfo,
+        experience: resume.experience,
+        education: resume.education,
+        skills: resume.skills,
+        languages: resume.languages,
+        certifications: resume.certifications,
+        projects: resume.projects,
+        references: resume.references,
+      },
     });
+
+    setExportingId(null);
+    refetchResumes();
+  };
+
+  const handleConfirmDelete = function () {
+    deleteResume();
+    setDeleteTarget(null);
   };
 
   if (isFetchingResumes && resumes.length === 0) {
     return (
-      <View className="flex-1 items-center justify-center bg-surface">
-        <ActivityIndicator size="large" color="#3B82F6" />
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator color={accent} />
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-surface">
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-4 py-4">
-        <AppText type="title" className="font-bricolage-bold text-foreground">
-          My Resumes
-        </AppText>
-        <TouchableOpacity
-          onPress={handleCreateResume}
-          className="rounded-full bg-accent p-3"
-        >
-          <Ionicons name="add" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Resumes List */}
+    <View className="flex-1">
       <FlatList
         data={resumes}
         keyExtractor={(item) => item.id}
         refreshControl={
           <RefreshControl
-            refreshing={isFetchingResumes}
+            refreshing={isFetchingResumes && resumes.length > 0}
             onRefresh={refetchResumes}
-            tintColor="#3B82F6"
+            tintColor={accent}
           />
         }
         renderItem={({ item }) => (
           <ResumeItem
             resume={item}
+            isExporting={exportingId === item.id}
             onEdit={handleEditResume}
             onExport={handleExportResume}
-            onDelete={handleDeleteResume}
-            formatDate={formatDate}
+            onDelete={() => setDeleteTarget(item)}
           />
         )}
-        ListEmptyComponent={() => (
-          <View className="flex-1 items-center justify-center py-16">
-            <Ionicons name="document-text-outline" size={64} color={foregroundSubtle} />
-            <AppText className="mt-4 font-bricolage-semibold text-xl text-foreground">
-              No resumes yet
-            </AppText>
-            <AppText className="mt-1 text-sm text-foreground-subtle">
-              Create your first resume to get started
-            </AppText>
-            <TouchableOpacity
-              onPress={handleCreateResume}
-              className="mt-6 rounded-lg bg-accent px-6 py-3"
-            >
-              <AppText className="font-bricolage-semibold text-white">
-                Create Resume
-              </AppText>
-            </TouchableOpacity>
-          </View>
-        )}
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingHorizontal: 20,
+          paddingBottom: 110,
+          gap: 12,
           flexGrow: 1,
         }}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <EmptyState
+            icon="document-outline"
+            accentColor={accent}
+            title="No resumes yet"
+            subtitle="Pick a template to build your first resume"
+          />
+        }
       />
 
-      {/* Delete Confirmation Dialog */}
       <ConfirmDialog
-        visible={!!deleteTargetId}
-        title="Delete Resume"
-        message="Are you sure you want to delete this resume? This action cannot be undone."
+        visible={!!deleteTarget}
+        title="Delete resume"
+        message={`Delete "${deleteTarget?.title}"? This cannot be undone.`}
         confirmLabel="Delete"
-        cancelLabel="Cancel"
         variant="delete"
-        onConfirm={confirmDelete}
-        onCancel={() => setDeleteTargetId(null)}
+        isLoading={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
       />
-    </SafeAreaView>
+    </View>
   );
 }

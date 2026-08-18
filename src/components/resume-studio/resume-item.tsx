@@ -1,90 +1,97 @@
-import { useThemeColors } from "@/hooks/use-theme-colors";
 import { AppText } from "@/components/shared/app-text";
-import { useDeleteResume } from "@/hooks/resume/use-delete-resume";
+import { useThemeColors } from "@/hooks/use-theme-colors";
+import { formatRelativeDate } from "@/constants/dashboard";
 import { Ionicons } from "@expo/vector-icons";
-import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Pressable, View } from "react-native";
 import { Resume } from "../../../types/resume/resume";
 
 interface ResumeItemProps {
   resume: Resume;
+  isExporting: boolean;
   onEdit: (id: string) => void;
-  onExport: (id: string) => void;
+  onExport: (resume: Resume) => void;
   onDelete: (id: string) => void;
-  formatDate: (date: string) => string;
 }
+
+const Action = function ({
+  icon,
+  label,
+  color,
+  busy,
+  onPress,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  color: string;
+  busy?: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={busy}
+      hitSlop={6}
+      className="flex-row items-center gap-1.5 rounded-full px-2 py-1.5 active:bg-surface-muted"
+    >
+      {busy ? (
+        <ActivityIndicator size="small" color={color} />
+      ) : (
+        <Ionicons name={icon} size={15} color={color} />
+      )}
+      <AppText type="caption" style={{ color }}>
+        {label}
+      </AppText>
+    </Pressable>
+  );
+};
 
 export function ResumeItem({
   resume,
+  isExporting,
   onEdit,
   onExport,
   onDelete,
-  formatDate,
 }: ResumeItemProps) {
-  const { foregroundMuted } = useThemeColors();
-
-  const { deleteResume, isDeleting } = useDeleteResume({
-    resumeId: resume.id,
-  });
-
-  const handleDelete = function () {
-    deleteResume();
-    onDelete(resume.id);
-  };
+  const { foregroundMuted, danger, contentColor } = useThemeColors();
+  const accent = contentColor("resume");
 
   return (
-    <View className="mx-4 mb-4 rounded-xl border border-line bg-surface p-4">
-      {/* Title */}
-      <AppText
-        type="subtitle"
-        className="font-bricolage-semibold text-foreground"
-      >
+    <View className="rounded-2xl border-hairline border-line bg-surface p-4">
+      <AppText type="label" numberOfLines={1} className="text-[15px]">
         {resume.title}
       </AppText>
 
-      {/* Template & Date */}
-      <View className="mt-1 flex-row items-center gap-3">
-        <View className="rounded-full bg-surface-muted px-2 py-0.5">
-          <AppText className="text-xs text-foreground-muted">
+      <View className="mt-1.5 flex-row items-center gap-2">
+        <View
+          className="rounded-full px-2 py-0.5"
+          style={{ backgroundColor: `${accent}1F` }}
+        >
+          <AppText type="caption" style={{ color: accent }}>
             {resume.template?.name || "No template"}
           </AppText>
         </View>
-        <AppText className="text-xs text-foreground-subtle">
-          Updated {formatDate(resume.updatedAt)}
+        <AppText type="caption">
+          Edited {formatRelativeDate(resume.updatedAt)}
         </AppText>
       </View>
 
-      {/* Actions */}
-      <View className="mt-3 flex-row items-center gap-4">
-        <TouchableOpacity
-          onPress={() => onEdit(resume.id)}
-          className="flex-row items-center gap-1"
-        >
-          <Ionicons name="create-outline" size={18} color="#3B82F6" />
-          <AppText className="text-sm text-accent">Edit</AppText>
-        </TouchableOpacity>
+      {!!resume.lastExportedAt && (
+        <AppText type="caption" className="mt-1">
+          Last exported {formatRelativeDate(resume.lastExportedAt)}
+        </AppText>
+      )}
 
-        <TouchableOpacity
-          onPress={() => onExport(resume.id)}
-          className="flex-row items-center gap-1"
-        >
-          <Ionicons name="download-outline" size={18} color={foregroundMuted} />
-          <AppText className="text-sm text-foreground-muted">Export</AppText>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={handleDelete}
-          className="flex-row items-center gap-1"
-          disabled={isDeleting}
-        >
-          {isDeleting ? (
-            <ActivityIndicator size="small" color="#EF4444" />
-          ) : (
-            <>
-              <Ionicons name="trash-outline" size={18} color="#EF4444" />
-              <AppText className="text-sm text-danger">Delete</AppText>
-            </>
-          )}
-        </TouchableOpacity>
+      <View className="mt-3 flex-row items-center gap-1 border-t-hairline border-line pt-2">
+        <Action icon="create-outline" label="Edit" color={foregroundMuted} onPress={() => onEdit(resume.id)} />
+        <Action
+          icon="download-outline"
+          label="Export PDF"
+          color={accent}
+          busy={isExporting}
+          onPress={() => onExport(resume)}
+        />
+        <View className="flex-1" />
+        <Action icon="trash-outline" label="Delete" color={danger} onPress={() => onDelete(resume.id)} />
       </View>
     </View>
   );
