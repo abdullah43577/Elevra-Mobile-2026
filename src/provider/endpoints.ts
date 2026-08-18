@@ -53,6 +53,16 @@ export const API_ENDPOINTS = {
     transcribe: (id: string) => `/voice-notes/${id}/transcribe`,
   },
 
+  notifications: {
+    list: "/notifications",
+    unreadCount: "/notifications/unread-count",
+    markRead: (id: string) => `/notifications/${id}/read`,
+    markAllRead: "/notifications/read-all",
+    delete: (id: string) => `/notifications/${id}`,
+    clearAll: "/notifications",
+    registerDevice: "/notifications/device",
+  },
+
   jobApplications: {
     list: "/job-applications",
     stats: "/job-applications/stats",

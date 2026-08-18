@@ -32,6 +32,8 @@ export interface User {
   lastLogin: Date;
   account_status: AccountStatus;
   has_onboarded: boolean;
+  deviceToken: string | null;
+  deviceType: string | null;
   isGuest: boolean;
   createdAt: Date;
   updatedAt: Date;

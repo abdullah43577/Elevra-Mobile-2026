@@ -18,6 +18,7 @@ import { ErrorBoundary } from "./error-boundary";
 import useNotifications from "@/hooks/use-notification";
 import { StatusBar } from "expo-status-bar";
 import { useSyncTheme, useTheme } from "@/hooks/use-theme";
+import { useSyncDeviceToken } from "@/hooks/notifications/use-sync-device-token";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
@@ -35,9 +36,8 @@ export const AppNavigator = function () {
   const isAuthenticated = !!profile && hasToken === true;
 
   useSyncTheme();
+  useSyncDeviceToken(expoPushToken);
   const { scheme, colors } = useTheme();
-
-  console.log(expoPushToken, "expo push token");
 
   const {
     hasOnboarded,

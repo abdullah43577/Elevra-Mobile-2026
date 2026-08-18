@@ -1,207 +1,158 @@
-import { useThemeColors } from "@/hooks/use-theme-colors";
-import { useState } from "react";
-import { View, FlatList, TouchableOpacity, RefreshControl } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
+import { NotificationList } from "@/components/notifications/notification-list";
 import { AppText } from "@/components/shared/app-text";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { EmptyState } from "@/components/shared/empty-state";
+import { SegmentedControl } from "@/components/shared/segmented-control";
+import { NOTIFICATION_ROUTES } from "@/constants/notifications";
+import { useGetNotifications } from "@/hooks/notifications/use-get-notifications";
+import { useGetUnreadCount } from "@/hooks/notifications/use-get-unread-count";
+import { useNotificationActions } from "@/hooks/notifications/use-notification-actions";
+import { useThemeColors } from "@/hooks/use-theme-colors";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { AppNotification, NotificationEntity } from "../../../../types/notification";
 
-// Temporary static data - will be replaced with API data later
-const NOTIFICATIONS_DATA = [
-  {
-    id: "1",
-    type: "summary",
-    title: "AI Summary Ready",
-    message: "Your note 'Q4 Project Kickoff' has been summarized",
-    time: "2 min ago",
-    read: false,
-    icon: "sparkles",
-    iconColor: "#8B5CF6",
-  },
-  {
-    id: "2",
-    type: "resume",
-    title: "Resume Exported",
-    message: "Your resume 'Software Engineer Resume' was exported as PDF",
-    time: "1 hour ago",
-    read: false,
-    icon: "document-outline",
-    iconColor: "#10B981",
-  },
-  {
-    id: "3",
-    type: "recording",
-    title: "Recording Processed",
-    message: "Voice note 'Meeting Notes' has been transcribed",
-    time: "3 hours ago",
-    read: true,
-    icon: "mic-outline",
-    iconColor: "#3B82F6",
-  },
-  {
-    id: "4",
-    type: "system",
-    title: "Welcome to Elevra!",
-    message:
-      "Start by creating your first note, recording a voice note, or building a resume",
-    time: "2 days ago",
-    read: true,
-    icon: "rocket-outline",
-    iconColor: "#F59E0B",
-  },
-  {
-    id: "5",
-    type: "resume",
-    title: "Resume Created",
-    message: "Your resume 'Marketing Director Resume' was created successfully",
-    time: "3 days ago",
-    read: true,
-    icon: "checkmark-circle-outline",
-    iconColor: "#10B981",
-  },
-  {
-    id: "6",
-    type: "summary",
-    title: "AI Summary Ready",
-    message: "Your note 'Team Meeting Notes' has been summarized",
-    time: "5 days ago",
-    read: true,
-    icon: "sparkles",
-    iconColor: "#8B5CF6",
-  },
-];
+type Filter = "all" | "unread";
 
 export default function Notifications() {
-  const { foregroundSubtle } = useThemeColors();
+  const router = useRouter();
+  const { contentColor } = useThemeColors();
+  const accent = contentColor("note");
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
+  const [filter, setFilter] = useState<Filter>("all");
+  const [clearDialogVisible, setClearDialogVisible] = useState(false);
+
+  const { notifications, isFetchingNotifications, refetchNotifications } =
+    useGetNotifications(filter === "unread" ? { isRead: false } : undefined);
+
+  const { unreadCount, refetchUnreadCount } = useGetUnreadCount();
+
+  const {
+    markRead,
+    markAllRead,
+    deleteNotification,
+    clearAll,
+    isMarkingAllRead,
+  } = useNotificationActions();
+
+  const handlePressNotification = function (notification: AppNotification) {
+    if (!notification.isRead) markRead({ id: notification.id });
+
+    const route =
+      notification.entityType &&
+      NOTIFICATION_ROUTES[notification.entityType as NotificationEntity];
+
+    if (route && notification.entityId) {
+      router.push({
+        pathname: route as any,
+        params: { id: notification.entityId },
+      });
+    }
+  };
 
   const handleRefresh = function () {
-    setRefreshing(true);
-    // Simulate API call
-    setTimeout(() => setRefreshing(false), 1000);
+    refetchNotifications();
+    refetchUnreadCount();
   };
 
-  const handleMarkAsRead = function (id: string) {
-    setNotifications((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, read: true } : item)),
-    );
+  const handleClearAll = function () {
+    setClearDialogVisible(false);
+    clearAll();
   };
 
-  const handleMarkAllAsRead = function () {
-    setNotifications((prev) => prev.map((item) => ({ ...item, read: true })));
-  };
-
-  const unreadCount = notifications.filter((n) => !n.read).length;
-
-  const renderNotification = function ({
-    item,
-  }: {
-    item: (typeof NOTIFICATIONS_DATA)[0];
-  }) {
-    return (
-      <TouchableOpacity
-        onPress={() => handleMarkAsRead(item.id)}
-        className={`mx-4 mb-2 rounded-xl border border-line p-4 ${
-          item.read ? "bg-surface" : "bg-accent-muted"
-        }`}
-      >
-        <View className="flex-row items-start gap-3">
-          {/* Icon */}
-          <View
-            className="mt-0.5 h-10 w-10 items-center justify-center rounded-full"
-            style={{ backgroundColor: `${item.iconColor}20` }}
-          >
-            <Ionicons
-              name={item.icon as any}
-              size={20}
-              color={item.iconColor}
-            />
-          </View>
-
-          <View className="flex-1">
-            <View className="flex-row items-center justify-between">
-              <AppText
-                type="default"
-                className={`font-bricolage-medium ${
-                  item.read ? "text-foreground" : "text-foreground"
-                }`}
-              >
-                {item.title}
-              </AppText>
-              {!item.read && (
-                <View className="h-2 w-2 rounded-full bg-accent" />
-              )}
-            </View>
-
-            <AppText type="subtitle" className="mt-0.5 text-foreground-muted">
-              {item.message}
-            </AppText>
-
-            <AppText type="subtitle" className="mt-1 text-xs text-foreground-subtle">
-              {item.time}
-            </AppText>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  const isFirstLoad = isFetchingNotifications && notifications.length === 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-surface">
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-4 py-4">
-        <AppText type="title" className="text-foreground">
-          Notifications
-        </AppText>
-        <View className="flex-row items-center gap-3">
-          {unreadCount > 0 && (
-            <TouchableOpacity onPress={handleMarkAllAsRead}>
-              <AppText type="link" className="text-accent">
-                Mark all as read
-              </AppText>
-            </TouchableOpacity>
-          )}
-          <View className="rounded-full bg-accent px-2.5 py-0.5">
-            <AppText type="default" className="text-xs text-white">
-              {unreadCount}
-            </AppText>
-          </View>
+    <SafeAreaView className="flex-1 bg-canvas">
+      <View className="flex-row items-start justify-between px-5 pb-4 pt-2">
+        <View className="flex-1 pr-3">
+          <AppText type="display">Notifications</AppText>
+          <AppText type="subtitle" className="mt-1">
+            {unreadCount > 0 ? `${unreadCount} unread` : "You are all caught up"}
+          </AppText>
         </View>
+
+        {notifications.length > 0 && (
+          <Pressable
+            onPress={() => setClearDialogVisible(true)}
+            hitSlop={8}
+            className="active:opacity-70"
+          >
+            <AppText type="link">Clear all</AppText>
+          </Pressable>
+        )}
       </View>
 
-      {/* Notifications List */}
-      <FlatList
-        data={notifications}
-        keyExtractor={(item) => item.id}
+      <View className="px-5">
+        <SegmentedControl
+          options={[
+            { label: "All", value: "all" },
+            { label: "Unread", value: "unread" },
+          ]}
+          value={filter}
+          onChange={(value) => setFilter(value as Filter)}
+        />
+      </View>
+
+      {unreadCount > 0 && (
+        <View className="mt-3 flex-row justify-end px-5">
+          <Pressable
+            onPress={() => markAllRead()}
+            disabled={isMarkingAllRead}
+            hitSlop={8}
+            className="active:opacity-70"
+          >
+            <AppText type="link">Mark all as read</AppText>
+          </Pressable>
+        </View>
+      )}
+
+      <ScrollView
+        className="mt-4 flex-1"
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 110, flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={isFetchingNotifications && notifications.length > 0}
             onRefresh={handleRefresh}
-            tintColor="#3B82F6"
+            tintColor={accent}
           />
         }
-        renderItem={renderNotification}
-        contentContainerStyle={{
-          paddingBottom: 100,
-          paddingTop: 4,
-          flexGrow: 1,
-        }}
-        ListEmptyComponent={() => (
+      >
+        {isFirstLoad ? (
           <View className="flex-1 items-center justify-center py-16">
-            <Ionicons
-              name="notifications-off-outline"
-              size={64}
-              color={foregroundSubtle}
-            />
-            <AppText type="title" className="mt-4 text-foreground">
-              No notifications
-            </AppText>
-            <AppText type="subtitle" className="mt-1 text-foreground-subtle">
-              You're all caught up! Check back later for updates.
-            </AppText>
+            <ActivityIndicator color={accent} />
           </View>
+        ) : notifications.length === 0 ? (
+          <EmptyState
+            icon="notifications-off-outline"
+            accentColor={accent}
+            title={filter === "unread" ? "Nothing unread" : "No notifications yet"}
+            subtitle={
+              filter === "unread"
+                ? "Every notification has been read"
+                : "Updates on your applications, notes, and recordings will show up here"
+            }
+          />
+        ) : (
+          <NotificationList
+            notifications={notifications}
+            onPressNotification={handlePressNotification}
+            onDeleteNotification={(id) => deleteNotification({ id })}
+          />
         )}
+      </ScrollView>
+
+      <ConfirmDialog
+        visible={clearDialogVisible}
+        title="Clear notifications"
+        message="This removes every notification from your list. It cannot be undone."
+        confirmLabel="Clear all"
+        variant="delete"
+        onConfirm={handleClearAll}
+        onCancel={() => setClearDialogVisible(false)}
       />
     </SafeAreaView>
   );

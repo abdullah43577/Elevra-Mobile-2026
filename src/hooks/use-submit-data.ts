@@ -18,6 +18,10 @@ interface UseSubmitDataOptions<TData, TResponse> {
   onSuccess?: (data: TResponse) => void;
   redirectTo?: string;
   skipAuth?: boolean;
+  // Suppresses the success toast. For background mutations the user did not
+  // explicitly ask for — marking a notification read on tap, for instance —
+  // where a toast would be noise.
+  silent?: boolean;
 }
 
 export function useSubmitData<TData = unknown, TResponse = unknown>(
@@ -34,6 +38,7 @@ export function useSubmitData<TData = unknown, TResponse = unknown>(
     onSuccess,
     redirectTo,
     skipAuth,
+    silent = false,
   } = options;
 
   const handleErrors = useHandleErrors();
@@ -61,7 +66,7 @@ export function useSubmitData<TData = unknown, TResponse = unknown>(
     },
 
     onSuccess: (data) => {
-      showToast("success", onSuccessMessage);
+      if (!silent) showToast("success", onSuccessMessage);
 
       queryClient.refetchQueries({ queryKey: [lastResolvedUrl.current] });
 

@@ -1,3 +1,4 @@
+import { useGetUnreadCount } from "@/hooks/notifications/use-get-unread-count";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -45,6 +46,7 @@ const makeTabIcon = function (key: keyof typeof TAB_ICONS) {
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const { accent, foregroundSubtle, surface, line } = useThemeColors();
+  const { unreadCount } = useGetUnreadCount();
 
   return (
     <Tabs
@@ -89,6 +91,14 @@ export default function TabsLayout() {
         options={{
           title: "Alerts",
           tabBarIcon: makeTabIcon("notifications"),
+          ...(unreadCount > 0 && {
+            tabBarBadge: unreadCount > 99 ? "99+" : unreadCount,
+          }),
+          tabBarBadgeStyle: {
+            backgroundColor: accent,
+            color: "#FFFFFF",
+            fontSize: 10,
+          },
         }}
       />
       <Tabs.Screen
