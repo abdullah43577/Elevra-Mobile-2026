@@ -2,6 +2,7 @@ import { API_ENDPOINTS } from "@/provider/endpoints";
 import {
   CoverLetter,
   SaveCoverLetterRequest,
+  UpdateCoverLetterRequest,
 } from "../../../types/cover-letter";
 import { APIResponse } from "../../../types/response";
 import { useSubmitData } from "../use-submit-data";
@@ -12,7 +13,7 @@ export const useSaveCoverLetter = function ({
   const isUpdate = !!coverLetterId;
 
   const { mutateAsync, isPending } = useSubmitData<
-    SaveCoverLetterRequest,
+    SaveCoverLetterRequest | UpdateCoverLetterRequest,
     APIResponse<CoverLetter>
   >({
     url: isUpdate

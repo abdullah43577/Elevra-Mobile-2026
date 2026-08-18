@@ -1,4 +1,5 @@
 import { ApplicationOverview } from "@/components/job-tracker/application-overview";
+import { JobDescriptionSection } from "@/components/job-tracker/job-description-section";
 import { LinkedItemsSection } from "@/components/job-tracker/linked-items-section";
 import { StatusPill } from "@/components/job-tracker/status-pill";
 import { AppText } from "@/components/shared/app-text";
@@ -165,6 +166,10 @@ export default function ApplicationDetail() {
                 </AppText>
               </View>
             </View>
+          )}
+
+          {application.jobDescription && (
+            <JobDescriptionSection jobDescription={application.jobDescription} />
           )}
 
           <LinkedItemsSection

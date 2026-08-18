@@ -2,6 +2,7 @@ import { ResumeItem } from "@/components/resume-studio/resume-item";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { useDeleteResume } from "@/hooks/resume/use-delete-resume";
+import { useDuplicateResume } from "@/hooks/resume/use-duplicate-resume";
 import { useExportResume } from "@/hooks/resume/use-export-resume";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
 import { useProAction } from "@/components/shared/pro-gate";
@@ -20,6 +21,7 @@ export default function Resumes() {
 
   const [deleteTarget, setDeleteTarget] = useState<Resume | null>(null);
   const [exportingId, setExportingId] = useState<string | null>(null);
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
 
   const { resumes, isFetchingResumes, refetchResumes } = useGetResumes();
   const { exportResume } = useExportResume();
@@ -28,6 +30,29 @@ export default function Resumes() {
   const { deleteResume, isDeleting } = useDeleteResume({
     resumeId: deleteTarget?.id ?? "",
   });
+
+  /*
+    Duplicating opens the copy in the builder rather than dropping the user back
+    on the list. Nobody duplicates a resume to admire it — they do it to tailor
+    it for one more role, so the next step is always editing.
+  */
+  const { duplicateResume } = useDuplicateResume({
+    onSuccess: (response) => {
+      setDuplicatingId(null);
+      router.push({
+        pathname: "/(dashboard)/(tabs)/workspaces/resume-studio/resume-builder",
+        params: { resumeId: response.data.id },
+      });
+    },
+  });
+
+  const handleDuplicateResume = function (resume: Resume) {
+    setDuplicatingId(resume.id);
+    duplicateResume(
+      { resumeId: resume.id },
+      { onError: () => setDuplicatingId(null) },
+    );
+  };
 
   const handleEditResume = function (resumeId: string) {
     router.push({
@@ -108,7 +133,9 @@ export default function Resumes() {
           <ResumeItem
             resume={item}
             isExporting={exportingId === item.id}
+            isDuplicating={duplicatingId === item.id}
             onEdit={handleEditResume}
+            onDuplicate={handleDuplicateResume}
             onExport={handleExportResume}
             onDelete={() => setDeleteTarget(item)}
           />

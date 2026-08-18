@@ -3,6 +3,8 @@ import { FolderPicker } from "@/components/smart-notes/note-editor/folder-picker
 import { NoteEditorHeader } from "@/components/smart-notes/note-editor/note-editor-header";
 import { TagManager } from "@/components/smart-notes/note-editor/tag-manager";
 import { RichTextEditor } from "@/components/smart-notes/rich-text-editor";
+import { useProAction } from "@/components/shared/pro-gate";
+import { PRO_FEATURES } from "@/constants/entitlements";
 import { useGenerateSummary } from "@/hooks/smart-notes/use-generate-summary";
 import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
 import { useGetNoteById } from "@/hooks/smart-notes/use-get-note-by-id";
@@ -80,11 +82,28 @@ export default function NoteEditor() {
     });
   };
 
+  const { allowed: canSummarize, copy: summaryCopy } = useProAction(
+    PRO_FEATURES.AI_NOTE_SUMMARY,
+  );
+
   const handleGenerateSummary = function () {
     if (!noteId) return showToast("error", "Please save the note first");
 
     if (!content || content === "<p></p>")
       return showToast("error", "Add some content to summarize first");
+
+    /*
+      The server refuses this with a 402 either way — it is the actual boundary,
+      and the SSE stream would surface the refusal as a bare error toast. Asking
+      first turns that into the paywall, which is the same trade resume export
+      makes: someone who has written a note and reached for a summary is at the
+      point of highest intent, so refusal is the wrong last word.
+    */
+    if (!canSummarize) {
+      showToast("warning", summaryCopy.blurb);
+      router.push("/(dashboard)/paywall");
+      return;
+    }
 
     setSummaryComplete(false);
     resetSummary();

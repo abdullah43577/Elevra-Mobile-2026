@@ -76,7 +76,6 @@ export interface MinimalCompactTheme extends BaseTheme {
 // Executive Formal Theme
 export interface ExecutiveFormalTheme extends BaseTheme {
   goldAccent?: string;
-  showAwards: boolean;
   useSerifFont: boolean;
 }
 

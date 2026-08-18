@@ -40,6 +40,7 @@ export const jobApplicationSchema = z
       "WITHDRAWN",
     ]),
     notes: z.string().optional(),
+    jobDescription: z.string().optional(),
     resumeId: z.string().nullable().optional(),
     coverLetterId: z.string().nullable().optional(),
   })

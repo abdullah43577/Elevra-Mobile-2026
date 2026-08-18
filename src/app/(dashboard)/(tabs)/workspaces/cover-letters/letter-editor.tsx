@@ -140,10 +140,25 @@ export default function LetterEditor() {
       role: data.role,
       body: data.body,
       personalInfo: data.personalInfo,
-      ...(data.recipientName && { recipientName: data.recipientName }),
-      ...(data.recipientTitle && { recipientTitle: data.recipientTitle }),
-      ...(data.companyAddress && { companyAddress: data.companyAddress }),
-      ...(data.closing && { closing: data.closing }),
+      /*
+        On update an emptied field sends an explicit null. Omitting it is how
+        every other field says "unchanged", so clearing a recipient name saved
+        nothing and the old name came back on the next fetch — the same trap the
+        application form had. Create cannot send null; the server rejects it.
+      */
+      ...(isEditing
+        ? {
+            recipientName: data.recipientName?.trim() || null,
+            recipientTitle: data.recipientTitle?.trim() || null,
+            companyAddress: data.companyAddress?.trim() || null,
+            closing: data.closing?.trim() || null,
+          }
+        : {
+            ...(data.recipientName && { recipientName: data.recipientName }),
+            ...(data.recipientTitle && { recipientTitle: data.recipientTitle }),
+            ...(data.companyAddress && { companyAddress: data.companyAddress }),
+            ...(data.closing && { closing: data.closing }),
+          }),
     });
   };
 

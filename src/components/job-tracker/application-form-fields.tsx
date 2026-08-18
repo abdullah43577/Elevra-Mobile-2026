@@ -238,6 +238,14 @@ export const ApplicationFormFields = function ({
             placeholder="Referred by Ada. Team is 12 people, mostly remote."
             errors={errors}
           />
+
+          <FormTextArea<JobApplicationFormValues>
+            control={control}
+            name="jobDescription"
+            label="Job description"
+            placeholder="Paste the posting here. Listings get taken down, and this is what you will want in front of you when the interview comes round."
+            errors={errors}
+          />
         </View>
       </View>
     </View>

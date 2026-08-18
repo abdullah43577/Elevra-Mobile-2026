@@ -8,7 +8,9 @@ import { Resume } from "../../../types/resume/resume";
 interface ResumeItemProps {
   resume: Resume;
   isExporting: boolean;
+  isDuplicating: boolean;
   onEdit: (id: string) => void;
+  onDuplicate: (resume: Resume) => void;
   onExport: (resume: Resume) => void;
   onDelete: (id: string) => void;
 }
@@ -48,7 +50,9 @@ const Action = function ({
 export function ResumeItem({
   resume,
   isExporting,
+  isDuplicating,
   onEdit,
+  onDuplicate,
   onExport,
   onDelete,
 }: ResumeItemProps) {
@@ -84,8 +88,17 @@ export function ResumeItem({
       <View className="mt-3 flex-row items-center gap-1 border-t-hairline border-line pt-2">
         <Action icon="create-outline" label="Edit" color={foregroundMuted} onPress={() => onEdit(resume.id)} />
         <Action
+          icon="copy-outline"
+          label="Duplicate"
+          color={foregroundMuted}
+          busy={isDuplicating}
+          onPress={() => onDuplicate(resume)}
+        />
+        {/* "Export PDF" was shortened to "Export" when Duplicate joined the
+            row — four labelled actions do not fit across a 360pt phone. */}
+        <Action
           icon="download-outline"
-          label="Export PDF"
+          label="Export"
           color={accent}
           busy={isExporting}
           onPress={() => onExport(resume)}

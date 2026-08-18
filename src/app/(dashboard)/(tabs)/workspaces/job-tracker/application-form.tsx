@@ -26,6 +26,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   ApplicationStatus,
   CreateApplicationRequest,
+  UpdateApplicationRequest,
   WorkArrangement,
 } from "../../../../../../types/job-application";
 
@@ -79,6 +80,7 @@ export default function ApplicationForm() {
       salaryCurrency: "",
       status: "SAVED",
       notes: "",
+      jobDescription: "",
       resumeId: null,
       coverLetterId: null,
     },
@@ -104,6 +106,7 @@ export default function ApplicationForm() {
       salaryCurrency: application.salaryCurrency ?? "",
       status: application.status,
       notes: application.notes ?? "",
+      jobDescription: application.jobDescription ?? "",
       resumeId: application.resumeId ?? null,
       coverLetterId: application.coverLetterId ?? null,
     });
@@ -121,7 +124,7 @@ export default function ApplicationForm() {
     coverLetters.find((letter) => letter.id === coverLetterId)?.title ?? null;
 
   const onSubmit = function (values: JobApplicationFormValues) {
-    const payload: CreateApplicationRequest = {
+    const payload: CreateApplicationRequest | UpdateApplicationRequest = {
       company: values.company.trim(),
       role: values.role.trim(),
       status: values.status,
@@ -134,7 +137,24 @@ export default function ApplicationForm() {
       ...(trimmed(values.salaryCurrency) && {
         salaryCurrency: values.salaryCurrency?.trim().toUpperCase(),
       }),
-      ...(trimmed(values.notes) && { notes: trimmed(values.notes) }),
+      /*
+        The free-text fields send an explicit null on update rather than being
+        omitted. Omitting is how every other field says "unchanged", which meant
+        emptying the notes box saved nothing and the old text came straight back
+        on the next fetch. Create cannot send null — the server's create schema
+        rejects it — so the two paths differ.
+      */
+      ...(isUpdate
+        ? {
+            notes: trimmed(values.notes) ?? null,
+            jobDescription: trimmed(values.jobDescription) ?? null,
+          }
+        : {
+            ...(trimmed(values.notes) && { notes: trimmed(values.notes) }),
+            ...(trimmed(values.jobDescription) && {
+              jobDescription: trimmed(values.jobDescription),
+            }),
+          }),
       ...(values.resumeId && { resumeId: values.resumeId }),
       ...(values.coverLetterId && { coverLetterId: values.coverLetterId }),
     };

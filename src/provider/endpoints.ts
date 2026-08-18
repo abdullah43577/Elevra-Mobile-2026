@@ -130,6 +130,7 @@ export const API_ENDPOINTS = {
     create: "/resume",
     update: (id: string) => `/resume/${id}`,
     delete: (id: string) => `/resume/${id}`,
+    duplicate: (id: string) => `/resume/${id}/duplicate`,
     export: (id: string) => `/resume/${id}/export`,
   },
 };

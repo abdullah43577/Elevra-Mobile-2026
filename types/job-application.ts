@@ -63,6 +63,9 @@ export interface JobApplication {
   status: ApplicationStatus;
   appliedAt?: string | null;
   notes?: string | null;
+  // The posting, pasted in. Ads get taken down or rewritten between applying
+  // and interviewing, so keeping a copy is the only way to still have it later.
+  jobDescription?: string | null;
   isArchived: boolean;
   userId: string;
   resumeId?: string | null;
@@ -97,18 +100,27 @@ export interface CreateApplicationRequest {
   salaryCurrency?: string;
   status?: ApplicationStatus;
   notes?: string;
+  jobDescription?: string;
   resumeId?: string;
   coverLetterId?: string;
 }
 
 export interface UpdateApplicationRequest
   extends Partial<
-    Omit<CreateApplicationRequest, "resumeId" | "coverLetterId">
+    Omit<
+      CreateApplicationRequest,
+      "resumeId" | "coverLetterId" | "notes" | "jobDescription"
+    >
   > {
-  // Nullable, not just optional: JSON.stringify drops undefined keys, so
-  // detaching a resume or a cover letter has to send an explicit null for the
-  // server to clear it.
+  /*
+    Nullable, not just optional: JSON.stringify drops undefined keys, so
+    detaching a resume, or clearing out notes you have emptied, has to send an
+    explicit null for the server to act on it. Omitting the key means "leave it
+    alone", which is indistinguishable from "I deleted this text".
+  */
   resumeId?: string | null;
   coverLetterId?: string | null;
+  notes?: string | null;
+  jobDescription?: string | null;
   isArchived?: boolean;
 }
