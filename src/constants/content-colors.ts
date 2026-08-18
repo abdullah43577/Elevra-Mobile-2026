@@ -15,28 +15,49 @@ export type ContentType = keyof typeof CONTENT_COLORS;
 export const CONTENT_META = {
   Note: {
     color: CONTENT_COLORS.note,
+    label: "Note",
     icon: "document-text-outline",
     plural: "Notes",
   },
   Recording: {
     color: CONTENT_COLORS.recording,
+    label: "Recording",
     icon: "mic-outline",
     plural: "Recordings",
   },
   Resume: {
     color: CONTENT_COLORS.resume,
+    label: "Resume",
     icon: "document-outline",
     plural: "Resumes",
   },
   Application: {
     color: CONTENT_COLORS.application,
+    label: "Application",
     icon: "briefcase-outline",
     plural: "Applications",
+  },
+  CoverLetter: {
+    color: CONTENT_COLORS.letter,
+    label: "Cover letter",
+    icon: "mail-outline",
+    // "Letters", not "Cover letters" — this is a tile caption sharing a row
+    // with four others, and the long form wraps.
+    plural: "Letters",
+  },
+  InterviewQuestion: {
+    color: CONTENT_COLORS.interview,
+    label: "Interview answer",
+    icon: "chatbubbles-outline",
+    plural: "Answers",
   },
 } as const satisfies Record<
   string,
   {
     color: string;
+    // Singular, for a row that names one item. The key is not usable as copy —
+    // "CoverLetter" is not something to show a user.
+    label: string;
     icon: keyof typeof Ionicons.glyphMap;
     plural: string;
   }

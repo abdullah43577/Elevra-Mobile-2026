@@ -34,7 +34,7 @@ export const RecentActivityRow = function ({ item, onPress }: Props) {
           {item.title}
         </AppText>
         <View className="mt-0.5 flex-row items-center gap-1.5">
-          <AppText type="caption">{item.type}</AppText>
+          <AppText type="caption">{meta.label}</AppText>
           <View className="h-0.5 w-0.5 rounded-full bg-line-strong" />
           <AppText type="caption">{formatRelativeDate(item.date)}</AppText>
         </View>

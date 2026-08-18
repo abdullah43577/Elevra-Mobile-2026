@@ -1,4 +1,6 @@
+import { CareerProfilePrompt } from "@/components/home/career-profile-prompt";
 import { HomeHeader } from "@/components/home/home-header";
+import { PrepReadinessCard } from "@/components/home/prep-readiness-card";
 import { QuickActions } from "@/components/home/quick-actions";
 import { RecentActivityList } from "@/components/home/recent-activity-list";
 import { StatsOverview } from "@/components/home/stats-overview";
@@ -10,6 +12,10 @@ import {
   getRecentItems,
   RecentItem,
 } from "@/constants/dashboard";
+import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profile";
+import { useGetCoverLetters } from "@/hooks/cover-letters/use-get-cover-letters";
+import { useGetPrepStats } from "@/hooks/interview-prep/use-get-prep-stats";
+import { useGetQuestions } from "@/hooks/interview-prep/use-get-questions";
 import { useGetApplications } from "@/hooks/job-applications/use-get-applications";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
 import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
@@ -29,6 +35,11 @@ export default function Home() {
   const { resumes, refetchResumes } = useGetResumes();
   const { recordings, refetchRecordings } = useGetRecordings();
   const { applications, refetchApplications } = useGetApplications();
+  const { coverLetters, refetchCoverLetters } = useGetCoverLetters();
+  const { questions, refetchQuestions } = useGetQuestions();
+  const { prepStats, refetchPrepStats } = useGetPrepStats();
+  const { hasCareerProfile, hasLoadedCareerProfile, refetchCareerProfile } =
+    useGetCareerProfile();
 
   const handleRefresh = async function () {
     setRefreshing(true);
@@ -38,12 +49,16 @@ export default function Home() {
       refetchResumes(),
       refetchRecordings(),
       refetchApplications(),
+      refetchCoverLetters(),
+      refetchQuestions(),
+      refetchPrepStats(),
+      refetchCareerProfile(),
     ]);
     setRefreshing(false);
   };
 
   const handleOpenItem = function (item: RecentItem) {
-    router.push({ pathname: item.route as any, params: { id: item.id } });
+    router.push({ pathname: item.route as any, params: item.params });
   };
 
   const recentItems = getRecentItems({
@@ -51,6 +66,8 @@ export default function Home() {
     resumes,
     recordings,
     applications,
+    coverLetters,
+    questions,
   });
 
   return (
@@ -79,7 +96,33 @@ export default function Home() {
               Recording: recordings.length,
               Resume: resumes.length,
               Application: applications.length,
+              CoverLetter: coverLetters.length,
+              InterviewQuestion: prepStats?.answered ?? 0,
             }}
+          />
+        </View>
+
+        {/*
+          Disappears once the profile has anything in it — and waits for the
+          query to land first, or it flashes on every Home load for the users
+          who already have one.
+        */}
+        {hasLoadedCareerProfile && !hasCareerProfile && (
+          <View className="mt-4 px-5">
+            <CareerProfilePrompt
+              onPress={() =>
+                router.push("/(dashboard)/(tabs)/workspaces/career-profile")
+              }
+            />
+          </View>
+        )}
+
+        <View className="mt-4 px-5">
+          <PrepReadinessCard
+            stats={prepStats}
+            onPress={() =>
+              router.push("/(dashboard)/(tabs)/workspaces/interview-prep")
+            }
           />
         </View>
 

@@ -2,6 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { router } from "expo-router";
 import { User } from "../../types/auth";
+import { CoverLetter } from "../../types/cover-letter";
+import { InterviewQuestion } from "../../types/interview-prep";
 import { JobApplication } from "../../types/job-application";
 import { Note } from "../../types/notes";
 import { Resume } from "../../types/resume/resume";
@@ -14,6 +16,14 @@ export interface RecentItem {
   type: ContentCategory;
   date: string;
   route: string;
+  /*
+    Carried per item rather than assumed to be `{ id }`. The detail screens do
+    not agree on a param name — the resume builder reads `resumeId`, the letter
+    editor `coverLetterId`, question detail `questionId` — so a single hardcoded
+    `id` opened the resume builder with nothing in it and rendered
+    "Template not found".
+  */
+  params: Record<string, string>;
 }
 
 export const getGreeting = function () {
@@ -43,7 +53,47 @@ export const formatRelativeDate = function (date: string) {
   return formatDistanceToNow(new Date(date), { addSuffix: true });
 };
 
+/*
+  Two rows of three, grouped: the documents you send, then the things you do.
+  Rehearse is an action rather than a create, but it is the one thing on this
+  screen most likely to change an outcome, so it earns a slot.
+*/
 export const quickActions = [
+  {
+    id: "resume",
+    label: "Resume",
+    icon: "document-outline",
+    color: CONTENT_COLORS.resume,
+    onPress: () => router.push("/(dashboard)/(tabs)/workspaces/resume-studio"),
+  },
+  {
+    id: "cover-letter",
+    label: "Letter",
+    icon: "mail-outline",
+    color: CONTENT_COLORS.letter,
+    onPress: () =>
+      router.push(
+        "/(dashboard)/(tabs)/workspaces/cover-letters/letter-editor",
+      ),
+  },
+  {
+    id: "application",
+    label: "Application",
+    icon: "briefcase-outline",
+    color: CONTENT_COLORS.application,
+    onPress: () =>
+      router.push(
+        "/(dashboard)/(tabs)/workspaces/job-tracker/application-form",
+      ),
+  },
+  {
+    id: "rehearse",
+    label: "Rehearse",
+    icon: "chatbubbles-outline",
+    color: CONTENT_COLORS.interview,
+    onPress: () =>
+      router.push("/(dashboard)/(tabs)/workspaces/interview-prep"),
+  },
   {
     id: "note",
     label: "Note",
@@ -60,23 +110,6 @@ export const quickActions = [
     onPress: () =>
       router.push("/(dashboard)/(tabs)/workspaces/voice-notes/recorder"),
   },
-  {
-    id: "resume",
-    label: "Resume",
-    icon: "document-outline",
-    color: CONTENT_COLORS.resume,
-    onPress: () => router.push("/(dashboard)/(tabs)/workspaces/resume-studio"),
-  },
-  {
-    id: "application",
-    label: "Application",
-    icon: "briefcase-outline",
-    color: CONTENT_COLORS.application,
-    onPress: () =>
-      router.push(
-        "/(dashboard)/(tabs)/workspaces/job-tracker/application-form",
-      ),
-  },
 ] satisfies {
   id: string;
   label: string;
@@ -90,11 +123,15 @@ export const getRecentItems = function ({
   resumes,
   recordings,
   applications,
+  coverLetters,
+  questions,
 }: {
   notes: Note[];
   resumes: Resume[];
   recordings: VoiceRecording[];
   applications: JobApplication[];
+  coverLetters: CoverLetter[];
+  questions: InterviewQuestion[];
 }) {
   const items: RecentItem[] = [];
 
@@ -105,6 +142,7 @@ export const getRecentItems = function ({
       type: "Application",
       date: application.updatedAt,
       route: "/(dashboard)/(tabs)/workspaces/job-tracker/application-detail",
+      params: { id: application.id },
     });
   });
 
@@ -116,6 +154,7 @@ export const getRecentItems = function ({
       type: "Note",
       date: note.updatedAt,
       route: "/(dashboard)/(tabs)/workspaces/smart-notes/note-editor",
+      params: { id: note.id },
     });
   });
 
@@ -127,6 +166,7 @@ export const getRecentItems = function ({
       type: "Resume",
       date: resume.updatedAt,
       route: "/(dashboard)/(tabs)/workspaces/resume-studio/resume-builder",
+      params: { resumeId: resume.id },
     });
   });
 
@@ -138,8 +178,44 @@ export const getRecentItems = function ({
       type: "Recording",
       date: recording.createdAt,
       route: "/(dashboard)/(tabs)/workspaces/voice-notes/playback",
+      params: { id: recording.id },
     });
   });
+
+  coverLetters.slice(0, 2).forEach((letter) => {
+    items.push({
+      id: letter.id,
+      title: letter.title,
+      type: "CoverLetter",
+      date: letter.updatedAt,
+      route: "/(dashboard)/(tabs)/workspaces/cover-letters/letter-editor",
+      params: { coverLetterId: letter.id },
+    });
+  });
+
+  /*
+    Only questions the user has actually answered, dated by the answer rather
+    than the question — the seeded catalogue never changes, so question.updatedAt
+    would put fifty identical timestamps at the top of this list.
+  */
+  questions
+    .filter((question) => !!question.answers?.[0])
+    .sort(
+      (a, b) =>
+        new Date(b.answers![0]!.updatedAt).getTime() -
+        new Date(a.answers![0]!.updatedAt).getTime(),
+    )
+    .slice(0, 2)
+    .forEach((question) => {
+      items.push({
+        id: question.id,
+        title: question.text,
+        type: "InterviewQuestion",
+        date: question.answers![0]!.updatedAt,
+        route: "/(dashboard)/(tabs)/workspaces/interview-prep/question-detail",
+        params: { questionId: question.id },
+      });
+    });
 
   // Sort by date (newest first) and limit to 5
   return items
