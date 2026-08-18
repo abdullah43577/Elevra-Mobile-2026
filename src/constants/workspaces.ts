@@ -9,6 +9,7 @@ import {
   ClipboardList,
   BookUser,
   Mail,
+  MessagesSquare,
   LucideIcon,
 } from "lucide-react-native";
 
@@ -32,6 +33,16 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     icon: FileText,
     comingSoonIcon: "document-text-outline",
     route: "resume-studio",
+    locked: false,
+  },
+  {
+    id: "interview-prep",
+    color: CONTENT_COLORS.interview,
+    title: "Interview Prep",
+    description: "Rehearse real questions out loud",
+    icon: MessagesSquare,
+    comingSoonIcon: "chatbubbles-outline",
+    route: "interview-prep",
     locked: false,
   },
   {

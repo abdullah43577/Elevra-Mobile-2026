@@ -17,6 +17,8 @@ import { useGetApplicationById } from "@/hooks/job-applications/use-get-applicat
 import { useLinkNote } from "@/hooks/job-applications/use-link-note";
 import { useLinkRecording } from "@/hooks/job-applications/use-link-recording";
 import { useSaveApplication } from "@/hooks/job-applications/use-save-application";
+import { useGetQuestions } from "@/hooks/interview-prep/use-get-questions";
+import { usePinQuestion } from "@/hooks/interview-prep/use-pin-question";
 import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useGetRecordings } from "@/hooks/voice-notes/use-get-recordings";
@@ -27,7 +29,7 @@ import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApplicationStatus } from "../../../../../../types/job-application";
 
-type PickerTarget = "status" | "note" | "recording" | null;
+type PickerTarget = "status" | "note" | "recording" | "question" | null;
 
 export default function ApplicationDetail() {
   const router = useRouter();
@@ -55,6 +57,11 @@ export default function ApplicationDetail() {
   const { linkRecording, unlinkRecording, isLinkingRecording } = useLinkRecording({
     applicationId: id,
   });
+
+  // Every question, for the picker; and just the pinned ones, for the section.
+  const { questions } = useGetQuestions();
+  const { questions: pinnedQuestions } = useGetQuestions({ applicationId: id });
+  const { pinQuestion, unpinQuestion, isPinning } = usePinQuestion(id);
 
   const { notes } = useGetNotes();
   const { recordings } = useGetRecordings();
@@ -198,6 +205,39 @@ export default function ApplicationDetail() {
           />
 
           <LinkedItemsSection
+            title="Interview questions"
+            icon="chatbubbles-outline"
+            color={CONTENT_COLORS.interview}
+            addLabel="Pin question"
+            emptyLabel="Pin the questions you expect for this role, then rehearse them"
+            items={pinnedQuestions.map((question) => ({
+              id: question.id,
+              title: question.text,
+            }))}
+            onAdd={() => setPicker("question")}
+            onRemove={(questionId) => unpinQuestion(questionId)}
+            disabled={isPinning}
+          />
+
+          {pinnedQuestions.length > 0 && (
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname:
+                    "/(dashboard)/(tabs)/workspaces/interview-prep/practice",
+                  params: { applicationId: id },
+                })
+              }
+              className="mt-3 flex-row items-center justify-center gap-2 rounded-2xl px-4 py-3.5 active:opacity-80"
+              style={{ backgroundColor: CONTENT_COLORS.interview }}
+            >
+              <AppText type="label" className="text-white">
+                Rehearse these {pinnedQuestions.length}
+              </AppText>
+            </Pressable>
+          )}
+
+          <LinkedItemsSection
             title="Notes"
             icon="document-text-outline"
             color={CONTENT_COLORS.note}
@@ -255,6 +295,20 @@ export default function ApplicationDetail() {
           .filter((note) => !linkedNoteIds.has(note.id))
           .map((note) => ({ label: note.title, value: note.id }))}
         onSelect={(noteId) => linkNote({ noteId })}
+        onClose={() => setPicker(null)}
+      />
+
+      <BottomSheetPicker
+        visible={picker === "question"}
+        title="Pin an interview question"
+        selectedValue={null}
+        accentColor={CONTENT_COLORS.interview}
+        searchPlaceholder="Search questions..."
+        emptyLabel="No questions available"
+        options={questions
+          .filter((question) => !pinnedQuestions.some((pinned) => pinned.id === question.id))
+          .map((question) => ({ label: question.text, value: question.id }))}
+        onSelect={(value) => pinQuestion(value)}
         onClose={() => setPicker(null)}
       />
 

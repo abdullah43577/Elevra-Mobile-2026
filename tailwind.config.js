@@ -112,6 +112,7 @@ module.exports = {
           application: "#2E6FD1",
           profile: "#B23A6B",
           letter: "#A8761C",
+          interview: "#1B7A99",
         },
       },
 

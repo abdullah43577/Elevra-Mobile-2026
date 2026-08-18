@@ -56,6 +56,7 @@ export const CONTENT_COLORS_BY_SCHEME = {
     application: "#2E6FD1",
     profile: "#B23A6B",
     letter: "#A8761C",
+    interview: "#1B7A99",
   },
   dark: {
     note: "#8B7BF5",
@@ -64,6 +65,7 @@ export const CONTENT_COLORS_BY_SCHEME = {
     application: "#6BA0F0",
     profile: "#E27FA8",
     letter: "#D9A544",
+    interview: "#56B4D3",
   },
 } as const;
 

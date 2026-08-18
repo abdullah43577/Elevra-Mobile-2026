@@ -89,6 +89,23 @@ export const API_ENDPOINTS = {
     delete: "/career-profile",
   },
 
+  interviewPrep: {
+    questions: "/interview-prep",
+    stats: "/interview-prep/stats",
+    practice: "/interview-prep/practice",
+    detail: (id: string) => `/interview-prep/${id}`,
+    create: "/interview-prep",
+    update: (id: string) => `/interview-prep/${id}`,
+    delete: (id: string) => `/interview-prep/${id}`,
+    saveAnswer: (id: string) => `/interview-prep/${id}/answer`,
+    uploadAnswerAudio: (id: string) => `/interview-prep/${id}/answer/audio`,
+    deleteAnswerAudio: (id: string) => `/interview-prep/${id}/answer/audio`,
+    pinToApplication: (id: string, applicationId: string) =>
+      `/interview-prep/${id}/applications/${applicationId}`,
+    unpinFromApplication: (id: string, applicationId: string) =>
+      `/interview-prep/${id}/applications/${applicationId}`,
+  },
+
   coverLetters: {
     list: "/cover-letters",
     detail: (id: string) => `/cover-letters/${id}`,

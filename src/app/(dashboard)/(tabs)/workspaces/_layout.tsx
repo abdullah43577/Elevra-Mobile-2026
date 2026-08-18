@@ -21,6 +21,13 @@ export default function WorkspacesLayout() {
         }}
       />
       <Stack.Screen
+        name="interview-prep"
+        options={{
+          title: "Interview Prep",
+          headerBackTitle: "Back",
+        }}
+      />
+      <Stack.Screen
         name="cover-letters"
         options={{
           title: "Cover Letters",
