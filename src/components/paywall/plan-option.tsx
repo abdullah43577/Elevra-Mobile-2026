@@ -1,11 +1,11 @@
 import { AppText } from "@/components/shared/app-text";
-import { Plan } from "@/constants/plans";
+import { PlanPresentation } from "@/constants/plans";
 import { Ionicons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { Pressable, View } from "react-native";
 
 interface Props {
-  plan: Plan;
+  plan: PlanPresentation;
   isSelected: boolean;
   accent: string;
   onSelect: () => void;
@@ -45,6 +45,16 @@ export const PlanOption = function ({ plan, isSelected, accent, onSelect }: Prop
             </View>
           )}
         </View>
+        {plan.trial && (
+          <AppText
+            type="caption"
+            className="mt-0.5 font-bricolage-semibold"
+            style={{ color: accent }}
+          >
+            {plan.trial}, then {plan.price} {plan.period}
+          </AppText>
+        )}
+
         {plan.caption && (
           <AppText type="caption" className="mt-0.5">
             {plan.caption}

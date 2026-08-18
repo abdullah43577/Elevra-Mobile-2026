@@ -17,6 +17,11 @@ export const API_ENDPOINTS = {
     query: "/search",
   },
 
+  subscriptions: {
+    detail: "/subscriptions",
+    sync: "/subscriptions/sync",
+  },
+
   professions: {
     list: "/professions",
   },

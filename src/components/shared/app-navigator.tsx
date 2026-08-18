@@ -19,6 +19,7 @@ import useNotifications from "@/hooks/use-notification";
 import { StatusBar } from "expo-status-bar";
 import { useSyncTheme, useTheme } from "@/hooks/use-theme";
 import { useSyncDeviceToken } from "@/hooks/notifications/use-sync-device-token";
+import { useSyncPurchaser } from "@/hooks/subscriptions/use-sync-purchaser";
 
 export const AppNavigator = function () {
   const [loaded] = useFonts({
@@ -37,6 +38,7 @@ export const AppNavigator = function () {
 
   useSyncTheme();
   useSyncDeviceToken(expoPushToken);
+  useSyncPurchaser(profile?.id);
   const { scheme, colors } = useTheme();
 
   const {

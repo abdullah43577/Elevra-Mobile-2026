@@ -5,6 +5,7 @@ import { useGetData } from "./use-get-data";
 import { tokenStorage } from "@/provider/token-storage";
 import { useAuthStore } from "@/store/auth";
 import { clearPersistedCache } from "@/provider/query-persister";
+import { forgetPurchaser } from "@/provider/purchases";
 import { queryClient } from "@/utils/queryClient";
 
 export const useGetProfile = function () {
@@ -23,6 +24,11 @@ export const useGetProfile = function () {
     // notes, applications, and profile until the first refetch lands.
     queryClient.clear();
     await clearPersistedCache();
+
+    // The RevenueCat customer is tied to the user id that just signed out. Left
+    // identified, the next account on this device would inherit their
+    // entitlement until the next identify call.
+    await forgetPurchaser();
 
     setAuthenticated(false);
   };
