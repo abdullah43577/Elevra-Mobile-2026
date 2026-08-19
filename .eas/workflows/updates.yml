@@ -1,8 +1,14 @@
 name: Elevra Workflow Update
 
+# Only dev. A push to master cuts a production build instead
+# (.github/workflows/build.yml); a production OTA hotfix is a deliberate
+# `eas update --branch production`, not a side effect of merging.
+#
+# The channel is still derived from the ref rather than hardcoded, so running
+# this by hand from master (`eas workflow:run`) still targets production.
 on:
   push:
-    branches: ["dev", "master"]
+    branches: ["dev"]
 
 jobs:
   send_updates:
