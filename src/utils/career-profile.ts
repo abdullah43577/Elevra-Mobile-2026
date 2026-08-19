@@ -2,7 +2,6 @@ import { CareerProfile } from "../../types/career-profile";
 import {
   DEFAULT_EDUCATION,
   DEFAULT_EXPERIENCE,
-  DEFAULT_SKILL,
   ResumeBuilderFormValues,
 } from "@/schemas/resume-builder/resume-builder";
 import { ProfileSectionId } from "@/constants/career-profile";
@@ -89,6 +88,5 @@ export const toResumeFormValues = function (
     ...values,
     experience: values.experience?.length ? values.experience : [DEFAULT_EXPERIENCE],
     education: values.education?.length ? values.education : [DEFAULT_EDUCATION],
-    skills: values.skills?.length ? values.skills : [DEFAULT_SKILL],
   };
 };

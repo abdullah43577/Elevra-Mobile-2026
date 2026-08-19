@@ -33,7 +33,7 @@ export function AtsCleanLayout({ theme, data, isThumbnail }: ResumeLayoutProps) 
 
       <Rule style={style} />
 
-      <ResumeBody data={data} style={style} variant="plain" limit={isThumbnail} />
+      <ResumeBody data={data} style={style} variant="plain" />
     </ResumePage>
   );
 }

@@ -10,10 +10,7 @@ import {
 } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/components/shared/app-text";
-import {
-  DEFAULT_SKILL,
-  ResumeBuilderFormValues,
-} from "@/schemas/resume-builder/resume-builder";
+import { ResumeBuilderFormValues } from "@/schemas/resume-builder/resume-builder";
 import { showToast } from "@/utils/show-toast";
 
 interface SkillsProps {

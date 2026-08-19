@@ -17,7 +17,6 @@ import { useThemeColors } from "@/hooks/use-theme-colors";
 import {
   DEFAULT_EDUCATION,
   DEFAULT_EXPERIENCE,
-  DEFAULT_SKILL,
   ResumeBuilderFormValues,
   resumeBuilderSchema,
 } from "@/schemas/resume-builder/resume-builder";
@@ -85,7 +84,11 @@ export default function ResumeBuilder() {
       },
       experience: [DEFAULT_EXPERIENCE],
       education: [DEFAULT_EDUCATION],
-      skills: [DEFAULT_SKILL],
+      // Skills starts empty even though it is a required-ish section, because
+      // it is the one chip-based step: you type into a separate input and press
+      // add, so there is no blank row to fill in. A seeded entry renders as an
+      // empty chip and fails skillSchema's min(1) on save.
+      skills: [],
       // Optional sections start empty. A blank row is an invalid row — each
       // item schema requires its fields, so seeding one blank entry per
       // optional section made saving impossible until every section was filled.
@@ -120,7 +123,7 @@ export default function ResumeBuilder() {
       education: resume.education?.length
         ? resume.education
         : [DEFAULT_EDUCATION],
-      skills: resume.skills?.length ? resume.skills : [DEFAULT_SKILL],
+      skills: resume.skills ?? [],
       languages: resume.languages ?? [],
       certifications: resume.certifications ?? [],
       projects: resume.projects ?? [],

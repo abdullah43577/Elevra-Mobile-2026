@@ -35,28 +35,31 @@ const toBullets = function (description?: string, achievements?: string[]) {
   the section-title treatment, never in the content structure.
 
   Empty sections are dropped entirely rather than rendered as a bare heading.
+
+  Every entry renders, always. This used to slice five sections to the first two
+  whenever `limit` was set, which every layout wired to `isThumbnail` — and
+  `TemplatePreview` sets that unconditionally, including for the builder's live
+  preview of real data. So a third job silently vanished from the preview while
+  exporting correctly, because `resume-html.ts` never had the cap. The number
+  two was not a template's capacity; it is how many experience entries the one
+  shared sample dataset happens to carry.
 */
 export const ResumeBody = function ({
   data,
   style,
   variant = "rule",
-  limit = false,
 }: {
   data: ResumeData;
   style: ResumeStyle;
   variant?: SectionVariant;
-  limit?: boolean;
 }) {
-  const cap = <T,>(items: T[] | undefined, max: number) =>
-    limit ? (items ?? []).slice(0, max) : (items ?? []);
-
-  const experience = cap(data.experience, 2).filter((e) => e.position || e.company);
-  const education = cap(data.education, 2).filter((e) => e.school || e.degree);
+  const experience = (data.experience ?? []).filter((e) => e.position || e.company);
+  const education = (data.education ?? []).filter((e) => e.school || e.degree);
   const skills = (data.skills ?? []).map((s) => s.name).filter(Boolean);
-  const certifications = cap(data.certifications, 2).filter((c) => c.name);
-  const projects = cap(data.projects, 2).filter((p) => p.name);
+  const certifications = (data.certifications ?? []).filter((c) => c.name);
+  const projects = (data.projects ?? []).filter((p) => p.name);
   const languages = (data.languages ?? []).filter((l) => l.name);
-  const references = cap(data.references, 2).filter((r) => r.name);
+  const references = (data.references ?? []).filter((r) => r.name);
 
   return (
     <View>

@@ -37,7 +37,7 @@ export function CompactDenseLayout({ theme, data, isThumbnail }: ResumeLayoutPro
 
       <Rule style={style} color={style.accent} />
 
-      <ResumeBody data={data} style={style} variant="plain" limit={isThumbnail} />
+      <ResumeBody data={data} style={style} variant="plain" />
     </ResumePage>
   );
 }

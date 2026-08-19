@@ -107,11 +107,6 @@ export const DEFAULT_EDUCATION = {
   gpa: "",
 };
 
-export const DEFAULT_SKILL = {
-  name: "",
-  level: undefined,
-};
-
 export const DEFAULT_LANGUAGE = {
   name: "",
   proficiency: undefined,
