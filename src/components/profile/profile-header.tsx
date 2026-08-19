@@ -1,8 +1,9 @@
+import { Avatar } from "@/components/shared/avatar";
 import { Badge } from "@/components/shared/badge";
 import { useGetProfile } from "@/hooks/use-get-profile";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Ionicons } from "@expo/vector-icons";
-import { ActivityIndicator, Image, Pressable, View } from "react-native";
+import { ActivityIndicator, Pressable, View } from "react-native";
 import { AppText } from "../shared/app-text";
 
 interface Props {
@@ -35,18 +36,13 @@ export const ProfileHeader = function ({
 
       <View className="mt-5 flex-row items-center gap-4 rounded-3xl border-hairline border-line bg-surface p-5">
         <Pressable onPress={onChangePicture} className="relative">
-          {displayUri ? (
-            <Image
-              source={{ uri: displayUri }}
-              className="h-16 w-16 rounded-full"
-            />
-          ) : (
-            <View className="h-16 w-16 items-center justify-center rounded-full bg-surface-muted">
-              <AppText type="title" className="text-foreground-muted">
-                {initials}
-              </AppText>
-            </View>
-          )}
+          <Avatar
+            uri={displayUri}
+            initials={initials}
+            size={64}
+            textType="title"
+            className="bg-surface-muted"
+          />
 
           {isUpdatingProfile && !isEditing && (
             <View className="absolute inset-0 items-center justify-center rounded-full bg-black/40">

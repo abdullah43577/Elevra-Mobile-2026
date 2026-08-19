@@ -17,7 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const STEPS = ["profile", "notifications", "tour"] as const;
@@ -135,50 +136,57 @@ export default function Setup() {
         )}
       </View>
 
-      <KeyboardAvoidingView
+      {/*
+        KeyboardAwareScrollView rather than KeyboardAvoidingView: this screen
+        was the only form in the app still on the latter, and its Android
+        behavior was undefined, so nothing moved and the keyboard sat over the
+        lower inputs. Same props as every other form screen here.
+      */}
+      <KeyboardAwareScrollView
         className="flex-1"
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingTop: 32,
+          paddingBottom: 24,
+        }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid
+        extraScrollHeight={20}
       >
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 32, paddingBottom: 24 }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {STEPS[stepIndex] === "profile" && (
-            <QuickProfileStep control={control} errors={errors} />
-          )}
+        {STEPS[stepIndex] === "profile" && (
+          <QuickProfileStep control={control} errors={errors} />
+        )}
 
-          {STEPS[stepIndex] === "notifications" && (
-            <NotificationsStep
-              isGranted={isGranted}
-              isRequesting={isRequesting}
-              onEnable={requestPermission}
-            />
-          )}
-
-          {STEPS[stepIndex] === "tour" && <TourStep />}
-        </ScrollView>
-
-        <View className="gap-3 px-5 pb-6 pt-2">
-          <AppButton
-            type="submit"
-            label={primaryLabel}
-            onPress={handlePrimaryPress}
-            isLoading={isSavingCareerProfile}
+        {STEPS[stepIndex] === "notifications" && (
+          <NotificationsStep
+            isGranted={isGranted}
+            isRequesting={isRequesting}
+            onEnable={requestPermission}
           />
+        )}
 
-          {STEPS[stepIndex] === "notifications" && !isGranted && (
-            <Pressable
-              onPress={goToNextStep}
-              hitSlop={8}
-              className="items-center py-1 active:opacity-60"
-            >
-              <AppText type="caption">Not now</AppText>
-            </Pressable>
-          )}
-        </View>
-      </KeyboardAvoidingView>
+        {STEPS[stepIndex] === "tour" && <TourStep />}
+      </KeyboardAwareScrollView>
+
+      <View className="gap-3 px-5 pb-6 pt-2">
+        <AppButton
+          type="submit"
+          label={primaryLabel}
+          onPress={handlePrimaryPress}
+          isLoading={isSavingCareerProfile}
+        />
+
+        {STEPS[stepIndex] === "notifications" && !isGranted && (
+          <Pressable
+            onPress={goToNextStep}
+            hitSlop={8}
+            className="items-center py-1 active:opacity-60"
+          >
+            <AppText type="caption">Not now</AppText>
+          </Pressable>
+        )}
+      </View>
     </SafeAreaView>
   );
 }

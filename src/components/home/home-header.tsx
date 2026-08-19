@@ -1,6 +1,7 @@
 import { AppText } from "@/components/shared/app-text";
+import { Avatar } from "@/components/shared/avatar";
 import { IconButton } from "@/components/shared/icon-button";
-import { Image, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 interface Props {
   greeting: string;
@@ -40,13 +41,7 @@ export const HomeHeader = function ({
           onPress={onPressAvatar}
           className="h-11 w-11 items-center justify-center overflow-hidden rounded-full border-hairline border-line bg-surface active:opacity-70"
         >
-          {avatarUri ? (
-            <Image source={{ uri: avatarUri }} className="h-full w-full" />
-          ) : (
-            <AppText type="label" className="text-foreground-muted">
-              {initials}
-            </AppText>
-          )}
+          <Avatar uri={avatarUri} initials={initials} size={44} />
         </Pressable>
       </View>
     </View>
