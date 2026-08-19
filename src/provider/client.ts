@@ -8,5 +8,5 @@ export const getBaseUrl = function () {
     }
     return `${process.env.EXPO_PUBLIC_API_URL}/v1`; // physical device / iOS simulator
   }
-  return "https://api.elevra.com/v1"; // Production
+  return "https://elevra-mobile-server-2026.onrender.com/v1"; // Production
 };
