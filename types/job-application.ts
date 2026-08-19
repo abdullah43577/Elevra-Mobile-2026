@@ -109,7 +109,17 @@ export interface UpdateApplicationRequest
   extends Partial<
     Omit<
       CreateApplicationRequest,
-      "resumeId" | "coverLetterId" | "notes" | "jobDescription"
+      | "resumeId"
+      | "coverLetterId"
+      | "notes"
+      | "jobDescription"
+      | "location"
+      | "workArrangement"
+      | "jobUrl"
+      | "source"
+      | "salaryMin"
+      | "salaryMax"
+      | "salaryCurrency"
     >
   > {
   /*
@@ -122,5 +132,12 @@ export interface UpdateApplicationRequest
   coverLetterId?: string | null;
   notes?: string | null;
   jobDescription?: string | null;
+  location?: string | null;
+  workArrangement?: WorkArrangement | null;
+  jobUrl?: string | null;
+  source?: string | null;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  salaryCurrency?: string | null;
   isArchived?: boolean;
 }

@@ -11,11 +11,11 @@ module.exports = ({ config }) => ({
     // to dark. Requires a native rebuild to take effect in the dev client.
     userInterfaceStyle: "automatic",
     ios: {
-      icon: "./assets/expo.icon",
+      icon: "./assets/images/icon.png",
     },
     android: {
       adaptiveIcon: {
-        backgroundColor: "#E6F4FE",
+        backgroundColor: "#5B47E8",
         foregroundImage: "./assets/images/android-icon-foreground.png",
         backgroundImage: "./assets/images/android-icon-background.png",
         monochromeImage: "./assets/images/android-icon-monochrome.png",
@@ -44,9 +44,16 @@ module.exports = ({ config }) => ({
       [
         "expo-splash-screen",
         {
-          backgroundColor: "#1A1C1D",
-          android: {
-            image: "./assets/images/splashscreen.png",
+          // The app reads light, so a near-black splash flashed dark before a
+          // white app on every cold start. Each scheme gets its own mark: the
+          // light-mode indigo does not lift off the dark canvas.
+          backgroundColor: "#FAFAFB",
+          image: "./assets/images/splashscreen.png",
+          resizeMode: "contain",
+          imageWidth: 200,
+          dark: {
+            backgroundColor: "#0F0F12",
+            image: "./assets/images/splashscreen-dark.png",
             resizeMode: "contain",
             imageWidth: 200,
           },

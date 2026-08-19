@@ -37,6 +37,11 @@ const trimmed = function (value?: string) {
   return next ? next : undefined;
 };
 
+const numeric = function (value?: string) {
+  const next = trimmed(value);
+  return next ? Number(next) : null;
+};
+
 export default function ApplicationForm() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -128,28 +133,44 @@ export default function ApplicationForm() {
       company: values.company.trim(),
       role: values.role.trim(),
       status: values.status,
-      ...(trimmed(values.location) && { location: trimmed(values.location) }),
-      ...(values.workArrangement && { workArrangement: values.workArrangement }),
-      ...(trimmed(values.jobUrl) && { jobUrl: trimmed(values.jobUrl) }),
-      ...(trimmed(values.source) && { source: trimmed(values.source) }),
-      ...(trimmed(values.salaryMin) && { salaryMin: Number(values.salaryMin) }),
-      ...(trimmed(values.salaryMax) && { salaryMax: Number(values.salaryMax) }),
-      ...(trimmed(values.salaryCurrency) && {
-        salaryCurrency: values.salaryCurrency?.trim().toUpperCase(),
-      }),
       /*
-        The free-text fields send an explicit null on update rather than being
-        omitted. Omitting is how every other field says "unchanged", which meant
-        emptying the notes box saved nothing and the old text came straight back
-        on the next fetch. Create cannot send null — the server's create schema
-        rejects it — so the two paths differ.
+        Every optional field sends an explicit null on update rather than
+        being omitted. Omitting is how a field says "unchanged", which meant
+        emptying any of these saved nothing and the old value came straight
+        back on the next fetch. Create cannot send null — the server's create
+        schema rejects it — so the two paths differ.
       */
       ...(isUpdate
         ? {
+            location: trimmed(values.location) ?? null,
+            workArrangement: values.workArrangement || null,
+            jobUrl: trimmed(values.jobUrl) ?? null,
+            source: trimmed(values.source) ?? null,
+            salaryMin: numeric(values.salaryMin),
+            salaryMax: numeric(values.salaryMax),
+            salaryCurrency:
+              trimmed(values.salaryCurrency)?.toUpperCase() ?? null,
             notes: trimmed(values.notes) ?? null,
             jobDescription: trimmed(values.jobDescription) ?? null,
           }
         : {
+            ...(trimmed(values.location) && {
+              location: trimmed(values.location),
+            }),
+            ...(values.workArrangement && {
+              workArrangement: values.workArrangement,
+            }),
+            ...(trimmed(values.jobUrl) && { jobUrl: trimmed(values.jobUrl) }),
+            ...(trimmed(values.source) && { source: trimmed(values.source) }),
+            ...(trimmed(values.salaryMin) && {
+              salaryMin: Number(values.salaryMin),
+            }),
+            ...(trimmed(values.salaryMax) && {
+              salaryMax: Number(values.salaryMax),
+            }),
+            ...(trimmed(values.salaryCurrency) && {
+              salaryCurrency: values.salaryCurrency?.trim().toUpperCase(),
+            }),
             ...(trimmed(values.notes) && { notes: trimmed(values.notes) }),
             ...(trimmed(values.jobDescription) && {
               jobDescription: trimmed(values.jobDescription),

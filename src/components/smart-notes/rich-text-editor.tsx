@@ -1,9 +1,12 @@
 import {
+  darkEditorTheme,
+  defaultEditorTheme,
   RichText,
   Toolbar,
   useBridgeState,
   useEditorBridge,
 } from "@10play/tentap-editor";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useEffect, useRef } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 
@@ -24,11 +27,23 @@ export const RichTextEditor = function ({
   autofocus = false,
 }: Props) {
   const isHydrated = useRef(false);
+  const { isDark, surface, foreground, foregroundSubtle, lineStrong } =
+    useThemeColors();
 
   const editor = useEditorBridge({
     autofocus,
     avoidIosKeyboard: true,
     initialContent,
+    /*
+      Covers the React Native side only — the toolbar and the webview's own
+      container. The document inside the webview is a separate world with its
+      own stylesheet, which is what injectCSS below is for.
+    */
+    theme: {
+      ...(isDark ? darkEditorTheme : defaultEditorTheme),
+      webview: { backgroundColor: surface },
+      webviewContainer: { backgroundColor: surface },
+    },
     onChange: async () => {
       // tentap emits a change while loading; letting it through would push an
       // empty "<p></p>" into parent state and wipe the note.
@@ -47,8 +62,40 @@ export const RichTextEditor = function ({
     isHydrated.current = true;
   }, [isReady, initialContent, editor]);
 
+  /*
+    The editor body is a webview document, so no Tailwind class and no RN style
+    reaches it — left alone it stays on the browser default white and a note
+    reads as a white slab in an otherwise dark app.
+
+    Injected rather than passed at construction because the user can change
+    scheme while a note is open, and the bridge only reads its options once.
+    The "theme" tag makes each injection replace the previous style element
+    instead of stacking a new one per toggle.
+  */
+  useEffect(() => {
+    if (!isReady) return;
+
+    editor.injectCSS(
+      `
+      body, .ProseMirror {
+        background-color: ${surface};
+        color: ${foreground};
+        caret-color: ${foreground};
+      }
+      .ProseMirror p.is-editor-empty:first-child::before {
+        color: ${foregroundSubtle};
+      }
+      blockquote {
+        border-left: 3px solid ${lineStrong};
+        padding-left: 1rem;
+      }
+      `,
+      "theme",
+    );
+  }, [isReady, editor, surface, foreground, foregroundSubtle, lineStrong]);
+
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-surface">
       <RichText editor={editor} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
