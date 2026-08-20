@@ -33,6 +33,15 @@ export const configurePurchases = function () {
   if (isConfigured) return true;
   if (!Purchases || !API_KEY) return false;
 
+  // Test Store keys only work in Debug/dev-client builds. In preview and
+  // production (release-type) builds, RevenueCat's native SDK hard-crashes
+  // on Purchases.configure() rather than throwing a catchable JS error — so
+  // this has to be blocked before configure() is ever called, not caught
+  // after the fact.
+  if (!__DEV__ && API_KEY.startsWith("test_")) {
+    return false;
+  }
+
   try {
     /*
       Configured anonymously. The user is not authenticated yet at launch, and
