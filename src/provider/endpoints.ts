@@ -1,6 +1,8 @@
 export const API_ENDPOINTS = {
   auth: {
     signin: "/auth/signin",
+    google: "/auth/google",
+    apple: "/auth/apple",
     register: "/auth/signup",
     verifyEmail: "/auth/verify-email",
     resendVerificationOtp: "/auth/resend-verification-otp",

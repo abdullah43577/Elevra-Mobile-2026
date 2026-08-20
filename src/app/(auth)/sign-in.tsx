@@ -1,10 +1,9 @@
-import { useThemeColors } from "@/hooks/use-theme-colors";
+import { SocialAuthButtons } from "@/components/auth/social-auth-buttons";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
 import { useLogin } from "@/hooks/auth/use-login";
 import { signInSchema, type SignInFormValues } from "@/schemas/auth/sign-in";
-import { AntDesign } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
@@ -12,8 +11,6 @@ import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function SignIn() {
-  const { foreground } = useThemeColors();
-
   const {
     control,
     handleSubmit,
@@ -100,28 +97,7 @@ export default function SignIn() {
           <View className="h-px flex-1 bg-line" />
         </View>
 
-        {/* OAuth buttons — side by side, not stacked */}
-        <View className="flex-row gap-3">
-          <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-line bg-canvas active:opacity-70">
-            <AntDesign name="google" size={16} color={foreground} />
-            <AppText
-              type="body"
-              className="font-bricolage-semibold text-[13px]"
-            >
-              Google
-            </AppText>
-          </Pressable>
-
-          <Pressable className="h-[48px] flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-line bg-canvas active:opacity-70">
-            <AntDesign name="apple" size={16} color={foreground} />
-            <AppText
-              type="body"
-              className="font-bricolage-semibold text-[13px]"
-            >
-              Apple
-            </AppText>
-          </Pressable>
-        </View>
+        <SocialAuthButtons />
 
         {/* Sign up link */}
         <View className="mt-8 flex-row justify-center gap-1">

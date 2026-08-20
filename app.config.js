@@ -1,3 +1,13 @@
+/*
+  Google's iOS client id, reversed, e.g. com.googleusercontent.apps.1234-abcd.
+  The google-signin config plugin turns it into a URL scheme so the Google app
+  can hand the result back; the plugin throws if it is missing, which is why the
+  entry below is added conditionally rather than with an empty string. Android
+  needs nothing here — it authenticates against google-services.json and the
+  build's SHA-1 instead.
+*/
+const googleIosUrlScheme = process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME;
+
 module.exports = ({ config }) => ({
   expo: {
     name: "Elevra",
@@ -12,6 +22,10 @@ module.exports = ({ config }) => ({
     userInterfaceStyle: "automatic",
     ios: {
       icon: "./assets/images/icon.png",
+      bundleIdentifier: "com.reactmode.elevra",
+      // Adds the Sign In with Apple entitlement. Without it the native sheet
+      // fails with an "unknown" error that says nothing about the cause.
+      usesAppleSignIn: true,
     },
     android: {
       adaptiveIcon: {
@@ -90,6 +104,15 @@ module.exports = ({ config }) => ({
         },
       ],
       "expo-notifications",
+      "expo-apple-authentication",
+      ...(googleIosUrlScheme
+        ? [
+            [
+              "@react-native-google-signin/google-signin",
+              { iosUrlScheme: googleIosUrlScheme },
+            ],
+          ]
+        : []),
     ],
     experiments: {
       typedRoutes: true,

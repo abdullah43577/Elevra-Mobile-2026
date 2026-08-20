@@ -7,6 +7,16 @@ import { queryClient } from "@/utils/queryClient";
 import { router } from "expo-router";
 import { showToast } from "@/utils/show-toast";
 
+/*
+  What the API puts in an error body. `code` is the stable identifier attached
+  to the handful of errors a caller has to branch on rather than display — see
+  AppError in ../elevra-server/src/lib/errors.ts.
+*/
+export interface APIErrorBody {
+  message?: string;
+  code?: string;
+}
+
 interface UseSubmitDataOptions<TData, TResponse> {
   url: string | ((data: TData) => string);
   getBody?: (data: TData) => unknown;
@@ -14,7 +24,7 @@ interface UseSubmitDataOptions<TData, TResponse> {
   additionalQueryKeys?: string[][];
   onSuccessMessage?: string;
   onLoadingMessage?: string;
-  onError?: (error: AxiosError<{ message?: string }>) => void;
+  onError?: (error: AxiosError<APIErrorBody>) => void;
   onSuccess?: (data: TResponse) => void;
   redirectTo?: string;
   skipAuth?: boolean;
@@ -46,7 +56,7 @@ export function useSubmitData<TData = unknown, TResponse = unknown>(
 
   const mutation = useMutation<
     TResponse,
-    AxiosError<{ message?: string }>,
+    AxiosError<APIErrorBody>,
     TData
   >({
     mutationFn: async (data: TData) => {
