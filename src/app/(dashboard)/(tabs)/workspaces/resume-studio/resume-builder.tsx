@@ -49,12 +49,19 @@ export default function ResumeBuilder() {
   const [pendingResume, setPendingResume] =
     useState<ResumeBuilderFormValues | null>(null);
 
-  const { template, isFetchingTemplate } = useGetTemplateById({
+  const { template: fetchedTemplate, isFetchingTemplate } = useGetTemplateById({
     templateId: templateId || "",
   });
   const { resume, isFetchingResume } = useGetResumeById({
     resumeId: resumeId || "",
   });
+
+  /*
+    Editing arrives with a resumeId and no templateId, so there is nothing to
+    fetch a template by — the resume carries its own (theme nested), which is
+    the same shape the template endpoint returns.
+  */
+  const template = fetchedTemplate ?? resume?.template;
   const { saveResume, isSaving } = useSaveResume({ resumeId });
 
   const { careerProfile, hasCareerProfile } = useGetCareerProfile();
@@ -279,7 +286,10 @@ export default function ResumeBuilder() {
     }
   };
 
-  if (isFetchingTemplate || (isEditing && isFetchingResume && !resume)) {
+  if (
+    (isFetchingTemplate && !fetchedTemplate) ||
+    (isEditing && isFetchingResume && !resume)
+  ) {
     return (
       <SafeAreaView className="bg-canvas flex-1 items-center justify-center">
         <ActivityIndicator color={accent} />
