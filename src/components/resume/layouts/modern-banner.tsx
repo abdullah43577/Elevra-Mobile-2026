@@ -36,7 +36,7 @@ export function ModernBannerLayout({ theme, data, isThumbnail }: ResumeLayoutPro
       </View>
 
       <ResumePage style={style} padding={style.px(38)}>
-        <ResumeBody data={data} style={style} variant="rule" limit={isThumbnail} />
+        <ResumeBody data={data} style={style} variant="rule" />
       </ResumePage>
     </View>
   );

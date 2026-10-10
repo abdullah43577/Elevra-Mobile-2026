@@ -1,3 +1,4 @@
+import { ActiveApplications } from "@/components/home/active-applications";
 import { HomeHeader } from "@/components/home/home-header";
 import { SetupChecklist, SetupTask } from "@/components/home/setup-checklist";
 import { PrepReadinessCard } from "@/components/home/prep-readiness-card";
@@ -91,12 +92,12 @@ export default function Home() {
       onPress: () => router.push("/(dashboard)/setup"),
     },
     {
-      id: "first-resume",
-      title: "Build your first resume",
-      body: "Six ATS-ready templates, prefilled from your profile",
-      icon: "document-outline",
-      isDone: resumes.length > 0,
-      onPress: () => router.push("/(dashboard)/(tabs)/workspaces/resume-studio"),
+      id: "first-application",
+      title: "Add the job you want next",
+      body: "Paste the link and Elevra lays out every step from there",
+      icon: "briefcase-outline",
+      isDone: applications.length > 0,
+      onPress: () => router.push("/(dashboard)/(tabs)/applications/application-form"),
     },
   ];
 
@@ -158,6 +159,20 @@ export default function Home() {
         />
 
         <View className="mt-6 px-5">
+          <ActiveApplications
+            applications={applications}
+            onOpen={(application) =>
+              router.push({
+                pathname: "/(dashboard)/(tabs)/applications/application-detail",
+                params: { id: application.id },
+              })
+            }
+            onSeeAll={() => router.push("/(dashboard)/(tabs)/applications")}
+            onAdd={() => router.push("/(dashboard)/(tabs)/applications/application-form")}
+          />
+        </View>
+
+        <View className="mt-8 px-5">
           <StatsOverview
             counts={{
               Note: notes.length,

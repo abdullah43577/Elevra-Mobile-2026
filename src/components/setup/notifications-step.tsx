@@ -1,3 +1,4 @@
+import { Illustration } from "@/components/illustrations/illustration";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { useThemeColors } from "@/hooks/use-theme-colors";
@@ -29,18 +30,15 @@ export const NotificationsStep = function ({
   onEnable,
 }: Props) {
   const { contentTint, foregroundMuted } = useThemeColors();
-  const { color, holder } = contentTint("application");
+  const { color } = contentTint("application");
 
   return (
     <View>
-      <View
-        className="items-center justify-center rounded-squircle"
-        style={{ width: 44, height: 44, backgroundColor: holder }}
-      >
-        <Ionicons name="notifications-outline" size={21} color={color} />
+      <View className="self-start">
+        <Illustration name="setupNotifications" color={color} size={148} />
       </View>
 
-      <AppText type="display" className="mt-5">
+      <AppText type="display" className="mt-4">
         Stay on top of your search
       </AppText>
       <AppText type="subtitle" className="mt-2">

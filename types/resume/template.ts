@@ -10,7 +10,6 @@ export interface Template<K extends LayoutKey = LayoutKey> {
   themeId: string;
   theme: ThemeFor<K>;
   defaultData: ResumeData;
-  isPremium: boolean;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -22,6 +21,5 @@ export type AnyTemplate = Template<LayoutKey>;
 
 export interface TemplateFilters {
   category?: string;
-  isPremium?: boolean;
   search?: string;
 }

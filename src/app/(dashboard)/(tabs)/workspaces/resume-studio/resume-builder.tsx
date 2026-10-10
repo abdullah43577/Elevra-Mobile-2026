@@ -17,7 +17,6 @@ import { useThemeColors } from "@/hooks/use-theme-colors";
 import {
   DEFAULT_EDUCATION,
   DEFAULT_EXPERIENCE,
-  DEFAULT_SKILL,
   ResumeBuilderFormValues,
   resumeBuilderSchema,
 } from "@/schemas/resume-builder/resume-builder";
@@ -39,8 +38,9 @@ export default function ResumeBuilder() {
   const params = useLocalSearchParams<{
     templateId?: string;
     resumeId?: string;
+    applicationId?: string;
   }>();
-  const { templateId, resumeId } = params;
+  const { templateId, resumeId, applicationId } = params;
   const isEditing = !!resumeId;
 
   const [activeStep, setActiveStep] = useState(0);
@@ -50,13 +50,21 @@ export default function ResumeBuilder() {
   const [pendingResume, setPendingResume] =
     useState<ResumeBuilderFormValues | null>(null);
 
-  const { template, isFetchingTemplate } = useGetTemplateById({
+  const { template: fetchedTemplate, isFetchingTemplate } = useGetTemplateById({
     templateId: templateId || "",
   });
   const { resume, isFetchingResume } = useGetResumeById({
     resumeId: resumeId || "",
   });
-  const { saveResume, isSaving } = useSaveResume({ resumeId });
+
+  /*
+    Editing arrives with a resumeId and no templateId, so there is nothing to
+    fetch a template by — the resume carries its own (theme nested), which is
+    the same shape the template endpoint returns.
+  */
+  const template = fetchedTemplate ?? resume?.template;
+  // Opened from an application (a tailored resume): saving returns there.
+  const { saveResume, isSaving } = useSaveResume({ resumeId, shouldRedirect: !applicationId });
 
   const { careerProfile, hasCareerProfile } = useGetCareerProfile();
   const { saveCareerProfile, isSavingCareerProfile } = useSaveCareerProfile({
@@ -85,7 +93,11 @@ export default function ResumeBuilder() {
       },
       experience: [DEFAULT_EXPERIENCE],
       education: [DEFAULT_EDUCATION],
-      skills: [DEFAULT_SKILL],
+      // Skills starts empty even though it is a required-ish section, because
+      // it is the one chip-based step: you type into a separate input and press
+      // add, so there is no blank row to fill in. A seeded entry renders as an
+      // empty chip and fails skillSchema's min(1) on save.
+      skills: [],
       // Optional sections start empty. A blank row is an invalid row — each
       // item schema requires its fields, so seeding one blank entry per
       // optional section made saving impossible until every section was filled.
@@ -120,7 +132,7 @@ export default function ResumeBuilder() {
       education: resume.education?.length
         ? resume.education
         : [DEFAULT_EDUCATION],
-      skills: resume.skills?.length ? resume.skills : [DEFAULT_SKILL],
+      skills: resume.skills ?? [],
       languages: resume.languages ?? [],
       certifications: resume.certifications ?? [],
       projects: resume.projects ?? [],
@@ -212,11 +224,7 @@ export default function ResumeBuilder() {
       references: data.references,
     });
 
-    const msg = isEditing
-      ? "Resume updated successfully"
-      : "Resume created successfully";
-
-    showToast("success", msg);
+    if (applicationId) router.back();
   };
 
   /*
@@ -276,7 +284,10 @@ export default function ResumeBuilder() {
     }
   };
 
-  if (isFetchingTemplate || (isEditing && isFetchingResume && !resume)) {
+  if (
+    (isFetchingTemplate && !fetchedTemplate) ||
+    (isEditing && isFetchingResume && !resume)
+  ) {
     return (
       <SafeAreaView className="bg-canvas flex-1 items-center justify-center">
         <ActivityIndicator color={accent} />

@@ -1,3 +1,4 @@
+import { Illustration } from "@/components/illustrations/illustration";
 import { AppText } from "@/components/shared/app-text";
 import {
   CONTENT_META,
@@ -15,14 +16,14 @@ import { View } from "react-native";
 */
 const HIGHLIGHTS: { type: ContentCategory; title: string; body: string }[] = [
   {
+    type: "Application",
+    title: "Start from a job you want",
+    body: "Paste the link in Applications. Each one lists its next step, posting to thank-you.",
+  },
+  {
     type: "Resume",
     title: "Tailor a resume per role",
     body: "Six ATS-safe templates, and your profile fills the first draft.",
-  },
-  {
-    type: "Application",
-    title: "Track where you applied",
-    body: "Every role in one pipeline, with the resume and letter you sent attached.",
   },
   {
     type: "InterviewQuestion",
@@ -32,11 +33,17 @@ const HIGHLIGHTS: { type: ContentCategory; title: string; body: string }[] = [
 ];
 
 export const TourStep = function () {
-  const { contentTint } = useThemeColors();
+  const { contentTint, contentColor } = useThemeColors();
 
   return (
     <View>
-      <AppText type="display">You are set up</AppText>
+      <View className="self-start">
+        <Illustration name="setupDone" color={contentColor("note")} size={148} />
+      </View>
+
+      <AppText type="display" className="mt-4">
+        You are set up
+      </AppText>
       <AppText type="subtitle" className="mt-2">
         Here is what is waiting for you. Nothing else needs configuring.
       </AppText>

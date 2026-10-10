@@ -24,7 +24,7 @@ export const CONTENT_ROUTES = {
     param: "resumeId",
   },
   Application: {
-    route: "/(dashboard)/(tabs)/workspaces/job-tracker/application-detail",
+    route: "/(dashboard)/(tabs)/applications/application-detail",
     param: "id",
   },
   CoverLetter: {

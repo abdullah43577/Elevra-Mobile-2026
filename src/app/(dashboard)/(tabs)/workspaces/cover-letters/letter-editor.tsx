@@ -6,11 +6,14 @@ import { LetterPreview } from "@/components/cover-letters/letter-preview";
 import { LetterTemplateRow } from "@/components/cover-letters/letter-template-row";
 import { AppButton } from "@/components/shared/app-button";
 import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { IconButton } from "@/components/shared/icon-button";
 import { ScreenHeader } from "@/components/shared/screen-header";
 import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profile";
+import { useCoverLetterDrafting } from "@/hooks/cover-letters/use-cover-letter-drafting";
 import { useGetCoverLetterById } from "@/hooks/cover-letters/use-get-cover-letter-by-id";
 import { useSaveCoverLetter } from "@/hooks/cover-letters/use-save-cover-letter";
+import { useGetApplicationById } from "@/hooks/job-applications/use-get-application-by-id";
 import { useGetTemplates } from "@/hooks/resume/use-get-templates";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import {
@@ -50,8 +53,13 @@ export default function LetterEditor() {
   const { contentColor } = useThemeColors();
   const accent = contentColor("letter");
 
-  const { coverLetterId } = useLocalSearchParams<{ coverLetterId?: string }>();
+  const { coverLetterId, applicationId } = useLocalSearchParams<{
+    coverLetterId?: string;
+    applicationId?: string;
+  }>();
   const isEditing = !!coverLetterId;
+  // Only a new letter is written "for" an application; editing leaves links alone.
+  const forApplicationId = isEditing ? undefined : applicationId;
 
   const [templateId, setTemplateId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -62,12 +70,18 @@ export default function LetterEditor() {
     coverLetterId: coverLetterId ?? "",
   });
   const { careerProfile, hasCareerProfile } = useGetCareerProfile();
+  const { application } = useGetApplicationById({
+    applicationId: forApplicationId ?? "",
+    shouldFetch: !!forApplicationId,
+  });
   const { saveCoverLetter, isSavingCoverLetter } = useSaveCoverLetter({
     ...(coverLetterId && { coverLetterId }),
+    ...(forApplicationId && { applicationId: forApplicationId }),
   });
 
   const {
     control,
+    getValues,
     handleSubmit,
     reset,
     setValue,
@@ -105,6 +119,29 @@ export default function LetterEditor() {
       },
     });
   }, [coverLetter, isEditing]);
+
+  const prefilledFromApplication = useRef(false);
+
+  useEffect(() => {
+    if (!application || prefilledFromApplication.current) return;
+    prefilledFromApplication.current = true;
+    setValue("company", application.company);
+    setValue("role", application.role);
+  }, [application, setValue]);
+
+  const drafting = useCoverLetterDrafting({
+    ...(forApplicationId && { applicationId: forApplicationId }),
+    getValues: () => {
+      const current = getValues();
+      return {
+        company: current.company,
+        role: current.role,
+        body: current.body,
+        ...(current.recipientName && { recipientName: current.recipientName }),
+      };
+    },
+    onDrafted: (body) => setValue("body", body, { shouldDirty: true, shouldValidate: true }),
+  });
 
   // A new letter needs some template chosen before it can render a preview.
   useEffect(() => {
@@ -158,8 +195,11 @@ export default function LetterEditor() {
             ...(data.recipientTitle && { recipientTitle: data.recipientTitle }),
             ...(data.companyAddress && { companyAddress: data.companyAddress }),
             ...(data.closing && { closing: data.closing }),
+            ...(forApplicationId && { applicationId: forApplicationId }),
           }),
     });
+
+    if (forApplicationId) router.back();
   };
 
   const values = watch();
@@ -205,7 +245,11 @@ export default function LetterEditor() {
             showsVerticalScrollIndicator={false}
           >
             <View className="mt-4">
-              <AiDraftCard />
+              <AiDraftCard
+                isPro={drafting.isPro}
+                isDrafting={drafting.isDrafting}
+                onPress={drafting.handleDraft}
+              />
             </View>
 
             <View className="mt-8">
@@ -264,6 +308,15 @@ export default function LetterEditor() {
         accentColor={accent}
         onSelect={setTemplateId}
         onClose={() => setIsTemplatePickerVisible(false)}
+      />
+
+      <ConfirmDialog
+        visible={drafting.isConfirmingOverwrite}
+        title="Replace your letter?"
+        message="The draft replaces what you have written in the body. Your other details stay as they are."
+        confirmLabel="Replace"
+        onConfirm={drafting.handleConfirmOverwrite}
+        onCancel={drafting.handleCancelOverwrite}
       />
     </SafeAreaView>
   );

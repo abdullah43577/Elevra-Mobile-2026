@@ -26,7 +26,7 @@ export function AtsAccentLayout({ theme, data, isThumbnail }: ResumeLayoutProps)
         <ContactLine items={contactItems(data)} style={style} align="left" />
       </View>
 
-      <ResumeBody data={data} style={style} variant="rule" limit={isThumbnail} />
+      <ResumeBody data={data} style={style} variant="rule" />
     </ResumePage>
   );
 }

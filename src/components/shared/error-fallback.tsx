@@ -1,3 +1,5 @@
+import { Illustration } from "@/components/illustrations/illustration";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppText } from "./app-text";
@@ -23,6 +25,7 @@ export const ErrorFallback = ({
     description ||
     (typeof error === "string" ? error : error?.message) ||
     "An unexpected error occurred. Please try again.";
+  const { danger } = useThemeColors();
 
   //   const handleGoBack = () => {
   //     if (router.canGoBack()) {
@@ -36,9 +39,8 @@ export const ErrorFallback = ({
     <View className={containerClassName}>
       <SafeAreaView className="flex-1 items-center justify-center px-5">
         <View className="items-center">
-          {/* Error Icon */}
-          <View className="mb-6 size-16 items-center justify-center rounded-full bg-danger-muted">
-            <AppText className="text-2xl">⚠️</AppText>
+          <View className="mb-5">
+            <Illustration name="error" color={danger} size={156} />
           </View>
 
           {/* Title */}

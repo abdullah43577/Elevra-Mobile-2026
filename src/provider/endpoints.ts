@@ -1,6 +1,8 @@
 export const API_ENDPOINTS = {
   auth: {
     signin: "/auth/signin",
+    google: "/auth/google",
+    apple: "/auth/apple",
     register: "/auth/signup",
     verifyEmail: "/auth/verify-email",
     resendVerificationOtp: "/auth/resend-verification-otp",
@@ -76,6 +78,7 @@ export const API_ENDPOINTS = {
   jobApplications: {
     list: "/job-applications",
     stats: "/job-applications/stats",
+    parse: "/job-applications/parse",
     detail: (id: string) => `/job-applications/${id}`,
     create: "/job-applications",
     update: (id: string) => `/job-applications/${id}`,
@@ -88,6 +91,10 @@ export const API_ENDPOINTS = {
     linkRecording: (id: string) => `/job-applications/${id}/recordings`,
     unlinkRecording: (id: string, recordingId: string) =>
       `/job-applications/${id}/recordings/${recordingId}`,
+
+    tailor: (id: string) => `/job-applications/${id}/tailor`,
+    match: (id: string) => `/job-applications/${id}/match`,
+    messages: (id: string) => `/job-applications/${id}/messages`,
   },
 
   careerProfile: {
@@ -97,12 +104,14 @@ export const API_ENDPOINTS = {
     detail: "/career-profile",
     save: "/career-profile",
     delete: "/career-profile",
+    import: "/career-profile/import",
   },
 
   interviewPrep: {
     questions: "/interview-prep",
     stats: "/interview-prep/stats",
     practice: "/interview-prep/practice",
+    generate: "/interview-prep/generate",
     detail: (id: string) => `/interview-prep/${id}`,
     create: "/interview-prep",
     update: (id: string) => `/interview-prep/${id}`,
@@ -110,6 +119,7 @@ export const API_ENDPOINTS = {
     saveAnswer: (id: string) => `/interview-prep/${id}/answer`,
     uploadAnswerAudio: (id: string) => `/interview-prep/${id}/answer/audio`,
     deleteAnswerAudio: (id: string) => `/interview-prep/${id}/answer/audio`,
+    coachAnswer: (id: string) => `/interview-prep/${id}/answer/coach`,
     pinToApplication: (id: string, applicationId: string) =>
       `/interview-prep/${id}/applications/${applicationId}`,
     unpinFromApplication: (id: string, applicationId: string) =>
@@ -123,6 +133,7 @@ export const API_ENDPOINTS = {
     update: (id: string) => `/cover-letters/${id}`,
     delete: (id: string) => `/cover-letters/${id}`,
     export: (id: string) => `/cover-letters/${id}/export`,
+    draft: "/cover-letters/draft",
   },
 
   resume: {

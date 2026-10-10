@@ -1,3 +1,4 @@
+import { Illustration } from "@/components/illustrations/illustration";
 import { BenefitRow } from "@/components/paywall/benefit-row";
 import { PlanOption } from "@/components/paywall/plan-option";
 import { AppButton } from "@/components/shared/app-button";
@@ -9,7 +10,6 @@ import { useOfferings } from "@/hooks/subscriptions/use-offerings";
 import { usePurchasePro } from "@/hooks/subscriptions/use-purchase-pro";
 import { useEntitlements } from "@/hooks/use-entitlements";
 import { useThemeColors } from "@/hooks/use-theme-colors";
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
@@ -60,18 +60,15 @@ export default function Paywall() {
         <ScreenHeader title="Elevra Pro" onBack={() => router.back()} backIcon="close" />
 
         <View className="flex-1 items-center justify-center px-8">
-          <View
-            className="mb-5 items-center justify-center rounded-full"
-            style={{ width: 64, height: 64, backgroundColor: `${accent}1F` }}
-          >
-            <Ionicons name="checkmark-circle" size={30} color={accent} />
+          <View className="mb-5">
+            <Illustration name="proActive" color={accent} size={168} />
           </View>
 
           <AppText type="title" className="text-center">
             You are on Pro
           </AppText>
           <AppText type="subtitle" className="mt-2 text-center">
-            Every AI feature and unlimited PDF exports are unlocked on this
+            Tailoring, drafting and interview coaching are unlocked on this
             account.
           </AppText>
 
@@ -100,19 +97,16 @@ export default function Paywall() {
         showsVerticalScrollIndicator={false}
       >
         <View className="items-center pb-2 pt-2">
-          <View
-            className="mb-4 items-center justify-center rounded-full"
-            style={{ width: 60, height: 60, backgroundColor: `${accent}1F` }}
-          >
-            <Ionicons name="sparkles" size={26} color={accent} />
+          <View className="mb-3">
+            <Illustration name="paywall" color={accent} size={184} />
           </View>
 
           <AppText type="display" className="text-center text-[26px] leading-[32px]">
-            Get the whole toolkit
+            Get the job, not just the file
           </AppText>
           <AppText type="subtitle" className="mt-2 text-center">
-            Keep building for free. Upgrade when you need the finished file or
-            the AI behind it.
+            Building and exporting stay free. Pro adds the AI that tailors,
+            drafts and coaches for each application.
           </AppText>
         </View>
 

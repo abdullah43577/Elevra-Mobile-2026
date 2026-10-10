@@ -5,8 +5,6 @@ import { useDeleteResume } from "@/hooks/resume/use-delete-resume";
 import { useDuplicateResume } from "@/hooks/resume/use-duplicate-resume";
 import { useExportResume } from "@/hooks/resume/use-export-resume";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
-import { useProAction } from "@/components/shared/pro-gate";
-import { PRO_FEATURES } from "@/constants/entitlements";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { showToast } from "@/utils/show-toast";
 import { useRouter } from "expo-router";
@@ -25,7 +23,6 @@ export default function Resumes() {
 
   const { resumes, isFetchingResumes, refetchResumes } = useGetResumes();
   const { exportResume } = useExportResume();
-  const { allowed: canExport, copy: exportCopy } = useProAction(PRO_FEATURES.RESUME_EXPORT);
 
   const { deleteResume, isDeleting } = useDeleteResume({
     resumeId: deleteTarget?.id ?? "",
@@ -62,21 +59,6 @@ export default function Resumes() {
   };
 
   const handleExportResume = async function (resume: Resume) {
-    /*
-      The button stays visible for free users — hiding it would leave them with
-      no idea the feature exists. Tapping it opens the paywall rather than just
-      refusing: someone who has built a resume and reached for Export is at the
-      single highest-intent moment in the app.
-
-      The server rejects the call with a 402 regardless; this only saves them a
-      round trip.
-    */
-    if (!canExport) {
-      showToast("warning", exportCopy.blurb);
-      router.push("/(dashboard)/paywall");
-      return;
-    }
-
     if (!resume.template?.theme) {
       showToast("error", "This resume is missing its template");
       return;
@@ -150,6 +132,7 @@ export default function Resumes() {
         ListEmptyComponent={
           <EmptyState
             icon="document-outline"
+            illustration="emptyResumes"
             accentColor={accent}
             title="No resumes yet"
             subtitle="Pick a template to build your first resume"

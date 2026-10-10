@@ -1,3 +1,4 @@
+import { AnswerFeedbackCard } from "@/components/interview-prep/answer-feedback/answer-feedback-card";
 import { AnswerRecorder } from "@/components/interview-prep/answer-recorder";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
@@ -5,6 +6,7 @@ import { ScreenHeader } from "@/components/shared/screen-header";
 import { SectionHeader } from "@/components/shared/section-header";
 import { TextArea } from "@/components/primitives/text-area";
 import { CATEGORY_META, STATUS_META } from "@/constants/interview-prep";
+import { useCoachAnswer } from "@/hooks/interview-prep/use-coach-answer";
 import { useGetQuestions } from "@/hooks/interview-prep/use-get-questions";
 import { useSaveAnswer } from "@/hooks/interview-prep/use-save-answer";
 import { useSaveAnswerAudio } from "@/hooks/interview-prep/use-save-answer-audio";
@@ -42,6 +44,7 @@ export default function QuestionDetail() {
     onSuccess: () => router.back(),
   });
   const { saveAnswerAudio, deleteAnswerAudio, isUploading } = useSaveAnswerAudio();
+  const coaching = useCoachAnswer(questionId ?? "");
 
   // Guarded by id: the query object changes identity on every background
   // refetch, and re-running this would wipe whatever the user has typed.
@@ -175,6 +178,18 @@ export default function QuestionDetail() {
             onDeleteTake={() => deleteAnswerAudio(question.id)}
           />
         </View>
+
+        {answer?.audioUrl && !isUploading && (
+          <View className="mt-4">
+            <AnswerFeedbackCard
+              answer={answer}
+              accent={accent}
+              isPro={coaching.isPro}
+              isCoaching={coaching.isCoaching}
+              onCoach={coaching.handleCoach}
+            />
+          </View>
+        )}
       </KeyboardAwareScrollView>
 
       <View className="border-t-hairline border-line bg-surface px-5 py-4">

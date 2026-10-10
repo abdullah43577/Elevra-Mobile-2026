@@ -6,6 +6,7 @@ import { tokenStorage } from "@/provider/token-storage";
 import { useAuthStore } from "@/store/auth";
 import { clearPersistedCache } from "@/provider/query-persister";
 import { forgetPurchaser } from "@/provider/purchases";
+import { forgetSocialSession } from "@/provider/social-auth";
 import { queryClient } from "@/utils/queryClient";
 
 export const useGetProfile = function () {
@@ -29,6 +30,11 @@ export const useGetProfile = function () {
     // identified, the next account on this device would inherit their
     // entitlement until the next identify call.
     await forgetPurchaser();
+
+    // Google caches the signed-in account natively. Left in place, the next
+    // person on this device taps the Google button and is dropped straight back
+    // into the previous user's account with no chooser.
+    await forgetSocialSession();
 
     setAuthenticated(false);
   };

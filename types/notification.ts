@@ -2,7 +2,6 @@ export type NotificationType =
   | "SYSTEM"
   | "APPLICATION_STATUS"
   | "APPLICATION_REMINDER"
-  | "RESUME_EXPORT"
   | "NOTE_SUMMARY"
   | "VOICE_TRANSCRIPTION";
 

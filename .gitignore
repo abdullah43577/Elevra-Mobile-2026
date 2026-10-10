@@ -46,3 +46,8 @@ example
 /android
 
 google-services.json
+
+# Agent working notes — local only, kept out of history on purpose
+CLAUDE.md
+AGENTS.md
+.claude/

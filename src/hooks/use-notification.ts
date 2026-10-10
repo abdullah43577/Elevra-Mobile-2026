@@ -3,7 +3,7 @@ import * as Notifications from "expo-notifications";
 import { AppState } from "react-native";
 import { useAuthStore } from "@/store/auth";
 import { registerForPushNotificationsAsync } from "@/provider/register-for-push-notification";
-import { NOTIFICATION_ROUTES } from "@/constants/notifications";
+import { notificationTarget } from "@/constants/notifications";
 import { NotificationEntity } from "../../types/notification";
 import { router } from "expo-router";
 
@@ -80,17 +80,13 @@ export default function useNotifications() {
         // The server puts entityType/entityId in the push payload so a tap can
         // open the thing the notification is actually about.
         const data = response.notification.request.content.data as {
+          type?: string;
           entityType?: NotificationEntity;
           entityId?: string;
         };
 
-        const route = data?.entityType && NOTIFICATION_ROUTES[data.entityType];
-        if (route && data.entityId) {
-          router.push({
-            pathname: route as any,
-            params: { id: data.entityId },
-          });
-        }
+        const target = data && notificationTarget(data);
+        if (target) router.push(target);
       });
 
     return () => {

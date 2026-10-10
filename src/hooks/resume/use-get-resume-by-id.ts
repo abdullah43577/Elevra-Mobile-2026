@@ -3,9 +3,19 @@ import { Resume } from "../../../types/resume/resume";
 import { useGetData } from "../use-get-data";
 import { API_ENDPOINTS } from "@/provider/endpoints";
 
-export const useGetResumeById = function ({ resumeId }: { resumeId: string }) {
+interface UseGetResumeByIdOptions {
+  resumeId: string;
+  shouldFetch?: boolean;
+}
+
+export const useGetResumeById = function ({
+  resumeId,
+  shouldFetch,
+}: UseGetResumeByIdOptions) {
   const { data, isFetching, error, refetch } = useGetData<APIResponse<Resume>>({
     url: API_ENDPOINTS.resume.detail(resumeId),
+    // See use-get-template-by-id: an empty id hits the list route instead.
+    shouldFetch: shouldFetch ?? !!resumeId,
   });
 
   return {

@@ -40,7 +40,7 @@ export function TechFocusedLayout({ theme, data, isThumbnail }: ResumeLayoutProp
         </Section>
       )}
 
-      <ResumeBody data={data} style={style} variant="boxed" limit={isThumbnail} />
+      <ResumeBody data={data} style={style} variant="boxed" />
     </ResumePage>
   );
 }

@@ -126,6 +126,7 @@ export default function SmartNotes() {
           ListEmptyComponent={
             <EmptyState
               icon="document-text-outline"
+              illustration={isFiltering ? "noResults" : "emptyNotes"}
               title={isFiltering ? "No notes found" : "No notes yet"}
               subtitle={
                 isFiltering

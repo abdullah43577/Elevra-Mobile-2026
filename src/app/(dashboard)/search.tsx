@@ -89,6 +89,8 @@ export default function Search() {
       return (
         <EmptyState
           icon="search-outline"
+          illustration="searchStart"
+          accentColor={foreground}
           title="Search everything"
           subtitle="Notes, recordings, resumes, cover letters, applications, and your interview answers — all from one place."
         />
@@ -107,6 +109,8 @@ export default function Search() {
       return (
         <EmptyState
           icon="search-outline"
+          illustration={isOnline ? "noResults" : "offline"}
+          accentColor={foreground}
           title="No matches"
           subtitle={
             isOnline

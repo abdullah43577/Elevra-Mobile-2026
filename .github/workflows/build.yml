@@ -1,8 +1,15 @@
 name: Build Elevra Android APK
 
+# Builds only on master. A push to dev publishes an OTA update instead
+# (.eas/workflows/updates.yml), so the two never fire for the same push.
+#
+# OTA cannot carry a native change — a new native dependency, a config plugin,
+# an app.config.js permission, or a version bump all need a real build. Dispatch
+# this manually from whichever branch needs one; the job guards below pick the
+# profile from the ref.
 on:
   push:
-    branches: [dev, master]
+    branches: [master]
   workflow_dispatch:
 
 jobs:

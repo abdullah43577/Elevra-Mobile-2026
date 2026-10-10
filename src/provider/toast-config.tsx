@@ -78,10 +78,23 @@ const makeToast = function (type: keyof typeof variants) {
   return Toast;
 };
 
+const SuccessToast = makeToast("success");
+const ErrorToast = makeToast("error");
+const WarningToast = makeToast("warning");
+const InfoToast = makeToast("info");
+const LoadingToast = makeToast("loading");
+
+/*
+  Each entry returns an element, never the component itself. The library calls
+  these as plain functions inside its own render, and React Compiler gives each
+  toast component a memo cache — called directly, every type shared one cache
+  slot, so whichever type rendered first painted all later toasts (a wrong
+  password came up green).
+*/
 export const toastConfig = {
-  success: makeToast("success"),
-  error: makeToast("error"),
-  warning: makeToast("warning"),
-  info: makeToast("info"),
-  loading: makeToast("loading"),
+  success: (props: BaseToastProps) => <SuccessToast {...props} />,
+  error: (props: BaseToastProps) => <ErrorToast {...props} />,
+  warning: (props: BaseToastProps) => <WarningToast {...props} />,
+  info: (props: BaseToastProps) => <InfoToast {...props} />,
+  loading: (props: BaseToastProps) => <LoadingToast {...props} />,
 };

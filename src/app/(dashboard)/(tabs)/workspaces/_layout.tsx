@@ -4,7 +4,7 @@ export default function WorkspacesLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // Hide header for all workspace screens
+        headerShown: false,
       }}
     >
       <Stack.Screen
@@ -52,27 +52,6 @@ export default function WorkspacesLayout() {
         name="smart-notes"
         options={{
           title: "Smart Notes",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="job-tracker"
-        options={{
-          title: "Job Tracker",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="ai-rewriter"
-        options={{
-          title: "AI Rewriter",
-          headerBackTitle: "Back",
-        }}
-      />
-      <Stack.Screen
-        name="career-tools"
-        options={{
-          title: "Career Tools",
           headerBackTitle: "Back",
         }}
       />

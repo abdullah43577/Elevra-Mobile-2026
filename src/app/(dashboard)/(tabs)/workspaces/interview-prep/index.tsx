@@ -137,7 +137,9 @@ export default function InterviewPrep() {
         </View>
 
         <View className="mt-6 px-5">
-          <AiQuestionsCard />
+          <AiQuestionsCard
+            onPress={() => router.push("/(dashboard)/(tabs)/applications")}
+          />
         </View>
 
         <View className="mt-8 flex-1 px-5">
@@ -150,6 +152,7 @@ export default function InterviewPrep() {
           ) : ordered.length === 0 ? (
             <EmptyState
               icon="chatbubbles-outline"
+              illustration="noResults"
               accentColor={accent}
               title="No questions found"
               subtitle={

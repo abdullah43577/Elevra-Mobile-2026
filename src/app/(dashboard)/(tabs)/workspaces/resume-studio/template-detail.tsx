@@ -1,7 +1,6 @@
 import { TemplatePreview } from "@/components/resume-studio/template-preview";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
-import { Badge } from "@/components/shared/badge";
 import { ScreenHeader } from "@/components/shared/screen-header";
 import { useGetTemplateById } from "@/hooks/resume/use-get-template-by-id";
 import { useThemeColors } from "@/hooks/use-theme-colors";
@@ -83,7 +82,6 @@ export default function TemplateDetail() {
                 {template.category}
               </AppText>
             </View>
-            {template.isPremium && <Badge label="Pro" variant="secondary" />}
           </View>
 
           <View

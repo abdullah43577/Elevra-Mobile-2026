@@ -3,15 +3,12 @@ import { AppText } from "@/components/shared/app-text";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { IconButton } from "@/components/shared/icon-button";
-import { useProAction } from "@/components/shared/pro-gate";
 import { SearchBar } from "@/components/shared/search-bar";
-import { PRO_FEATURES } from "@/constants/entitlements";
 import { useDeleteCoverLetter } from "@/hooks/cover-letters/use-delete-cover-letter";
 import { useExportCoverLetter } from "@/hooks/cover-letters/use-export-cover-letter";
 import { useGetCoverLetters } from "@/hooks/cover-letters/use-get-cover-letters";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useThemeColors } from "@/hooks/use-theme-colors";
-import { showToast } from "@/utils/show-toast";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -41,9 +38,6 @@ export default function CoverLetters() {
     useGetCoverLetters({ ...(debouncedSearch && { search: debouncedSearch }) });
 
   const { exportCoverLetter } = useExportCoverLetter();
-  const { allowed: canExport, copy: exportCopy } = useProAction(
-    PRO_FEATURES.COVER_LETTER_EXPORT,
-  );
 
   const { deleteCoverLetter, isDeletingCoverLetter } = useDeleteCoverLetter({
     coverLetterId: deleteTarget?.id ?? "",
@@ -60,19 +54,7 @@ export default function CoverLetters() {
     });
   };
 
-  /*
-    The button stays visible for free users. Tapping it opens the paywall rather
-    than just refusing — someone who has written a letter and reached for Export
-    is at the highest-intent moment there is. The server rejects with 402
-    regardless; this only saves a round trip.
-  */
   const handleExport = async function (coverLetter: CoverLetter) {
-    if (!canExport) {
-      showToast("warning", exportCopy.blurb);
-      router.push("/(dashboard)/paywall");
-      return;
-    }
-
     setExportingId(coverLetter.id);
     await exportCoverLetter(coverLetter);
     setExportingId(null);
@@ -152,6 +134,7 @@ export default function CoverLetters() {
           ListEmptyComponent={
             <EmptyState
               icon="mail-outline"
+              illustration={isFiltering ? "noResults" : "emptyLetters"}
               accentColor={accent}
               title={isFiltering ? "No letters found" : "No cover letters yet"}
               subtitle={

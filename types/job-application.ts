@@ -1,3 +1,5 @@
+import { Resume } from "./resume/resume";
+
 export type ApplicationStatus =
   | "SAVED"
   | "APPLIED"
@@ -78,6 +80,8 @@ export interface JobApplication {
     linkedNotes: number;
     linkedRecordings: number;
   };
+  // List rows only: pinned questions, and how many of them have been rehearsed.
+  prep?: { pinned: number; rehearsed: number };
   createdAt: string;
   updatedAt: string;
 }
@@ -140,4 +144,88 @@ export interface UpdateApplicationRequest
   salaryMax?: number | null;
   salaryCurrency?: string | null;
   isArchived?: boolean;
+}
+
+export interface JobKeyword {
+  term: string;
+  required: boolean;
+}
+
+// Computed on the server from extracted keywords, never generated — the same
+// resume against the same posting always scores the same.
+export interface KeywordCoverage {
+  score: number;
+  total: number;
+  matched: string[];
+  missing: JobKeyword[];
+}
+
+export interface ApplicationMatch {
+  resumeId: string;
+  coverage: KeywordCoverage;
+}
+
+export interface TailorReport {
+  before: KeywordCoverage;
+  after: KeywordCoverage;
+  changes: string[];
+  addedTerms: { term: string; evidence: string }[];
+  // Sections the server reverted to the original because the rewrite added
+  // something the resume does not say.
+  keptOriginal: number;
+}
+
+export interface TailorResult {
+  resume: Resume;
+  report: TailorReport;
+}
+
+export interface TailorResumeRequest {
+  // Omitted to tailor from the career profile.
+  baseResumeId?: string;
+}
+
+// Fields read from a job posting, for the new-application form to review.
+export interface JobDraft {
+  company?: string;
+  role?: string;
+  location?: string;
+  workArrangement?: WorkArrangement;
+  jobUrl?: string;
+  source?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: string;
+  jobDescription?: string;
+}
+
+export type ParseJobRequest = { url: string } | { text: string };
+
+export interface ParseJobResult {
+  draft: JobDraft;
+  // "structured" means the page carried schema.org job data and no AI was used.
+  method: "structured" | "ai";
+}
+
+export type MessageKind =
+  | "FOLLOW_UP"
+  | "THANK_YOU"
+  | "ACCEPT_OFFER"
+  | "NEGOTIATE_OFFER"
+  | "DECLINE_OFFER"
+  | "REJECTION_REPLY";
+
+export interface DraftMessageRequest {
+  kind: MessageKind;
+  interviewerName?: string;
+  // Anything the user wants mentioned: what was discussed, a figure to ask about.
+  points?: string;
+}
+
+// A draft only — the app never sends it; the user shares it or opens their mail app.
+export interface ApplicationMessage {
+  kind: MessageKind;
+  subject: string;
+  body: string;
+  removedSentences: number;
 }

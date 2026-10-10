@@ -1,41 +1,43 @@
 import { AppText } from "@/components/shared/app-text";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Ionicons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
+
+interface Props {
+  onPress: () => void;
+}
 
 /*
-  The AI surface, deliberately inert. Generating role-specific questions from a
-  job description, and critiquing a recorded answer, are the two obvious AI
-  features here — and both stay gated until the AI backend exists.
-
-  This is also why the seeded bank is category-tagged rather than role-tagged:
-  role-specific questions are AI's job, not a hand-curated catalogue's.
+  Points at where the two AI features live, since neither is on this screen:
+  job-specific questions are generated from an application's posting, and
+  feedback comes from recording a take on any question. It replaced an inert
+  "Soon" card once both shipped.
 */
-export const AiQuestionsCard = function () {
-  const { foregroundMuted } = useThemeColors();
+export const AiQuestionsCard = function ({ onPress }: Props) {
+  const { contentTint } = useThemeColors();
+  const tint = contentTint("interview");
 
   return (
-    <View className="flex-row items-center gap-3 rounded-2xl border-hairline border-line bg-surface-muted p-4">
+    <Pressable
+      onPress={onPress}
+      className="flex-row items-center gap-3 rounded-2xl border-hairline border-line p-4 active:opacity-70"
+      style={{ backgroundColor: tint.surface }}
+    >
       <View
         className="items-center justify-center rounded-squircle"
-        style={{ width: 36, height: 36 }}
+        style={{ width: 36, height: 36, backgroundColor: tint.holder }}
       >
-        <Ionicons name="sparkles-outline" size={18} color={foregroundMuted} />
+        <Ionicons name="sparkles-outline" size={18} color={tint.color} />
       </View>
 
       <View className="flex-1">
-        <View className="flex-row items-center gap-2">
-          <AppText type="label" className="text-foreground-muted">
-            Questions for this role
-          </AppText>
-          <View className="rounded-full bg-surface px-2 py-0.5">
-            <AppText type="caption">Soon</AppText>
-          </View>
-        </View>
+        <AppText type="label">Questions for a specific job</AppText>
         <AppText type="caption" className="mt-0.5">
-          Generate questions from a job description, and get your answers critiqued
+          Generate them from an application. Record any answer to get feedback on it.
         </AppText>
       </View>
-    </View>
+
+      <Ionicons name="chevron-forward" size={16} color={tint.color} />
+    </Pressable>
   );
 };

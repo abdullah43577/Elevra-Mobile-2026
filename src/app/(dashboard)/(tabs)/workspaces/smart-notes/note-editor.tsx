@@ -4,6 +4,7 @@ import { NoteEditorHeader } from "@/components/smart-notes/note-editor/note-edit
 import { TagManager } from "@/components/smart-notes/note-editor/tag-manager";
 import { RichTextEditor } from "@/components/smart-notes/rich-text-editor";
 import { useProAction } from "@/components/shared/pro-gate";
+import { isAiErrorCode } from "@/constants/ai";
 import { PRO_FEATURES } from "@/constants/entitlements";
 import { useGenerateSummary } from "@/hooks/smart-notes/use-generate-summary";
 import { useGetFolders } from "@/hooks/smart-notes/use-get-folders";
@@ -113,8 +114,11 @@ export default function NoteEditor() {
         setSummaryComplete(true);
         showToast("success", "Summary generated successfully");
       },
-      (errorMsg: string) => {
-        showToast("error", errorMsg || "Failed to generate summary");
+      (errorMsg: string, code?: string) => {
+        showToast(
+          isAiErrorCode(code) ? "warning" : "error",
+          errorMsg || "Failed to generate summary",
+        );
       },
     );
   };

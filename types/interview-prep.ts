@@ -4,6 +4,7 @@ export type InterviewCategory =
   | "SITUATIONAL"
   | "MOTIVATION"
   | "STRENGTHS"
+  | "ROLE_SPECIFIC"
   | "CLOSING";
 
 export type AnswerStatus = "DRAFT" | "NEEDS_WORK" | "READY";
@@ -15,6 +16,9 @@ export interface InterviewAnswer {
   text?: string | null;
   audioUrl?: string | null;
   audioDuration?: number | null;
+  // Both belong to the current take; recording a new one clears them.
+  transcript?: string | null;
+  feedback?: AnswerFeedback | null;
   status: AnswerStatus;
   practiceCount: number;
   lastPracticedAt?: string | null;
@@ -71,4 +75,42 @@ export interface QuestionFilters {
   search?: string;
   applicationId?: string;
   unanswered?: boolean;
+}
+
+export interface GenerateQuestionsResult {
+  // Newly written and pinned to the application.
+  questions: InterviewQuestion[];
+  // Generated questions that matched ones already in the bank, pinned instead of duplicated.
+  pinnedExisting: number;
+  // Dropped because they could not be traced to the posting or the resume.
+  dropped: number;
+}
+
+/*
+  Coaching on one recorded take. `metrics` is counted on the server, never
+  generated, so the same take always scores the same. `tighterVersion` is
+  absent when the model's rewrite added something the candidate did not say.
+*/
+export interface AnswerFeedback {
+  metrics: {
+    wordCount: number;
+    durationSeconds: number | null;
+    wordsPerMinute: number | null;
+    pace: "slow" | "steady" | "fast" | null;
+    fillerCount: number;
+    fillers: { word: string; count: number }[];
+    length: "short" | "good" | "long" | "too_long" | null;
+  };
+  structure: {
+    applies: boolean;
+    situation?: boolean;
+    task?: boolean;
+    action?: boolean;
+    result?: boolean;
+  };
+  specificity: "concrete" | "mixed" | "vague";
+  strongest: string;
+  biggestFix: string;
+  tighterVersion?: string;
+  generatedAt: string;
 }

@@ -1,8 +1,8 @@
 import api from "@/provider/api";
 import { API_ENDPOINTS } from "@/provider/endpoints";
-import { queryClient } from "@/utils/queryClient";
 import { showToast } from "@/utils/show-toast";
 import { useState } from "react";
+import { refreshQuestionQueries } from "./refresh-question-queries";
 
 /*
   Pins a question to one application, for rehearsing before a specific
@@ -14,11 +14,7 @@ import { useState } from "react";
 export const usePinQuestion = function (applicationId: string) {
   const [isPinning, setIsPinning] = useState(false);
 
-  const refresh = function () {
-    queryClient.refetchQueries({
-      queryKey: [API_ENDPOINTS.interviewPrep.questions],
-    });
-  };
+  const refresh = refreshQuestionQueries;
 
   const pinQuestion = async function (questionId: string) {
     setIsPinning(true);

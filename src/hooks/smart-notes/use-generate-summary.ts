@@ -11,7 +11,7 @@ export const useGenerateSummary = function ({ noteId }: { noteId: string }) {
   const generateSummary = useCallback(
     function (
       onComplete?: (summary: string) => void,
-      onError?: (error: string) => void,
+      onError?: (error: string, code?: string) => void,
     ) {
       if (!noteId) {
         const errorMsg = "Please save the note first";
@@ -31,9 +31,9 @@ export const useGenerateSummary = function ({ noteId }: { noteId: string }) {
           setSummary(data.summary);
           if (onComplete) onComplete(data.summary);
         },
-        onError: (errorMsg: string) => {
+        onError: (errorMsg: string, code?: string) => {
           setError(errorMsg);
-          if (onError) onError(errorMsg);
+          if (onError) onError(errorMsg, code);
         },
       });
     },

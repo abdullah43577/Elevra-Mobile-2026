@@ -2,7 +2,6 @@ import { CareerProfile } from "../../types/career-profile";
 import {
   DEFAULT_EDUCATION,
   DEFAULT_EXPERIENCE,
-  DEFAULT_SKILL,
   ResumeBuilderFormValues,
 } from "@/schemas/resume-builder/resume-builder";
 import { ProfileSectionId } from "@/constants/career-profile";
@@ -30,9 +29,12 @@ interface AccountDefaults {
 
   `account` seeds the name and email of a profile that has never been saved —
   the user already gave us those at sign-up, so asking again is busywork.
+
+  Takes the sections only, so an imported profile (which has no id or
+  timestamps yet) hydrates the editor the same way a saved one does.
 */
 export const toProfileFormValues = function (
-  profile?: CareerProfile,
+  profile?: Omit<CareerProfile, "id" | "userId" | "createdAt" | "updatedAt">,
   account?: AccountDefaults,
 ): ResumeBuilderFormValues {
   return {
@@ -89,6 +91,5 @@ export const toResumeFormValues = function (
     ...values,
     experience: values.experience?.length ? values.experience : [DEFAULT_EXPERIENCE],
     education: values.education?.length ? values.education : [DEFAULT_EDUCATION],
-    skills: values.skills?.length ? values.skills : [DEFAULT_SKILL],
   };
 };

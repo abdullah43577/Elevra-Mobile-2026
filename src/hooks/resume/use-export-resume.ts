@@ -2,7 +2,6 @@ import { buildResumeHtml } from "@/components/resume/html/resume-html";
 import { API_ENDPOINTS } from "@/provider/endpoints";
 import api from "@/provider/api";
 import { showToast } from "@/utils/show-toast";
-import { AxiosError } from "axios";
 import { File, Paths } from "expo-file-system";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
@@ -51,40 +50,6 @@ export const useExportResume = function () {
     setIsExporting(true);
 
     try {
-      /*
-        Ask the server FIRST, before generating anything.
-
-        The PDF is produced on-device, so the server can never physically
-        prevent it — but calling first means a free user is turned away by the
-        402 rather than getting a file and having the rejection swallowed
-        afterwards. The server stays the authority; the client obeys it.
-
-        A network failure is treated as permission granted: export is the one
-        thing a user may genuinely need on a bad connection, and the entitlement
-        check is not worth blocking that. Only an explicit 402 stops the export.
-      */
-      if (resumeId) {
-        try {
-          await api.post(API_ENDPOINTS.resume.export(resumeId));
-        } catch (error) {
-          const status = (error as AxiosError)?.response?.status;
-
-          if (status === 402) {
-            const message =
-              ((error as AxiosError)?.response?.data as { message?: string })
-                ?.message ?? "Exporting a resume requires Elevra Pro";
-            showToast("warning", message);
-            return;
-          }
-
-          if (status && status !== 402) {
-            showToast("error", "Could not export this resume");
-            return;
-          }
-          // No response at all — offline. Fall through and export anyway.
-        }
-      }
-
       const html = buildResumeHtml(template, data);
       const { uri } = await Print.printToFileAsync({ html, base64: false });
 
@@ -118,6 +83,9 @@ export const useExportResume = function () {
         showToast("error", "Sharing is not available on this device");
         return;
       }
+
+      // Only stamps lastExportedAt, so it runs after the share and never blocks it.
+      if (resumeId) api.post(API_ENDPOINTS.resume.export(resumeId)).catch(() => {});
     } catch (error) {
       showToast("error", "Could not export this resume");
       console.error("Resume export failed:", error);

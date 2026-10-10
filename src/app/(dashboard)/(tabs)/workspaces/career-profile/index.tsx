@@ -1,6 +1,8 @@
+import { ImportPdfCard } from "@/components/career-profile/import-pdf-card";
 import { ProfileCompleteness } from "@/components/career-profile/profile-completeness";
 import { ProfileSectionList } from "@/components/career-profile/profile-section-list";
 import { AppText } from "@/components/shared/app-text";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { SectionHeader } from "@/components/shared/section-header";
 import {
@@ -8,6 +10,7 @@ import {
   ProfileSectionId,
 } from "@/constants/career-profile";
 import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profile";
+import { useResumeImportFlow } from "@/hooks/career-profile/use-resume-import-flow";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { countProfileSection } from "@/utils/career-profile";
 import { useRouter } from "expo-router";
@@ -26,6 +29,8 @@ export default function CareerProfileOverview() {
     isFetchingCareerProfile,
     refetchCareerProfile,
   } = useGetCareerProfile();
+
+  const importFlow = useResumeImportFlow({ hasExistingProfile: hasCareerProfile });
 
   const counts = PROFILE_SECTIONS.reduce(
     (accumulator, section) => {
@@ -61,6 +66,10 @@ export default function CareerProfileOverview() {
         <AppText type="subtitle" className="mt-1">
           Your history in one place. New resumes prefill from it.
         </AppText>
+
+        <View className="mt-4">
+          <ImportPdfCard isImporting={importFlow.isImporting} onPress={importFlow.handleStart} />
+        </View>
       </View>
 
       <ScrollView
@@ -99,6 +108,7 @@ export default function CareerProfileOverview() {
         ) : (
           <EmptyState
             icon="person-outline"
+            illustration="emptyCareerProfile"
             accentColor={accent}
             title="Build your career profile"
             subtitle="Enter your history once. Every resume you build after this starts already filled in."
@@ -107,6 +117,15 @@ export default function CareerProfileOverview() {
           />
         )}
       </ScrollView>
+
+      <ConfirmDialog
+        visible={importFlow.isConfirmingReplace}
+        title="Import over your profile?"
+        message="What's in the PDF will replace your profile once you review it and tap Save. Until then, nothing changes."
+        confirmLabel="Choose PDF"
+        onConfirm={importFlow.handleConfirmReplace}
+        onCancel={importFlow.handleCancelReplace}
+      />
     </SafeAreaView>
   );
 }

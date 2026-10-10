@@ -1,8 +1,8 @@
+import { Illustration } from "@/components/illustrations/illustration";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { STATUS_META } from "@/constants/interview-prep";
 import { formatDuration } from "@/utils/interview-prep";
-import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 
 interface Props {
@@ -28,11 +28,8 @@ export const PracticeSummary = function ({
 
   return (
     <View className="flex-1 items-center justify-center px-8">
-      <View
-        className="mb-5 items-center justify-center rounded-full"
-        style={{ width: 64, height: 64, backgroundColor: `${accent}1F` }}
-      >
-        <Ionicons name="checkmark-done" size={28} color={accent} />
+      <View className="mb-4">
+        <Illustration name="practiceDone" color={accent} size={156} />
       </View>
 
       <AppText type="title" className="text-center text-[20px] leading-[26px]">

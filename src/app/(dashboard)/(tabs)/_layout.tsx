@@ -13,8 +13,8 @@ type TabBarIconProps = {
 
 const TAB_ICONS = {
   index: { active: "home", inactive: "home-outline" },
+  applications: { active: "briefcase", inactive: "briefcase-outline" },
   workspaces: { active: "grid", inactive: "grid-outline" },
-  "ai-chat": { active: "sparkles", inactive: "sparkles-outline" },
   notifications: {
     active: "notifications",
     inactive: "notifications-outline",
@@ -73,17 +73,17 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="applications"
+        options={{
+          title: "Applications",
+          tabBarIcon: makeTabIcon("applications"),
+        }}
+      />
+      <Tabs.Screen
         name="workspaces"
         options={{
           title: "Workspaces",
           tabBarIcon: makeTabIcon("workspaces"),
-        }}
-      />
-      <Tabs.Screen
-        name="ai-chat"
-        options={{
-          title: "AI Chat",
-          tabBarIcon: makeTabIcon("ai-chat"),
         }}
       />
       <Tabs.Screen

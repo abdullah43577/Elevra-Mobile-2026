@@ -1,4 +1,5 @@
 import { ApplicationFormFields } from "@/components/job-tracker/application-form-fields";
+import { ImportPostingCard } from "@/components/job-tracker/import-posting-card";
 import { AppButton } from "@/components/shared/app-button";
 import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
 import { ScreenHeader } from "@/components/shared/screen-header";
@@ -8,6 +9,7 @@ import {
   APPLICATION_STATUS_META,
 } from "@/constants/job-applications";
 import { useGetApplicationById } from "@/hooks/job-applications/use-get-application-by-id";
+import { useJobPostingImport } from "@/hooks/job-applications/use-job-posting-import";
 import { useSaveApplication } from "@/hooks/job-applications/use-save-application";
 import { useGetCoverLetters } from "@/hooks/cover-letters/use-get-cover-letters";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
@@ -28,7 +30,7 @@ import {
   CreateApplicationRequest,
   UpdateApplicationRequest,
   WorkArrangement,
-} from "../../../../../../types/job-application";
+} from "../../../../../types/job-application";
 
 type PickerTarget = "status" | "resume" | "coverLetter" | null;
 
@@ -44,7 +46,8 @@ const numeric = function (value?: string) {
 
 export default function ApplicationForm() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id?: string }>();
+  // `shared`: a link or posting handed over by the share sheet.
+  const { id, shared } = useLocalSearchParams<{ id?: string; shared?: string }>();
   const { contentColor } = useThemeColors();
   const accent = contentColor("application");
 
@@ -66,6 +69,7 @@ export default function ApplicationForm() {
 
   const {
     control,
+    getValues,
     handleSubmit,
     reset,
     setValue,
@@ -116,6 +120,16 @@ export default function ApplicationForm() {
       coverLetterId: application.coverLetterId ?? null,
     });
   }, [application]);
+
+  const { importPosting, isImportingPosting } = useJobPostingImport({ getValues, setValue });
+
+  const importedShare = useRef(false);
+
+  useEffect(() => {
+    if (isUpdate || !shared || importedShare.current) return;
+    importedShare.current = true;
+    importPosting(shared);
+  }, [isUpdate, shared, importPosting]);
 
   const status = watch("status");
   const workArrangement = watch("workArrangement");
@@ -207,6 +221,16 @@ export default function ApplicationForm() {
         extraScrollHeight={20}
         keyboardShouldPersistTaps="handled"
       >
+        {!isUpdate && (
+          <View className="mb-6">
+            <ImportPostingCard
+              initialInput={shared}
+              isImporting={isImportingPosting}
+              onImport={importPosting}
+            />
+          </View>
+        )}
+
         <ApplicationFormFields
           control={control}
           errors={errors}

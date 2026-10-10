@@ -5,6 +5,7 @@ import { PlaybackInfo } from "@/components/voice-notes/playback/playback-info";
 import { PlaybackTranscription } from "@/components/voice-notes/playback/playback-transcription";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { useGetRecordingById } from "@/hooks/voice-notes/use-get-recording-by-id";
+import { useTranscribeRecording } from "@/hooks/voice-notes/use-transcribe-recording";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
@@ -19,6 +20,8 @@ export default function Playback() {
     recordingId: recordingId || "",
     shouldFetch: !!recordingId,
   });
+
+  const transcription = useTranscribeRecording(recordingId || "");
 
   const player = useAudioPlayer(recording?.fileUrl ?? null);
   // Reading player.currentTime/duration during render does not re-render — the
@@ -92,6 +95,9 @@ export default function Playback() {
         <PlaybackTranscription
           isTranscribed={recording.isTranscribed}
           transcription={recording.transcription}
+          isPro={transcription.isPro}
+          isTranscribing={transcription.isTranscribing}
+          onTranscribe={transcription.handleTranscribe}
         />
 
         <PlaybackControls

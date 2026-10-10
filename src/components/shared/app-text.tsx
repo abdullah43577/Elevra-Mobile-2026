@@ -1,5 +1,18 @@
 import { clsx } from "clsx";
 import { Platform, Text, type TextProps } from "react-native";
+import { extendTailwindMerge } from "tailwind-merge";
+
+/*
+  A className passed in must beat the type's own classes. With plain clsx both
+  stay, and NativeWind resolves the conflict by stylesheet order instead — which
+  is how the auth screens' logo letter rendered as foreground-on-foreground.
+
+  Size overrides must not drop the type's line height: tailwind-merge assumes a
+  font-size class also sets one, but an arbitrary text-[15px] does not here.
+*/
+const mergeClasses = extendTailwindMerge({
+  override: { conflictingClassGroups: { "font-size": [] } },
+});
 
 export interface AppTextProps extends TextProps {
   type?:
@@ -39,5 +52,5 @@ export const AppText = function ({
     ),
   } as const;
 
-  return <Text {...rest} className={clsx(styleGuide[type], className)} />;
+  return <Text {...rest} className={mergeClasses(styleGuide[type], className)} />;
 };

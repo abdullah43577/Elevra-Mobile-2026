@@ -1,7 +1,6 @@
 import { Pressable, View, useWindowDimensions } from "react-native";
 import { AnyTemplate } from "../../../types/resume/template";
 import { AppText } from "../shared/app-text";
-import { Badge } from "../shared/badge";
 import { TemplatePreview } from "./template-preview";
 
 export const TemplateCard = function ({
@@ -31,7 +30,6 @@ export const TemplateCard = function ({
         <AppText type="label" numberOfLines={1} className="flex-1">
           {item.name}
         </AppText>
-        {item.isPremium && <Badge label="Pro" variant="secondary" />}
       </View>
 
       <AppText type="caption" numberOfLines={2} className="mt-0.5">

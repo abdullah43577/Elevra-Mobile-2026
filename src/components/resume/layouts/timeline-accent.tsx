@@ -33,7 +33,7 @@ export function TimelineAccentLayout({ theme, data, isThumbnail }: ResumeLayoutP
       <View style={{ flexDirection: "row" }}>
         <View style={{ width: style.px(3), backgroundColor: style.accent, marginRight: style.px(16) }} />
         <View style={{ flex: 1 }}>
-          <ResumeBody data={data} style={style} variant="plain" limit={isThumbnail} />
+          <ResumeBody data={data} style={style} variant="plain" />
         </View>
       </View>
     </ResumePage>
