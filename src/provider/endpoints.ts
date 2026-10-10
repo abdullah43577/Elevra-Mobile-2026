@@ -128,6 +128,7 @@ export const API_ENDPOINTS = {
     update: (id: string) => `/cover-letters/${id}`,
     delete: (id: string) => `/cover-letters/${id}`,
     export: (id: string) => `/cover-letters/${id}/export`,
+    draft: "/cover-letters/draft",
   },
 
   resume: {

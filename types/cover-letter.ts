@@ -41,6 +41,8 @@ export interface SaveCoverLetterRequest {
   companyAddress?: string;
   body: string;
   closing?: string;
+  // Create only: the server attaches the new letter to this application.
+  applicationId?: string;
 }
 
 /*
@@ -55,11 +57,26 @@ export interface UpdateCoverLetterRequest
   extends Partial<
     Omit<
       SaveCoverLetterRequest,
-      "recipientName" | "recipientTitle" | "companyAddress" | "closing"
+      "recipientName" | "recipientTitle" | "companyAddress" | "closing" | "applicationId"
     >
   > {
   recipientName?: string | null;
   recipientTitle?: string | null;
   companyAddress?: string | null;
   closing?: string | null;
+}
+
+export interface DraftCoverLetterRequest {
+  company: string;
+  role: string;
+  recipientName?: string;
+  applicationId?: string;
+}
+
+export interface CoverLetterDraft {
+  body: string;
+  // Sentences dropped because they claimed something the resume doesn't say.
+  removedSentences: number;
+  addedTerms: { term: string; evidence: string }[];
+  source: { kind: "resume" | "profile"; title: string };
 }

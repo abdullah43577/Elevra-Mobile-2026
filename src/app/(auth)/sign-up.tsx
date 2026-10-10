@@ -1,4 +1,6 @@
+import { AuthDivider } from "@/components/auth/auth-divider";
 import { SocialAuthButtons } from "@/components/auth/social-auth-buttons";
+import { AppLogo } from "@/components/shared/app-logo";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
@@ -41,9 +43,8 @@ export default function SignUp() {
       extraScrollHeight={20}
     >
       <View className="flex-1 justify-center px-6 py-10">
-        {/* Mark */}
-        <View className="mb-6 h-10 w-10 items-center justify-center rounded-xl bg-foreground">
-          <AppText className="font-bricolage-bold text-canvas">E</AppText>
+        <View className="mb-6">
+          <AppLogo />
         </View>
 
         {/* Header */}
@@ -125,14 +126,7 @@ export default function SignUp() {
           </AppButton>
         </View>
 
-        {/* OR divider */}
-        <View className="my-7 flex-row items-center gap-3">
-          <View className="h-px flex-1 bg-line" />
-          <AppText type="caption" className="tracking-[0.4px]">
-            OR CONTINUE WITH
-          </AppText>
-          <View className="h-px flex-1 bg-line" />
-        </View>
+        <AuthDivider />
 
         <SocialAuthButtons />
 

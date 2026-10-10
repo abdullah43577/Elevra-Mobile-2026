@@ -3,6 +3,7 @@ import { JobDescriptionSection } from "@/components/job-tracker/job-description-
 import { LinkedItemsSection } from "@/components/job-tracker/linked-items-section";
 import { StatusPill } from "@/components/job-tracker/status-pill";
 import { TailorResumeSection } from "@/components/job-tracker/tailor/tailor-resume-section";
+import { WriteLetterLink } from "@/components/job-tracker/write-letter-link";
 import { AppText } from "@/components/shared/app-text";
 import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -88,6 +89,13 @@ export default function ApplicationDetail() {
     router.push({
       pathname: "/(dashboard)/(tabs)/workspaces/job-tracker/application-form",
       params: { id },
+    });
+  };
+
+  const handleWriteLetter = function () {
+    router.push({
+      pathname: "/(dashboard)/(tabs)/workspaces/cover-letters/letter-editor",
+      params: { applicationId: id },
     });
   };
 
@@ -221,6 +229,10 @@ export default function ApplicationDetail() {
             onRemove={() => saveApplication({ coverLetterId: null })}
             disabled={isSavingApplication}
           />
+
+          {!application.coverLetter && (
+            <WriteLetterLink color={CONTENT_COLORS.letter} onPress={handleWriteLetter} />
+          )}
 
           <LinkedItemsSection
             title="Interview questions"
