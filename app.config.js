@@ -105,6 +105,20 @@ module.exports = ({ config }) => ({
       ],
       "expo-notifications",
       "expo-apple-authentication",
+      /*
+        Share a job from a browser or job app into a new application. Android
+        only for now: the iOS share extension needs an App Group, which needs
+        the paid Apple Developer account. Turning iOS on also needs care with
+        google-signin, which rewrites CFBundleURLSchemes — see the
+        expo-share-intent README before flipping disableIOS.
+      */
+      [
+        "expo-share-intent",
+        {
+          disableIOS: true,
+          androidIntentFilters: ["text/*"],
+        },
+      ],
       ...(googleIosUrlScheme
         ? [
             [

@@ -78,6 +78,7 @@ export const API_ENDPOINTS = {
   jobApplications: {
     list: "/job-applications",
     stats: "/job-applications/stats",
+    parse: "/job-applications/parse",
     detail: (id: string) => `/job-applications/${id}`,
     create: "/job-applications",
     update: (id: string) => `/job-applications/${id}`,

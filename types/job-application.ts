@@ -182,3 +182,25 @@ export interface TailorResumeRequest {
   // Omitted to tailor from the career profile.
   baseResumeId?: string;
 }
+
+// Fields read from a job posting, for the new-application form to review.
+export interface JobDraft {
+  company?: string;
+  role?: string;
+  location?: string;
+  workArrangement?: WorkArrangement;
+  jobUrl?: string;
+  source?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: string;
+  jobDescription?: string;
+}
+
+export type ParseJobRequest = { url: string } | { text: string };
+
+export interface ParseJobResult {
+  draft: JobDraft;
+  // "structured" means the page carried schema.org job data and no AI was used.
+  method: "structured" | "ai";
+}
