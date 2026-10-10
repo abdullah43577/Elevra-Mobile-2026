@@ -1,3 +1,4 @@
+import { degreeLabel, fieldLabel } from "@/utils/education";
 import { View } from "react-native";
 import { ResumeData } from "../../../../types/resume/data";
 import {
@@ -92,7 +93,7 @@ export const ResumeBody = function ({
           {education.map((item, index) => (
             <Entry
               key={index}
-              title={[item.degree, item.field].filter(Boolean).join(", ")}
+              title={[degreeLabel(item.degree), fieldLabel(item.field)].filter(Boolean).join(", ")}
               organisation={item.school}
               dates={dateRange(item.startDate, item.endDate, item.current)}
               {...(item.gpa && { meta: `GPA ${item.gpa}` })}

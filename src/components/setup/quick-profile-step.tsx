@@ -1,3 +1,4 @@
+import { ImportPdfCard } from "@/components/career-profile/import-pdf-card";
 import { Illustration } from "@/components/illustrations/illustration";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
@@ -9,9 +10,11 @@ import { View } from "react-native";
 interface Props {
   control: Control<QuickProfileFormValues>;
   errors: FieldErrors<QuickProfileFormValues>;
+  isImporting: boolean;
+  onImport: () => void;
 }
 
-export const QuickProfileStep = function ({ control, errors }: Props) {
+export const QuickProfileStep = function ({ control, errors, isImporting, onImport }: Props) {
   const { contentColor } = useThemeColors();
 
   return (
@@ -29,7 +32,15 @@ export const QuickProfileStep = function ({ control, errors }: Props) {
         starts filled in instead of blank. You can add your full history later.
       </AppText>
 
-      <View className="mt-7 gap-4">
+      <View className="mt-6">
+        <ImportPdfCard isImporting={isImporting} onPress={onImport} />
+      </View>
+
+      <AppText type="caption" className="mt-6">
+        Or start with the basics
+      </AppText>
+
+      <View className="mt-3 gap-4">
         <View className="flex-row gap-3">
           <View className="flex-1">
             <FormInput

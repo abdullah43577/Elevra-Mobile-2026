@@ -102,6 +102,7 @@ export const API_ENDPOINTS = {
     detail: "/career-profile",
     save: "/career-profile",
     delete: "/career-profile",
+    import: "/career-profile/import",
   },
 
   interviewPrep: {

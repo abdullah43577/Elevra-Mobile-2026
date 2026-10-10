@@ -1,3 +1,4 @@
+import { ImportNotice } from "@/components/career-profile/import-notice";
 import { ProfileEditorFooter } from "@/components/career-profile/profile-editor-footer";
 import { BuilderStepContent } from "@/components/resume-studio/builder/builder-step-content";
 import { StepNav } from "@/components/resume-studio/builder/step-nav";
@@ -12,6 +13,8 @@ import {
   ResumeBuilderFormValues,
   resumeBuilderSchema,
 } from "@/schemas/resume-builder/resume-builder";
+import { useProfileImportStore } from "@/store/profile-import";
+import { ImportedProfile } from "../../../../../../types/career-profile";
 import { toProfileFormValues } from "@/utils/career-profile";
 import { showToast } from "@/utils/show-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,22 +60,28 @@ export default function ProfileEditor() {
     defaultValues: toProfileFormValues(),
   });
 
+  const takeImportDraft = useProfileImportStore((state) => state.takeDraft);
+  const [importReport, setImportReport] = useState<ImportedProfile["report"] | null>(null);
+
   // Hydrate once. The query object changes identity on every background
   // refetch, and re-running this would wipe whatever the user has typed.
+  // A pending PDF import wins over the saved profile, and is taken exactly once.
   const hasHydrated = useRef(false);
 
   useEffect(() => {
     if (!hasLoadedCareerProfile || hasHydrated.current) return;
     hasHydrated.current = true;
 
-    reset(
-      toProfileFormValues(careerProfile, {
-        firstName: profile?.first_name,
-        lastName: profile?.last_name,
-        email: profile?.email,
-      }),
-    );
-  }, [hasLoadedCareerProfile, careerProfile, profile]);
+    const account = {
+      firstName: profile?.first_name,
+      lastName: profile?.last_name,
+      email: profile?.email,
+    };
+    const imported = takeImportDraft();
+
+    reset(toProfileFormValues(imported?.profile ?? careerProfile, account));
+    if (imported) setImportReport(imported.report);
+  }, [hasLoadedCareerProfile, careerProfile, profile, reset, takeImportDraft]);
 
   const experience = useFieldArray({ control, name: "experience" });
   const education = useFieldArray({ control, name: "education" });
@@ -121,6 +130,8 @@ export default function ProfileEditor() {
   return (
     <SafeAreaView className="flex-1 bg-canvas">
       <ScreenHeader title="Career profile" onBack={() => router.back()} />
+
+      {importReport && <ImportNotice report={importReport} />}
 
       <View className="py-4">
         {/*

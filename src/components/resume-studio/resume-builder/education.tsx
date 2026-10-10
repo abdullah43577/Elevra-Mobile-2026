@@ -1,6 +1,7 @@
 import { AppText } from "@/components/shared/app-text";
 import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
 import { FormInput } from "@/components/shared/form-input";
+import { degreeLabel, fieldLabel } from "@/utils/education";
 import {
   DEFAULT_EDUCATION,
   EDUCATIONAL_DEGREES,
@@ -42,15 +43,9 @@ export function Education({
   );
   const [fieldPickerIndex, setFieldPickerIndex] = useState<number | null>(null);
 
-  const getDegreeLabel = (value: string) => {
-    const found = EDUCATIONAL_DEGREES.find((d) => d.value === value);
-    return found?.label || "Select degree";
-  };
-
-  const getFieldLabel = (value: string) => {
-    const found = EDUCATIONAL_FIELDS.find((f) => f.value === value);
-    return found?.label || "Select field";
-  };
+  // Free text (from an imported resume) shows as written, not as "Select degree".
+  const getDegreeLabel = (value: string) => degreeLabel(value) || "Select degree";
+  const getFieldLabel = (value: string) => fieldLabel(value) || "Select field";
 
   const watchedEducation = useWatch({ control, name: "education" });
 

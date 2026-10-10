@@ -1,3 +1,4 @@
+import { degreeLabel, fieldLabel } from "@/utils/education";
 import { ResumeData } from "../../../../types/resume/data";
 import { AnyTemplate } from "../../../../types/resume/template";
 import {
@@ -100,7 +101,7 @@ const buildBody = function (data: ResumeData) {
       education
         .map((item) =>
           entry({
-            title: [item.degree, item.field].filter(Boolean).join(", "),
+            title: [degreeLabel(item.degree), fieldLabel(item.field)].filter(Boolean).join(", "),
             organisation: item.school,
             dates: dateRange(item.startDate, item.endDate, item.current),
             ...(item.gpa && { meta: `GPA ${item.gpa}` }),

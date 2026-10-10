@@ -36,3 +36,18 @@ export interface SaveCareerProfileRequest {
   projects?: ResumeData["projects"];
   references?: ResumeData["references"];
 }
+
+/*
+  A profile read out of an uploaded resume PDF. Never saved by the server: it
+  goes into the editor for the user to review, and only Save persists it.
+*/
+export interface ImportedProfile {
+  profile: SaveCareerProfileRequest;
+  report: {
+    // Values dropped because they could not be found in the PDF.
+    omittedValues: number;
+    // Experience and education entries with no start date, which the editor
+    // needs before it will save.
+    entriesMissingDates: number;
+  };
+}

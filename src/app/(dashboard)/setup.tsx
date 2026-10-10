@@ -4,7 +4,9 @@ import { SetupProgress } from "@/components/setup/setup-progress";
 import { TourStep } from "@/components/setup/tour-step";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profile";
+import { useResumeImportFlow } from "@/hooks/career-profile/use-resume-import-flow";
 import { useSaveCareerProfile } from "@/hooks/career-profile/use-save-career-profile";
 import { usePushPermission } from "@/hooks/notifications/use-push-permission";
 import { useGetProfile } from "@/hooks/use-get-profile";
@@ -28,7 +30,7 @@ export default function Setup() {
   const [stepIndex, setStepIndex] = useState(0);
 
   const { profile } = useGetProfile();
-  const { careerProfile, hasLoadedCareerProfile } = useGetCareerProfile();
+  const { careerProfile, hasCareerProfile, hasLoadedCareerProfile } = useGetCareerProfile();
   const { saveCareerProfile, isSavingCareerProfile } = useSaveCareerProfile({
     silent: true,
   });
@@ -79,10 +81,37 @@ export default function Setup() {
     setStepIndex((index) => Math.min(index + 1, STEPS.length - 1));
   };
 
+  /*
+    An import opens the full editor over setup. When the user saves there, the
+    profile's updatedAt moves and setup steps past the profile step — showing
+    the quick form again would invite a second, smaller save over the import.
+    Backing out of the editor unsaved leaves updatedAt alone, so they land back
+    on this step.
+  */
+  const importBaseline = useRef<string | null>(null);
+
+  const importFlow = useResumeImportFlow({
+    hasExistingProfile: hasCareerProfile,
+    onImported: () => {
+      importBaseline.current = careerProfile?.updatedAt ?? "none";
+    },
+  });
+
+  useEffect(() => {
+    if (importBaseline.current === null) return;
+    if ((careerProfile?.updatedAt ?? "none") === importBaseline.current) return;
+
+    importBaseline.current = null;
+    setStepIndex((index) => (STEPS[index] === "profile" ? index + 1 : index));
+  }, [careerProfile?.updatedAt]);
+
   const handleSaveProfile = async function (values: QuickProfileFormValues) {
     try {
       await saveCareerProfile({
+        // Merged, not replaced: personalInfo is stored as one value, and a quick
+        // save of five fields used to erase the summary and anything else in it.
         personalInfo: {
+          ...careerProfile?.personalInfo,
           firstName: values.firstName.trim(),
           lastName: values.lastName.trim(),
           email: values.email.trim(),
@@ -155,7 +184,12 @@ export default function Setup() {
         extraScrollHeight={20}
       >
         {STEPS[stepIndex] === "profile" && (
-          <QuickProfileStep control={control} errors={errors} />
+          <QuickProfileStep
+            control={control}
+            errors={errors}
+            isImporting={importFlow.isImporting}
+            onImport={importFlow.handleStart}
+          />
         )}
 
         {STEPS[stepIndex] === "notifications" && (
@@ -187,6 +221,15 @@ export default function Setup() {
           </Pressable>
         )}
       </View>
+
+      <ConfirmDialog
+        visible={importFlow.isConfirmingReplace}
+        title="Import over your profile?"
+        message="What's in the PDF will replace your profile once you review it and tap Save. Until then, nothing changes."
+        confirmLabel="Choose PDF"
+        onConfirm={importFlow.handleConfirmReplace}
+        onCancel={importFlow.handleCancelReplace}
+      />
     </SafeAreaView>
   );
 }

@@ -29,9 +29,12 @@ interface AccountDefaults {
 
   `account` seeds the name and email of a profile that has never been saved —
   the user already gave us those at sign-up, so asking again is busywork.
+
+  Takes the sections only, so an imported profile (which has no id or
+  timestamps yet) hydrates the editor the same way a saved one does.
 */
 export const toProfileFormValues = function (
-  profile?: CareerProfile,
+  profile?: Omit<CareerProfile, "id" | "userId" | "createdAt" | "updatedAt">,
   account?: AccountDefaults,
 ): ResumeBuilderFormValues {
   return {
