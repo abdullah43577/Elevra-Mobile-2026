@@ -2,7 +2,6 @@ import { buildCoverLetterHtml } from "@/components/cover-letters/html/cover-lett
 import api from "@/provider/api";
 import { API_ENDPOINTS } from "@/provider/endpoints";
 import { showToast } from "@/utils/show-toast";
-import { AxiosError } from "axios";
 import { File, Paths } from "expo-file-system";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
@@ -21,9 +20,7 @@ const safeFileName = function (value: string) {
 
 /*
   Mirrors useExportResume exactly, including why: the PDF is built on-device by
-  the OS HTML renderer so the text stays real and selectable, and the server is
-  asked first so a free user is turned away by the 402 rather than handed a file
-  and a swallowed rejection. A network failure counts as permission granted.
+  the OS HTML renderer so the text stays real and selectable.
 */
 export const useExportCoverLetter = function () {
   const [isExporting, setIsExporting] = useState(false);
@@ -39,26 +36,6 @@ export const useExportCoverLetter = function () {
     setIsExporting(true);
 
     try {
-      try {
-        await api.post(API_ENDPOINTS.coverLetters.export(coverLetter.id));
-      } catch (error) {
-        const status = (error as AxiosError)?.response?.status;
-
-        if (status === 402) {
-          const message =
-            ((error as AxiosError)?.response?.data as { message?: string })
-              ?.message ?? "Exporting a cover letter requires Elevra Pro";
-          showToast("warning", message);
-          return;
-        }
-
-        if (status && status !== 402) {
-          showToast("error", "Could not export this cover letter");
-          return;
-        }
-        // No response at all — offline. Fall through and export anyway.
-      }
-
       const html = buildCoverLetterHtml({
         ...coverLetter,
         template: coverLetter.template,
@@ -92,6 +69,8 @@ export const useExportCoverLetter = function () {
         showToast("error", "Sharing is not available on this device");
         return;
       }
+
+      api.post(API_ENDPOINTS.coverLetters.export(coverLetter.id)).catch(() => {});
     } catch (error) {
       showToast("error", "Could not export this cover letter");
       console.error("Cover letter export failed:", error);

@@ -2,6 +2,7 @@ import { NotificationsStep } from "@/components/setup/notifications-step";
 import { QuickProfileStep } from "@/components/setup/quick-profile-step";
 import { SetupProgress } from "@/components/setup/setup-progress";
 import { TourStep } from "@/components/setup/tour-step";
+import { TrialStep } from "@/components/setup/trial-step";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -9,7 +10,10 @@ import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profi
 import { useResumeImportFlow } from "@/hooks/career-profile/use-resume-import-flow";
 import { useSaveCareerProfile } from "@/hooks/career-profile/use-save-career-profile";
 import { usePushPermission } from "@/hooks/notifications/use-push-permission";
+import { useOfferings } from "@/hooks/subscriptions/use-offerings";
+import { useEntitlements } from "@/hooks/use-entitlements";
 import { useGetProfile } from "@/hooks/use-get-profile";
+import { trialLabel } from "@/constants/plans";
 import {
   QuickProfileFormValues,
   quickProfileSchema,
@@ -23,7 +27,7 @@ import { Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const STEPS = ["profile", "notifications", "tour"] as const;
+const ALL_STEPS = ["profile", "notifications", "trial", "tour"] as const;
 
 export default function Setup() {
   const router = useRouter();
@@ -36,6 +40,16 @@ export default function Setup() {
   });
   const { isGranted, isRequesting, requestPermission } = usePushPermission();
   const completeSetup = useSetupStore((state) => state.completeSetup);
+
+  /*
+    New users meet the store's free trial here, once, after they have seen what
+    the app does for free. The trial itself is the stores' (§28) — nothing is
+    counted on our side — and its length is read from the product, never typed.
+  */
+  const { isPro } = useEntitlements();
+  const { packages } = useOfferings();
+  const trial = packages.map(trialLabel).find(Boolean) ?? null;
+  const STEPS = isPro ? ALL_STEPS.filter((step) => step !== "trial") : ALL_STEPS;
 
   const {
     control,
@@ -102,7 +116,7 @@ export default function Setup() {
     if ((careerProfile?.updatedAt ?? "none") === importBaseline.current) return;
 
     importBaseline.current = null;
-    setStepIndex((index) => (STEPS[index] === "profile" ? index + 1 : index));
+    setStepIndex((index) => (index === 0 ? 1 : index));
   }, [careerProfile?.updatedAt]);
 
   const handleSaveProfile = async function (values: QuickProfileFormValues) {
@@ -140,6 +154,12 @@ export default function Setup() {
       return;
     }
 
+    if (STEPS[stepIndex] === "trial") {
+      goToNextStep();
+      router.push("/(dashboard)/paywall");
+      return;
+    }
+
     goToNextStep();
   };
 
@@ -149,7 +169,11 @@ export default function Setup() {
     ? "Start using Elevra"
     : STEPS[stepIndex] === "profile"
       ? "Save and continue"
-      : "Continue";
+      : STEPS[stepIndex] === "trial"
+        ? trial
+          ? "Start the free trial"
+          : "See Pro plans"
+        : "Continue";
 
   return (
     <SafeAreaView className="flex-1 bg-canvas">
@@ -200,6 +224,8 @@ export default function Setup() {
           />
         )}
 
+        {STEPS[stepIndex] === "trial" && <TrialStep trial={trial} />}
+
         {STEPS[stepIndex] === "tour" && <TourStep />}
       </KeyboardAwareScrollView>
 
@@ -211,7 +237,8 @@ export default function Setup() {
           isLoading={isSavingCareerProfile}
         />
 
-        {STEPS[stepIndex] === "notifications" && !isGranted && (
+        {((STEPS[stepIndex] === "notifications" && !isGranted) ||
+          STEPS[stepIndex] === "trial") && (
           <Pressable
             onPress={goToNextStep}
             hitSlop={8}

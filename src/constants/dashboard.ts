@@ -49,11 +49,19 @@ export const formatRelativeDate = function (date: string) {
 };
 
 /*
-  Two rows of three, grouped: the documents you send, then the things you do.
-  Rehearse is an action rather than a create, but it is the one thing on this
-  screen most likely to change an outcome, so it earns a slot.
+  Two rows of three. Application leads: it is where the journey starts and what
+  every other action attaches to. Rehearse is an action rather than a create,
+  but it is the one most likely to change an outcome, so it earns a slot.
 */
 export const quickActions = [
+  {
+    id: "application",
+    label: "Application",
+    icon: "briefcase-outline",
+    color: CONTENT_COLORS.application,
+    onPress: () =>
+      router.push("/(dashboard)/(tabs)/applications/application-form"),
+  },
   {
     id: "resume",
     label: "Resume",
@@ -69,16 +77,6 @@ export const quickActions = [
     onPress: () =>
       router.push(
         "/(dashboard)/(tabs)/workspaces/cover-letters/letter-editor",
-      ),
-  },
-  {
-    id: "application",
-    label: "Application",
-    icon: "briefcase-outline",
-    color: CONTENT_COLORS.application,
-    onPress: () =>
-      router.push(
-        "/(dashboard)/(tabs)/workspaces/job-tracker/application-form",
       ),
   },
   {

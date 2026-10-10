@@ -3,7 +3,7 @@ import { AppText } from "@/components/shared/app-text";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { SegmentedControl } from "@/components/shared/segmented-control";
-import { NOTIFICATION_ROUTES } from "@/constants/notifications";
+import { notificationTarget } from "@/constants/notifications";
 import { useGetNotifications } from "@/hooks/notifications/use-get-notifications";
 import { useGetUnreadCount } from "@/hooks/notifications/use-get-unread-count";
 import { useNotificationActions } from "@/hooks/notifications/use-notification-actions";
@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AppNotification, NotificationEntity } from "../../../../types/notification";
+import { AppNotification } from "../../../../types/notification";
 
 type Filter = "all" | "unread";
 
@@ -40,16 +40,8 @@ export default function Notifications() {
   const handlePressNotification = function (notification: AppNotification) {
     if (!notification.isRead) markRead({ id: notification.id });
 
-    const route =
-      notification.entityType &&
-      NOTIFICATION_ROUTES[notification.entityType as NotificationEntity];
-
-    if (route && notification.entityId) {
-      router.push({
-        pathname: route as any,
-        params: { id: notification.entityId },
-      });
-    }
+    const target = notificationTarget(notification);
+    if (target) router.push(target);
   };
 
   const handleRefresh = function () {

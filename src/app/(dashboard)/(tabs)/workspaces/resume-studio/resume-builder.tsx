@@ -38,8 +38,9 @@ export default function ResumeBuilder() {
   const params = useLocalSearchParams<{
     templateId?: string;
     resumeId?: string;
+    applicationId?: string;
   }>();
-  const { templateId, resumeId } = params;
+  const { templateId, resumeId, applicationId } = params;
   const isEditing = !!resumeId;
 
   const [activeStep, setActiveStep] = useState(0);
@@ -62,7 +63,8 @@ export default function ResumeBuilder() {
     the same shape the template endpoint returns.
   */
   const template = fetchedTemplate ?? resume?.template;
-  const { saveResume, isSaving } = useSaveResume({ resumeId });
+  // Opened from an application (a tailored resume): saving returns there.
+  const { saveResume, isSaving } = useSaveResume({ resumeId, shouldRedirect: !applicationId });
 
   const { careerProfile, hasCareerProfile } = useGetCareerProfile();
   const { saveCareerProfile, isSavingCareerProfile } = useSaveCareerProfile({
@@ -222,11 +224,7 @@ export default function ResumeBuilder() {
       references: data.references,
     });
 
-    const msg = isEditing
-      ? "Resume updated successfully"
-      : "Resume created successfully";
-
-    showToast("success", msg);
+    if (applicationId) router.back();
   };
 
   /*

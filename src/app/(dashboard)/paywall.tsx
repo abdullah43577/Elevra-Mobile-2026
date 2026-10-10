@@ -68,7 +68,7 @@ export default function Paywall() {
             You are on Pro
           </AppText>
           <AppText type="subtitle" className="mt-2 text-center">
-            Every AI feature and unlimited PDF exports are unlocked on this
+            Tailoring, drafting and interview coaching are unlocked on this
             account.
           </AppText>
 
@@ -102,11 +102,11 @@ export default function Paywall() {
           </View>
 
           <AppText type="display" className="text-center text-[26px] leading-[32px]">
-            Get the whole toolkit
+            Get the job, not just the file
           </AppText>
           <AppText type="subtitle" className="mt-2 text-center">
-            Keep building for free. Upgrade when you need the finished file or
-            the AI behind it.
+            Building and exporting stay free. Pro adds the AI that tailors,
+            drafts and coaches for each application.
           </AppText>
         </View>
 

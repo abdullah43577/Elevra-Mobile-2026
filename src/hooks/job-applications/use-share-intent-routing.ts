@@ -22,7 +22,7 @@ export const useShareIntentRouting = function (isAuthenticated: boolean) {
     if (!shared) return;
 
     router.push({
-      pathname: "/(dashboard)/(tabs)/workspaces/job-tracker/application-form",
+      pathname: "/(dashboard)/(tabs)/applications/application-form",
       params: { shared },
     });
   }, [hasShareIntent, isAuthenticated, navigationState?.key, shareIntent, resetShareIntent, router]);

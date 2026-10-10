@@ -1,15 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
 import { CONTENT_COLORS } from "./content-colors";
 import {
-  FileText,
-  Mic,
-  Sparkles,
-  StickyNote,
-  Briefcase,
-  ClipboardList,
   BookUser,
+  FileText,
   Mail,
   MessagesSquare,
+  Mic,
+  StickyNote,
   LucideIcon,
 } from "lucide-react-native";
 
@@ -17,33 +13,25 @@ export interface WorkspaceItem {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon; // used on the hub card
-  comingSoonIcon: keyof typeof Ionicons.glyphMap; // used on the stub screen
+  icon: LucideIcon;
   route: string;
-  locked: boolean; // controls the "Soon" badge on the hub
-  color: string; // tints the hub card's icon tile
+  color: string;
 }
 
+/*
+  The tools an application draws on. Applications themselves are a tab, not a
+  card here: they are the hub everything below attaches to. Notes and voice
+  notes come last and are described by what they attach to, not as headline
+  tools of their own.
+*/
 export const WORKSPACE_ITEMS: WorkspaceItem[] = [
   {
     id: "resume-studio",
     color: CONTENT_COLORS.resume,
     title: "Resume Studio",
-    description: "Build and export resumes from templates",
+    description: "ATS-ready resumes, tailored per job",
     icon: FileText,
-    comingSoonIcon: "document-text-outline",
     route: "resume-studio",
-    locked: false,
-  },
-  {
-    id: "interview-prep",
-    color: CONTENT_COLORS.interview,
-    title: "Interview Prep",
-    description: "Rehearse real questions out loud",
-    icon: MessagesSquare,
-    comingSoonIcon: "chatbubbles-outline",
-    route: "interview-prep",
-    locked: false,
   },
   {
     id: "cover-letters",
@@ -51,68 +39,38 @@ export const WORKSPACE_ITEMS: WorkspaceItem[] = [
     title: "Cover Letters",
     description: "Letters that match the resume you send",
     icon: Mail,
-    comingSoonIcon: "mail-outline",
     route: "cover-letters",
-    locked: false,
+  },
+  {
+    id: "interview-prep",
+    color: CONTENT_COLORS.interview,
+    title: "Interview Prep",
+    description: "Rehearse real questions out loud",
+    icon: MessagesSquare,
+    route: "interview-prep",
   },
   {
     id: "career-profile",
     color: CONTENT_COLORS.profile,
     title: "Career Profile",
-    description: "Your history once — resumes prefill from it",
+    description: "Your history once — everything prefills from it",
     icon: BookUser,
-    comingSoonIcon: "person-outline",
     route: "career-profile",
-    locked: false,
   },
   {
-    id: "job-tracker",
-    color: CONTENT_COLORS.application,
-    title: "Job Tracker",
-    description: "Track applications, interviews, and offers",
-    icon: ClipboardList,
-    comingSoonIcon: "briefcase-outline",
-    route: "job-tracker",
-    locked: false,
+    id: "smart-notes",
+    color: CONTENT_COLORS.note,
+    title: "Notes",
+    description: "Research and prep notes, linked to applications",
+    icon: StickyNote,
+    route: "smart-notes",
   },
   {
     id: "voice-notes",
     color: CONTENT_COLORS.recording,
     title: "Voice Notes",
-    description: "Record and organize voice memos",
+    description: "Post-interview memos, transcribed and linked",
     icon: Mic,
-    comingSoonIcon: "mic-outline",
     route: "voice-notes",
-    locked: false,
-  },
-  {
-    id: "smart-notes",
-    color: CONTENT_COLORS.note,
-    title: "Smart Notes",
-    description: "Notes, folders, tags, and search",
-    icon: StickyNote,
-    comingSoonIcon: "document-outline",
-    route: "smart-notes",
-    locked: false,
-  },
-  {
-    id: "ai-rewriter",
-    color: "#A64B9B",
-    title: "AI Rewriter",
-    description: "Rewrite and polish your writing with AI",
-    icon: Sparkles,
-    comingSoonIcon: "sparkles-outline",
-    route: "ai-rewriter",
-    locked: true,
-  },
-  {
-    id: "career-tools",
-    color: "#2E6FD1",
-    title: "Career Tools",
-    description: "Career advice and LinkedIn optimization",
-    icon: Briefcase,
-    comingSoonIcon: "briefcase-outline",
-    route: "career-tools",
-    locked: true,
   },
 ];

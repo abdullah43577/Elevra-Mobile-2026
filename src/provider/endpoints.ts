@@ -94,6 +94,7 @@ export const API_ENDPOINTS = {
 
     tailor: (id: string) => `/job-applications/${id}/tailor`,
     match: (id: string) => `/job-applications/${id}/match`,
+    messages: (id: string) => `/job-applications/${id}/messages`,
   },
 
   careerProfile: {

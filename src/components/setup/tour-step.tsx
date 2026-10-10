@@ -16,14 +16,14 @@ import { View } from "react-native";
 */
 const HIGHLIGHTS: { type: ContentCategory; title: string; body: string }[] = [
   {
+    type: "Application",
+    title: "Start from a job you want",
+    body: "Paste the link in Applications. Each one lists its next step, posting to thank-you.",
+  },
+  {
     type: "Resume",
     title: "Tailor a resume per role",
     body: "Six ATS-safe templates, and your profile fills the first draft.",
-  },
-  {
-    type: "Application",
-    title: "Track where you applied",
-    body: "Every role in one pipeline, with the resume and letter you sent attached.",
   },
   {
     type: "InterviewQuestion",

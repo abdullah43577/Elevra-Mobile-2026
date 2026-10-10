@@ -81,8 +81,8 @@ export const useResumeTailoring = function ({
     if (!resumeId) return;
 
     router.push({
-      pathname: "/(dashboard)/(tabs)/workspaces/resume-studio/resume-builder",
-      params: { resumeId },
+      pathname: "/(dashboard)/(tabs)/applications/resume-builder",
+      params: { resumeId, applicationId },
     });
   };
 

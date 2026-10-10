@@ -14,9 +14,9 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ApplicationStatus, JobApplication } from "../../../../../../types/job-application";
+import { ApplicationStatus, JobApplication } from "../../../../../types/job-application";
 
-export default function JobTracker() {
+export default function Applications() {
   const router = useRouter();
   const { contentColor } = useThemeColors();
   const accent = contentColor("application");
@@ -35,12 +35,12 @@ export default function JobTracker() {
   const { stats, refetchStats } = useGetApplicationStats();
 
   const handleAddApplication = function () {
-    router.push("/(dashboard)/(tabs)/workspaces/job-tracker/application-form");
+    router.push("/(dashboard)/(tabs)/applications/application-form");
   };
 
   const handleOpenApplication = function (application: JobApplication) {
     router.push({
-      pathname: "/(dashboard)/(tabs)/workspaces/job-tracker/application-detail",
+      pathname: "/(dashboard)/(tabs)/applications/application-detail",
       params: { id: application.id },
     });
   };

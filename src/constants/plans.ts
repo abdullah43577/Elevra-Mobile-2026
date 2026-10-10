@@ -138,34 +138,39 @@ interface Benefit {
 }
 
 /*
-  Written as outcomes rather than feature names. "Export as PDF" is a checkbox;
-  "send a real file to employers" is the reason someone pays.
-
-  Mirrors what src/constants/entitlements.ts actually gates — if you add a
-  PRO_FEATURE, it belongs here too or the paywall is selling an incomplete list.
+  Written as outcomes rather than feature names, and in the order of an
+  application: tailor, write, interview. Mirrors what src/constants/entitlements.ts
+  gates — add a PRO_FEATURE and it belongs here too, or the paywall sells an
+  incomplete list. The first three also make up setup's trial step.
 */
 export const PRO_BENEFITS: Benefit[] = [
   {
-    icon: "download-outline",
-    title: "Export resumes as PDF",
+    icon: "sparkles-outline",
+    title: "A resume tailored to every job",
     description:
-      "Download an ATS-ready file from any template and send it straight to employers.",
+      "A copy rewritten around each posting from what's already true about you, with the keywords it still misses.",
   },
   {
-    icon: "sparkles-outline",
-    title: "Every AI feature",
+    icon: "mail-outline",
+    title: "Letters and emails written for you",
     description:
-      "Note summaries, the AI rewriter, AI chat, and career tools as they land.",
+      "Cover letter drafts, follow-ups, thank-yous and offer replies, from your own notes.",
+  },
+  {
+    icon: "chatbubbles-outline",
+    title: "Interview coaching",
+    description:
+      "Questions written from the posting, and feedback on your recorded answers — pace, filler words, structure.",
   },
   {
     icon: "mic-outline",
-    title: "Voice transcription",
-    description: "Turn any recording into searchable text you can edit and reuse.",
+    title: "Transcripts and summaries",
+    description: "Voice notes turned into searchable text, and long notes into a summary.",
   },
   {
     icon: "infinite-outline",
     title: "Everything else stays free",
     description:
-      "Unlimited notes, recordings, applications, resumes, and all templates — Pro or not.",
+      "Unlimited applications, resumes, letters and notes, every template, and PDF export — Pro or not.",
   },
 ];

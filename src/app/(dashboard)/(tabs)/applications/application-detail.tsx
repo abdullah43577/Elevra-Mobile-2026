@@ -1,6 +1,9 @@
 import { ApplicationOverview } from "@/components/job-tracker/application-overview";
 import { JobDescriptionSection } from "@/components/job-tracker/job-description-section";
 import { LinkedItemsSection } from "@/components/job-tracker/linked-items-section";
+import { MessageActions } from "@/components/job-tracker/messages/message-actions";
+import { MessageSheet } from "@/components/job-tracker/messages/message-sheet";
+import { NextStepsCard } from "@/components/job-tracker/next-steps-card";
 import { StatusPill } from "@/components/job-tracker/status-pill";
 import { TailorResumeSection } from "@/components/job-tracker/tailor/tailor-resume-section";
 import { InlineActionLink } from "@/components/job-tracker/inline-action-link";
@@ -11,6 +14,7 @@ import { IconButton } from "@/components/shared/icon-button";
 import { ScreenHeader } from "@/components/shared/screen-header";
 import { SectionHeader } from "@/components/shared/section-header";
 import { CONTENT_COLORS } from "@/constants/content-colors";
+import { MESSAGES_FOR_STATUS } from "@/constants/messages";
 import {
   APPLICATION_STATUSES,
   APPLICATION_STATUS_META,
@@ -19,6 +23,7 @@ import { useDeleteApplication } from "@/hooks/job-applications/use-delete-applic
 import { useGetApplicationById } from "@/hooks/job-applications/use-get-application-by-id";
 import { useLinkNote } from "@/hooks/job-applications/use-link-note";
 import { useLinkRecording } from "@/hooks/job-applications/use-link-recording";
+import { useMessageDrafting } from "@/hooks/job-applications/use-message-drafting";
 import { useResumeTailoring } from "@/hooks/job-applications/use-resume-tailoring";
 import { useQuestionGeneration } from "@/hooks/interview-prep/use-question-generation";
 import { useSaveApplication } from "@/hooks/job-applications/use-save-application";
@@ -28,17 +33,19 @@ import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { useGetRecordings } from "@/hooks/voice-notes/use-get-recordings";
 import { formatTime } from "@/provider/utils";
+import { applicationSteps, isActiveApplication, ProgressStepId } from "@/utils/application-progress";
+import { answerOf } from "@/utils/interview-prep";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ApplicationStatus } from "../../../../../../types/job-application";
+import { ApplicationStatus, MessageKind } from "../../../../../types/job-application";
 
 type PickerTarget = "status" | "note" | "recording" | "question" | null;
 
 export default function ApplicationDetail() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, draft } = useLocalSearchParams<{ id: string; draft?: MessageKind }>();
   const { contentColor } = useThemeColors();
   const accent = contentColor("application");
 
@@ -74,6 +81,19 @@ export default function ApplicationDetail() {
   const hasJobDescription = !!application?.jobDescription?.trim();
   const tailoring = useResumeTailoring({ applicationId: id, hasJobDescription });
   const questionGeneration = useQuestionGeneration({ applicationId: id, hasJobDescription });
+  const messageDrafting = useMessageDrafting(id);
+
+  // A reminder notification lands here with ?draft; open it once, and only if
+  // the application is still at a stage where that message makes sense. Free
+  // users see the section instead of being dropped onto the paywall from a reminder.
+  const openedDraft = useRef(false);
+  useEffect(() => {
+    if (openedDraft.current || !draft || !application) return;
+    openedDraft.current = true;
+    if (messageDrafting.isPro && MESSAGES_FOR_STATUS[application.status].includes(draft)) {
+      messageDrafting.handleOpen(draft);
+    }
+  }, [draft, application, messageDrafting]);
 
   const linkedNotes = application?.linkedNotes ?? [];
   const linkedRecordings = application?.linkedRecordings ?? [];
@@ -89,16 +109,33 @@ export default function ApplicationDetail() {
 
   const handleEdit = function () {
     router.push({
-      pathname: "/(dashboard)/(tabs)/workspaces/job-tracker/application-form",
+      pathname: "/(dashboard)/(tabs)/applications/application-form",
       params: { id },
     });
   };
 
   const handleWriteLetter = function () {
     router.push({
-      pathname: "/(dashboard)/(tabs)/workspaces/cover-letters/letter-editor",
+      pathname: "/(dashboard)/(tabs)/applications/letter-editor",
       params: { applicationId: id },
     });
+  };
+
+  const handleRehearse = function () {
+    router.push({
+      pathname: "/(dashboard)/(tabs)/applications/practice",
+      params: { applicationId: id },
+    });
+  };
+
+  const handleStep = function (step: ProgressStepId) {
+    if (step === "posting") return handleEdit();
+    if (step === "resume") return hasJobDescription ? tailoring.handleStart() : handleEdit();
+    if (step === "letter") return handleWriteLetter();
+    if (step === "applied") return saveApplication({ status: "APPLIED" });
+    if (step === "rehearsed" && pinnedQuestions.length > 0) return handleRehearse();
+    if (questionGeneration.isPro && hasJobDescription) return questionGeneration.handleGenerate();
+    setPicker("question");
   };
 
   const handleDelete = function () {
@@ -172,6 +209,17 @@ export default function ApplicationDetail() {
 
           <ApplicationOverview application={application} accentColor={accent} />
 
+          {isActiveApplication(application.status) && (
+            <NextStepsCard
+              steps={applicationSteps(application, {
+                pinned: pinnedQuestions.length,
+                rehearsed: pinnedQuestions.filter((question) => (answerOf(question)?.practiceCount ?? 0) > 0).length,
+              })}
+              accent={accent}
+              onStep={handleStep}
+            />
+          )}
+
           {application.notes && (
             <View className="mt-8">
               <SectionHeader title="Notes" />
@@ -241,6 +289,12 @@ export default function ApplicationDetail() {
             />
           )}
 
+          <MessageActions
+            status={application.status}
+            isPro={messageDrafting.isPro}
+            onOpen={messageDrafting.handleOpen}
+          />
+
           <LinkedItemsSection
             title="Interview questions"
             icon="chatbubbles-outline"
@@ -268,13 +322,7 @@ export default function ApplicationDetail() {
 
           {pinnedQuestions.length > 0 && (
             <Pressable
-              onPress={() =>
-                router.push({
-                  pathname:
-                    "/(dashboard)/(tabs)/workspaces/interview-prep/practice",
-                  params: { applicationId: id },
-                })
-              }
+              onPress={handleRehearse}
               className="mt-3 flex-row items-center justify-center gap-2 rounded-2xl px-4 py-3.5 active:opacity-80"
               style={{ backgroundColor: CONTENT_COLORS.interview }}
             >
@@ -376,6 +424,8 @@ export default function ApplicationDetail() {
         onSelect={(recordingId) => linkRecording({ recordingId })}
         onClose={() => setPicker(null)}
       />
+
+      <MessageSheet drafting={messageDrafting} accent={accent} />
 
       <ConfirmDialog
         visible={deleteDialogVisible}

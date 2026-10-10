@@ -11,41 +11,36 @@ export interface OnboardingSlide {
 }
 
 /*
-  Every slide describes something that ships today.
+  Told as one application's journey, in order — the product's positioning
+  (CLAUDE.md §31). Every slide describes something that ships today, and the
+  AI parts say they are Pro: a slide that promises something a new user then
+  cannot find loses trust faster than saying less.
 
-  The previous deck sold AI resume guidance, AI note structuring and an AI
-  rewriter — all three still `ComingSoon` — plus export and "sync in a single
-  tap", when export is Pro-gated and sync does not exist. Four of five slides
-  promised something a new user would immediately fail to find, which is a
-  faster way to lose trust than saying less.
-
-  Illustrated with Open Peeps (components/illustrations). The first onboarding
-  art was dropped for being inconsistent, baked onto a light background that
-  became a bright slab in dark mode, and ~4.5MB in total. Two-colour line art
-  themed from tokens fixes all three, at about 11KB a figure.
+  Illustrated with Open Peeps (components/illustrations): two-colour line art
+  themed from tokens, so one file works in both schemes at about 11KB a figure.
 */
 export const onboardingSlides: OnboardingSlide[] = [
   {
-    id: "resume",
-    title: "Resumes that get read",
+    id: "journey",
+    title: "From the posting to the thank-you",
     subtitle:
-      "Six ATS-safe templates and a guided builder. Real selectable text on export, never a screenshot in a PDF.",
-    illustration: "onboardingResume",
-    accent: "resume",
-  },
-  {
-    id: "tracker",
-    title: "Every application in one place",
-    subtitle:
-      "Follow each role from saved to offer, with the exact resume and cover letter you sent kept alongside it.",
+      "Paste a job link and Elevra sets up the application, then walks you through every step to the offer.",
     illustration: "onboardingTracker",
     accent: "application",
   },
   {
-    id: "letters",
-    title: "Cover letters that match",
+    id: "resume",
+    title: "A resume shaped to each job",
     subtitle:
-      "Write one per role and it takes the styling of the resume it is sent with, so the pair arrives looking like a set.",
+      "Six ATS-safe templates, filled from your profile or an old PDF. Pro rewrites a copy around each posting, using only what is true about you.",
+    illustration: "onboardingResume",
+    accent: "resume",
+  },
+  {
+    id: "letters",
+    title: "Letters and emails, drafted",
+    subtitle:
+      "Cover letters that match the resume they go with, plus follow-ups and thank-yous ready to send. Drafting comes with Pro.",
     illustration: "onboardingLetters",
     accent: "letter",
   },
@@ -53,15 +48,15 @@ export const onboardingSlides: OnboardingSlide[] = [
     id: "interview",
     title: "Rehearse out loud",
     subtitle:
-      "A question bank with a practice runner that puts the answers you keep avoiding in front of you first.",
+      "Practise the questions you would rather avoid. Pro writes them from the posting and tells you how each answer lands.",
     illustration: "onboardingInterview",
     accent: "interview",
   },
   {
     id: "capture",
-    title: "Notes, memos, and one search",
+    title: "Everything about a job, together",
     subtitle:
-      "Keep everything from a recruiter call to a post-interview voice memo, and find any of it from one place.",
+      "Notes and voice memos attach to the application they are about, and one search finds any of it.",
     illustration: "onboardingCapture",
     accent: "note",
   },

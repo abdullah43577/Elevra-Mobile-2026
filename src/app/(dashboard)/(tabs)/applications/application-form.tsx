@@ -30,7 +30,7 @@ import {
   CreateApplicationRequest,
   UpdateApplicationRequest,
   WorkArrangement,
-} from "../../../../../../types/job-application";
+} from "../../../../../types/job-application";
 
 type PickerTarget = "status" | "resume" | "coverLetter" | null;
 

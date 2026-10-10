@@ -138,7 +138,7 @@ export default function InterviewPrep() {
 
         <View className="mt-6 px-5">
           <AiQuestionsCard
-            onPress={() => router.push("/(dashboard)/(tabs)/workspaces/job-tracker")}
+            onPress={() => router.push("/(dashboard)/(tabs)/applications")}
           />
         </View>
 

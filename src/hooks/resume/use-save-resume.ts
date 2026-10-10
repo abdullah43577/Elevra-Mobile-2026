@@ -19,7 +19,8 @@ interface SaveResumeData {
 
 export const useSaveResume = function ({
   resumeId,
-}: { resumeId?: string } = {}) {
+  shouldRedirect = true,
+}: { resumeId?: string; shouldRedirect?: boolean } = {}) {
   const isUpdate = !!resumeId;
 
   const { mutateAsync, isPending } = useSubmitData<
@@ -33,7 +34,7 @@ export const useSaveResume = function ({
     onSuccessMessage: isUpdate
       ? "Resume updated successfully"
       : "Resume created successfully",
-    redirectTo: "/(dashboard)/(tabs)/workspaces/resume-studio",
+    ...(shouldRedirect && { redirectTo: "/(dashboard)/(tabs)/workspaces/resume-studio" }),
   });
 
   return {
