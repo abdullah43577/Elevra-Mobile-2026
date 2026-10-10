@@ -2,6 +2,7 @@ import { ApplicationOverview } from "@/components/job-tracker/application-overvi
 import { JobDescriptionSection } from "@/components/job-tracker/job-description-section";
 import { LinkedItemsSection } from "@/components/job-tracker/linked-items-section";
 import { StatusPill } from "@/components/job-tracker/status-pill";
+import { TailorResumeSection } from "@/components/job-tracker/tailor/tailor-resume-section";
 import { AppText } from "@/components/shared/app-text";
 import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -17,6 +18,7 @@ import { useDeleteApplication } from "@/hooks/job-applications/use-delete-applic
 import { useGetApplicationById } from "@/hooks/job-applications/use-get-application-by-id";
 import { useLinkNote } from "@/hooks/job-applications/use-link-note";
 import { useLinkRecording } from "@/hooks/job-applications/use-link-recording";
+import { useResumeTailoring } from "@/hooks/job-applications/use-resume-tailoring";
 import { useSaveApplication } from "@/hooks/job-applications/use-save-application";
 import { useGetQuestions } from "@/hooks/interview-prep/use-get-questions";
 import { usePinQuestion } from "@/hooks/interview-prep/use-pin-question";
@@ -66,6 +68,9 @@ export default function ApplicationDetail() {
 
   const { notes } = useGetNotes();
   const { recordings } = useGetRecordings();
+
+  const hasJobDescription = !!application?.jobDescription?.trim();
+  const tailoring = useResumeTailoring({ applicationId: id, hasJobDescription });
 
   const linkedNotes = application?.linkedNotes ?? [];
   const linkedRecordings = application?.linkedRecordings ?? [];
@@ -171,6 +176,14 @@ export default function ApplicationDetail() {
           {application.jobDescription && (
             <JobDescriptionSection jobDescription={application.jobDescription} />
           )}
+
+          <TailorResumeSection
+            tailoring={tailoring}
+            hasJobDescription={hasJobDescription}
+            {...(application.resume && { attachedResumeTitle: application.resume.title })}
+            accentColor={accent}
+            onAddJobDescription={handleEdit}
+          />
 
           <LinkedItemsSection
             title="Resume sent"

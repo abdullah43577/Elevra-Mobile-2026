@@ -6,6 +6,7 @@ export const PRO_FEATURES = {
   AI_CHAT: "ai_chat",
   AI_CAREER_TOOLS: "ai_career_tools",
   AI_RESUME_BUILDER: "ai_resume_builder",
+  AI_RESUME_TAILOR: "ai_resume_tailor",
   VOICE_TRANSCRIPTION: "voice_transcription",
 } as const;
 
@@ -48,6 +49,10 @@ export const PRO_FEATURE_COPY: Record<ProFeature, { title: string; blurb: string
   [PRO_FEATURES.AI_RESUME_BUILDER]: {
     title: "AI resume builder with Pro",
     blurb: "Build a resume by answering questions instead of filling forms.",
+  },
+  [PRO_FEATURES.AI_RESUME_TAILOR]: {
+    title: "Tailor resumes with Pro",
+    blurb: "Rewrite a copy of your resume around any job posting, using only what's already true about you.",
   },
   [PRO_FEATURES.VOICE_TRANSCRIPTION]: {
     title: "Transcription with Pro",

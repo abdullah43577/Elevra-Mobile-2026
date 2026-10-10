@@ -90,6 +90,9 @@ export const API_ENDPOINTS = {
     linkRecording: (id: string) => `/job-applications/${id}/recordings`,
     unlinkRecording: (id: string, recordingId: string) =>
       `/job-applications/${id}/recordings/${recordingId}`,
+
+    tailor: (id: string) => `/job-applications/${id}/tailor`,
+    match: (id: string) => `/job-applications/${id}/match`,
   },
 
   careerProfile: {

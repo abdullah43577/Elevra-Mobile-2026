@@ -1,3 +1,5 @@
+import { Resume } from "./resume/resume";
+
 export type ApplicationStatus =
   | "SAVED"
   | "APPLIED"
@@ -140,4 +142,43 @@ export interface UpdateApplicationRequest
   salaryMax?: number | null;
   salaryCurrency?: string | null;
   isArchived?: boolean;
+}
+
+export interface JobKeyword {
+  term: string;
+  required: boolean;
+}
+
+// Computed on the server from extracted keywords, never generated — the same
+// resume against the same posting always scores the same.
+export interface KeywordCoverage {
+  score: number;
+  total: number;
+  matched: string[];
+  missing: JobKeyword[];
+}
+
+export interface ApplicationMatch {
+  resumeId: string;
+  coverage: KeywordCoverage;
+}
+
+export interface TailorReport {
+  before: KeywordCoverage;
+  after: KeywordCoverage;
+  changes: string[];
+  addedTerms: { term: string; evidence: string }[];
+  // Sections the server reverted to the original because the rewrite added
+  // something the resume does not say.
+  keptOriginal: number;
+}
+
+export interface TailorResult {
+  resume: Resume;
+  report: TailorReport;
+}
+
+export interface TailorResumeRequest {
+  // Omitted to tailor from the career profile.
+  baseResumeId?: string;
 }
