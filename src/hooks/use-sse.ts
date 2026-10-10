@@ -6,8 +6,20 @@ import { getBaseUrl } from "@/provider/client";
 interface SSEOptions {
   onChunk?: (chunk: string, full: string) => void;
   onComplete?: (data: any) => void;
-  onError?: (error: string) => void;
+  onError?: (error: string, code?: string) => void;
 }
+
+// A refusal before the stream opens (402, 429, 503) arrives as an error event
+// whose `message` is the raw JSON body the API sent.
+const parseErrorBody = function (raw: unknown): { message?: string; code?: string } {
+  if (typeof raw !== "string" || !raw) return {};
+  try {
+    const body = JSON.parse(raw);
+    return { message: body?.message, code: body?.code };
+  } catch {
+    return {};
+  }
+};
 
 export const useSSE = function () {
   const [isConnected, setIsConnected] = useState(false);
@@ -53,7 +65,7 @@ export const useSSE = function () {
 
           // Check for error
           if (data.error) {
-            if (onError) onError(data.error);
+            if (onError) onError(data.error, data.code);
             eventSource.close();
             setIsConnected(false);
             setIsLoading(false);
@@ -80,10 +92,13 @@ export const useSSE = function () {
       });
 
       eventSource.addEventListener("error", (event: any) => {
-        // react-native-sse may not have readyState, handle error differently
+        // Without close(), react-native-sse re-polls every 5s after an error,
+        // re-sending a request the server has already refused.
+        eventSource.close();
         setIsConnected(false);
         setIsLoading(false);
-        if (onError) onError("Connection lost");
+        const { message, code } = parseErrorBody(event?.message);
+        if (onError) onError(message ?? "Connection lost", code);
       });
 
       eventSource.addEventListener("open", () => {
