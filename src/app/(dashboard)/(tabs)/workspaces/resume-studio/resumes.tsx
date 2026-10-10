@@ -150,6 +150,7 @@ export default function Resumes() {
         ListEmptyComponent={
           <EmptyState
             icon="document-outline"
+            illustration="emptyResumes"
             accentColor={accent}
             title="No resumes yet"
             subtitle="Pick a template to build your first resume"

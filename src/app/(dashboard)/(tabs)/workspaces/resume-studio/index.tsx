@@ -159,6 +159,7 @@ export default function ResumeStudio() {
               ListEmptyComponent={
                 <EmptyState
                   icon="document-outline"
+                  illustration="noResults"
                   accentColor={accent}
                   title="No templates found"
                   subtitle={

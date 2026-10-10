@@ -99,6 +99,7 @@ export default function CareerProfileOverview() {
         ) : (
           <EmptyState
             icon="person-outline"
+            illustration="emptyCareerProfile"
             accentColor={accent}
             title="Build your career profile"
             subtitle="Enter your history once. Every resume you build after this starts already filled in."

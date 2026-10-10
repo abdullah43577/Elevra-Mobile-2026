@@ -152,6 +152,7 @@ export default function CoverLetters() {
           ListEmptyComponent={
             <EmptyState
               icon="mail-outline"
+              illustration={isFiltering ? "noResults" : "emptyLetters"}
               accentColor={accent}
               title={isFiltering ? "No letters found" : "No cover letters yet"}
               subtitle={

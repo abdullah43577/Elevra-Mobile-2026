@@ -119,6 +119,7 @@ export default function JobTracker() {
           ) : applications.length === 0 ? (
             <EmptyState
               icon="briefcase-outline"
+              illustration={isFiltering ? "noResults" : "emptyApplications"}
               accentColor={accent}
               title={isFiltering ? "No applications found" : "No applications yet"}
               subtitle={

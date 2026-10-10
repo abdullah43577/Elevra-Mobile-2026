@@ -128,6 +128,7 @@ export default function Notifications() {
         ) : notifications.length === 0 ? (
           <EmptyState
             icon="notifications-off-outline"
+            illustration="emptyNotifications"
             accentColor={accent}
             title={filter === "unread" ? "Nothing unread" : "No notifications yet"}
             subtitle={

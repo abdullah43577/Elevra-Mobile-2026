@@ -1,3 +1,5 @@
+import { Illustration } from "@/components/illustrations/illustration";
+import type { PeepName } from "@/components/illustrations/peeps.generated";
 import { CONTENT_COLORS } from "@/constants/content-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
@@ -5,7 +7,9 @@ import { AppButton } from "./app-button";
 import { AppText } from "./app-text";
 
 interface Props {
-  icon: keyof typeof Ionicons.glyphMap;
+  icon?: keyof typeof Ionicons.glyphMap;
+  /** Shown instead of the icon. Reserve for screens a user meets with nothing in them yet. */
+  illustration?: PeepName;
   title: string;
   subtitle: string;
   buttonText?: string;
@@ -15,6 +19,7 @@ interface Props {
 
 export const EmptyState = function ({
   icon,
+  illustration,
   title,
   subtitle,
   buttonText,
@@ -23,12 +28,20 @@ export const EmptyState = function ({
 }: Props) {
   return (
     <View className="flex-1 items-center justify-center px-10 py-16">
-      <View
-        className="mb-4 items-center justify-center rounded-full"
-        style={{ width: 64, height: 64, backgroundColor: `${accentColor}14` }}
-      >
-        <Ionicons name={icon} size={26} color={accentColor} />
-      </View>
+      {illustration ? (
+        <View className="mb-5">
+          <Illustration name={illustration} color={accentColor} size={168} />
+        </View>
+      ) : (
+        icon && (
+          <View
+            className="mb-4 items-center justify-center rounded-full"
+            style={{ width: 64, height: 64, backgroundColor: `${accentColor}14` }}
+          >
+            <Ionicons name={icon} size={26} color={accentColor} />
+          </View>
+        )
+      )}
 
       <AppText type="title" className="text-center text-[19px] leading-[24px]">
         {title}

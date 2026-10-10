@@ -1,3 +1,4 @@
+import { Illustration } from "@/components/illustrations/illustration";
 import { AppText } from "@/components/shared/app-text";
 import {
   CONTENT_META,
@@ -32,11 +33,17 @@ const HIGHLIGHTS: { type: ContentCategory; title: string; body: string }[] = [
 ];
 
 export const TourStep = function () {
-  const { contentTint } = useThemeColors();
+  const { contentTint, contentColor } = useThemeColors();
 
   return (
     <View>
-      <AppText type="display">You are set up</AppText>
+      <View className="self-start">
+        <Illustration name="setupDone" color={contentColor("note")} size={148} />
+      </View>
+
+      <AppText type="display" className="mt-4">
+        You are set up
+      </AppText>
       <AppText type="subtitle" className="mt-2">
         Here is what is waiting for you. Nothing else needs configuring.
       </AppText>

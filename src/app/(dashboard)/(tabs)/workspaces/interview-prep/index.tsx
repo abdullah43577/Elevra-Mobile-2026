@@ -150,6 +150,7 @@ export default function InterviewPrep() {
           ) : ordered.length === 0 ? (
             <EmptyState
               icon="chatbubbles-outline"
+              illustration="noResults"
               accentColor={accent}
               title="No questions found"
               subtitle={

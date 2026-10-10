@@ -86,6 +86,7 @@ export default function VoiceNotes() {
         ListEmptyComponent={
           <EmptyState
             icon="mic-outline"
+            illustration={searchQuery ? "noResults" : "emptyRecordings"}
             title={searchQuery ? "No recordings found" : "No recordings yet"}
             subtitle={
               searchQuery
