@@ -117,6 +117,7 @@ export const API_ENDPOINTS = {
     saveAnswer: (id: string) => `/interview-prep/${id}/answer`,
     uploadAnswerAudio: (id: string) => `/interview-prep/${id}/answer/audio`,
     deleteAnswerAudio: (id: string) => `/interview-prep/${id}/answer/audio`,
+    coachAnswer: (id: string) => `/interview-prep/${id}/answer/coach`,
     pinToApplication: (id: string, applicationId: string) =>
       `/interview-prep/${id}/applications/${applicationId}`,
     unpinFromApplication: (id: string, applicationId: string) =>

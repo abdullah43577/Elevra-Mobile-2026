@@ -9,6 +9,7 @@ export const PRO_FEATURES = {
   AI_RESUME_TAILOR: "ai_resume_tailor",
   AI_COVER_LETTER: "ai_cover_letter",
   AI_INTERVIEW_QUESTIONS: "ai_interview_questions",
+  AI_ANSWER_COACHING: "ai_answer_coaching",
   VOICE_TRANSCRIPTION: "voice_transcription",
 } as const;
 
@@ -63,6 +64,10 @@ export const PRO_FEATURE_COPY: Record<ProFeature, { title: string; blurb: string
   [PRO_FEATURES.AI_INTERVIEW_QUESTIONS]: {
     title: "Job-specific questions with Pro",
     blurb: "Get the questions this interviewer is likely to ask, written from the posting and your own experience.",
+  },
+  [PRO_FEATURES.AI_ANSWER_COACHING]: {
+    title: "Answer feedback with Pro",
+    blurb: "Hear how your answer actually lands: pace, filler words, structure, and a tighter version in your own words.",
   },
   [PRO_FEATURES.VOICE_TRANSCRIPTION]: {
     title: "Transcription with Pro",
