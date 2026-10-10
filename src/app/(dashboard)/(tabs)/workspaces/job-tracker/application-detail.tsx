@@ -3,7 +3,7 @@ import { JobDescriptionSection } from "@/components/job-tracker/job-description-
 import { LinkedItemsSection } from "@/components/job-tracker/linked-items-section";
 import { StatusPill } from "@/components/job-tracker/status-pill";
 import { TailorResumeSection } from "@/components/job-tracker/tailor/tailor-resume-section";
-import { WriteLetterLink } from "@/components/job-tracker/write-letter-link";
+import { InlineActionLink } from "@/components/job-tracker/inline-action-link";
 import { AppText } from "@/components/shared/app-text";
 import { BottomSheetPicker } from "@/components/shared/bottom-sheet-picker";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -20,6 +20,7 @@ import { useGetApplicationById } from "@/hooks/job-applications/use-get-applicat
 import { useLinkNote } from "@/hooks/job-applications/use-link-note";
 import { useLinkRecording } from "@/hooks/job-applications/use-link-recording";
 import { useResumeTailoring } from "@/hooks/job-applications/use-resume-tailoring";
+import { useQuestionGeneration } from "@/hooks/interview-prep/use-question-generation";
 import { useSaveApplication } from "@/hooks/job-applications/use-save-application";
 import { useGetQuestions } from "@/hooks/interview-prep/use-get-questions";
 import { usePinQuestion } from "@/hooks/interview-prep/use-pin-question";
@@ -72,6 +73,7 @@ export default function ApplicationDetail() {
 
   const hasJobDescription = !!application?.jobDescription?.trim();
   const tailoring = useResumeTailoring({ applicationId: id, hasJobDescription });
+  const questionGeneration = useQuestionGeneration({ applicationId: id, hasJobDescription });
 
   const linkedNotes = application?.linkedNotes ?? [];
   const linkedRecordings = application?.linkedRecordings ?? [];
@@ -231,7 +233,12 @@ export default function ApplicationDetail() {
           />
 
           {!application.coverLetter && (
-            <WriteLetterLink color={CONTENT_COLORS.letter} onPress={handleWriteLetter} />
+            <InlineActionLink
+              icon="create-outline"
+              label="Write one for this job"
+              color={CONTENT_COLORS.letter}
+              onPress={handleWriteLetter}
+            />
           )}
 
           <LinkedItemsSection
@@ -247,6 +254,16 @@ export default function ApplicationDetail() {
             onAdd={() => setPicker("question")}
             onRemove={(questionId) => unpinQuestion(questionId)}
             disabled={isPinning}
+          />
+
+          <InlineActionLink
+            icon="sparkles-outline"
+            label="Generate questions for this job"
+            loadingLabel="Writing questions for this role…"
+            color={CONTENT_COLORS.interview}
+            onPress={questionGeneration.handleGenerate}
+            isLoading={questionGeneration.isGenerating}
+            showProTag={!questionGeneration.isPro}
           />
 
           {pinnedQuestions.length > 0 && (

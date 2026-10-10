@@ -109,6 +109,7 @@ export const API_ENDPOINTS = {
     questions: "/interview-prep",
     stats: "/interview-prep/stats",
     practice: "/interview-prep/practice",
+    generate: "/interview-prep/generate",
     detail: (id: string) => `/interview-prep/${id}`,
     create: "/interview-prep",
     update: (id: string) => `/interview-prep/${id}`,

@@ -10,6 +10,7 @@ export const INTERVIEW_CATEGORIES: InterviewCategory[] = [
   "SITUATIONAL",
   "MOTIVATION",
   "STRENGTHS",
+  "ROLE_SPECIFIC",
   "CLOSING",
 ];
 
@@ -46,6 +47,12 @@ export const CATEGORY_META: Record<
     short: "Strengths",
     icon: "barbell-outline",
     blurb: "What you are good at, and what you are not",
+  },
+  ROLE_SPECIFIC: {
+    label: "Role-specific",
+    short: "Role",
+    icon: "construct-outline",
+    blurb: "The actual work of one particular job",
   },
   CLOSING: {
     label: "Closing",

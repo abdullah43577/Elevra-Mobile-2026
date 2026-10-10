@@ -8,6 +8,7 @@ export const PRO_FEATURES = {
   AI_RESUME_BUILDER: "ai_resume_builder",
   AI_RESUME_TAILOR: "ai_resume_tailor",
   AI_COVER_LETTER: "ai_cover_letter",
+  AI_INTERVIEW_QUESTIONS: "ai_interview_questions",
   VOICE_TRANSCRIPTION: "voice_transcription",
 } as const;
 
@@ -58,6 +59,10 @@ export const PRO_FEATURE_COPY: Record<ProFeature, { title: string; blurb: string
   [PRO_FEATURES.AI_COVER_LETTER]: {
     title: "Draft letters with Pro",
     blurb: "Get a first draft written from your own experience and the job, with nothing made up.",
+  },
+  [PRO_FEATURES.AI_INTERVIEW_QUESTIONS]: {
+    title: "Job-specific questions with Pro",
+    blurb: "Get the questions this interviewer is likely to ask, written from the posting and your own experience.",
   },
   [PRO_FEATURES.VOICE_TRANSCRIPTION]: {
     title: "Transcription with Pro",

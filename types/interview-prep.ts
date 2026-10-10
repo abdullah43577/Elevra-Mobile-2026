@@ -4,6 +4,7 @@ export type InterviewCategory =
   | "SITUATIONAL"
   | "MOTIVATION"
   | "STRENGTHS"
+  | "ROLE_SPECIFIC"
   | "CLOSING";
 
 export type AnswerStatus = "DRAFT" | "NEEDS_WORK" | "READY";
@@ -71,4 +72,13 @@ export interface QuestionFilters {
   search?: string;
   applicationId?: string;
   unanswered?: boolean;
+}
+
+export interface GenerateQuestionsResult {
+  // Newly written and pinned to the application.
+  questions: InterviewQuestion[];
+  // Generated questions that matched ones already in the bank, pinned instead of duplicated.
+  pinnedExisting: number;
+  // Dropped because they could not be traced to the posting or the resume.
+  dropped: number;
 }
