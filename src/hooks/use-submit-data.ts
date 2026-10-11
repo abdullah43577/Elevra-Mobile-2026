@@ -7,11 +7,6 @@ import { queryClient } from "@/utils/queryClient";
 import { router } from "expo-router";
 import { showToast } from "@/utils/show-toast";
 
-/*
-  What the API puts in an error body. `code` is the stable identifier attached
-  to the handful of errors a caller has to branch on rather than display — see
-  AppError in ../elevra-server/src/lib/errors.ts.
-*/
 export interface APIErrorBody {
   message?: string;
   code?: string;
@@ -28,9 +23,6 @@ interface UseSubmitDataOptions<TData, TResponse> {
   onSuccess?: (data: TResponse) => void;
   redirectTo?: string;
   skipAuth?: boolean;
-  // Suppresses the success toast. For background mutations the user did not
-  // explicitly ask for — marking a notification read on tap, for instance —
-  // where a toast would be noise.
   silent?: boolean;
 }
 

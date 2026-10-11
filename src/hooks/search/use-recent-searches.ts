@@ -8,12 +8,6 @@ const save = function (entries: string[]) {
   );
 };
 
-/*
-  Recent searches are a device convenience, not user data — they live in
-  AsyncStorage rather than on the server, and sign-out clears them for the same
-  reason it wipes the persisted query cache: the next person to hold the phone
-  should not read the last person's search history.
-*/
 export const useRecentSearches = function () {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 

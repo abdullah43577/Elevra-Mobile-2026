@@ -23,8 +23,6 @@ const Stat = function ({ value, label }: { value: string; label: string }) {
   );
 };
 
-// Counted on the server from the transcript and the take's length — the same
-// take always gives the same numbers.
 export const FeedbackMetrics = function ({ metrics }: Props) {
   const topFillers = metrics.fillers
     .slice(0, 3)

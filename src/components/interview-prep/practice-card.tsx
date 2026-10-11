@@ -33,11 +33,6 @@ export const PracticeCard = function ({
   const answer = answerOf(question);
   const category = CATEGORY_META[question.category];
 
-  /*
-    The timer is the single most useful signal in rehearsal: rambling is the
-    most common way a good answer goes wrong, and you cannot feel it happening.
-    It is guidance, not a limit — hence a colour shift rather than a cut-off.
-  */
   const timerColour =
     seconds >= ANSWER_LONG_SECONDS
       ? danger
@@ -81,11 +76,6 @@ export const PracticeCard = function ({
         </View>
       )}
 
-      {/*
-        Your own notes stay hidden until you ask for them. Rehearsal is recall —
-        reading the answer you already wrote is the browsable-bank failure mode
-        this screen exists to avoid.
-      */}
       <View className="mt-6">
         {isRevealed ? (
           <View className="rounded-2xl border-hairline border-line bg-surface p-4">

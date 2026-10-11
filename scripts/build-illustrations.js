@@ -1,19 +1,7 @@
 #!/usr/bin/env node
 
-/*
-  Builds src/components/illustrations/peeps.generated.ts from Open Peeps
-  (https://www.openpeeps.com, Pablo Stanley, CC0 1.0 — public domain).
-
-  Usage: node scripts/build-illustrations.js
-
-  Each peep is downloaded from the official site, optimised with svgo, and its
-  two colours swapped for tokens the Illustration component fills from the
-  theme: black ink -> {{ink}}, white -> {{paper}}. That is the whole reason the
-  set was chosen — two flat colours theme cleanly into light and dark.
-
-  To add one: browse openpeeps.com, copy the .svg url, add a line below, run
-  this, and use the new name with <Illustration />.
-*/
+// Builds peeps.generated.ts from Open Peeps (openpeeps.com, Pablo Stanley, CC0 1.0).
+// Usage: node scripts/build-illustrations.js
 
 const fs = require("fs");
 const path = require("path");
@@ -46,11 +34,9 @@ const MANIFEST = {
   practiceDone: `${CDN}/5e51c674258ffe10d286d30a/5e535f2ad39923f7d558435b_peep-sitting-11.svg`,
 };
 
-// Run from the repo root, like scripts/reset-project.js.
 const OUTPUT = path.join(process.cwd(), "src", "components", "illustrations", "peeps.generated.ts");
 
-// Downloaded markup is untrusted. These never appear in a peep, so their
-// presence means the file is not what it claims to be.
+// Downloaded markup is untrusted; none of these ever appear in a real peep.
 const FORBIDDEN = [/<script/i, /\son[a-z]+\s*=/i, /<foreignObject/i, /(?:xlink:)?href\s*=\s*["'](?!#)/i];
 
 const tokenize = function (name, svg) {
@@ -58,12 +44,8 @@ const tokenize = function (name, svg) {
     if (pattern.test(svg)) throw new Error(`${name}: refusing markup matching ${pattern}`);
   }
 
-  /*
-    A mask's white is not a colour: masks work by luminance, white meaning
-    "show". Themed to {{paper}}, it went near-black in dark mode and hid the
-    body it was masking (peep-sitting-11). Mask fills are held aside and left
-    white in both themes.
-  */
+  // Mask fills stay white: masks work by luminance, and themed to {{paper}} they
+  // hid the masked body in dark mode.
   const themed = svg
     .replace(/(<mask\b[^>]*\s)fill="#(?:fff|ffffff|white)"/gi, '$1fill="{{mask}}"')
     .replace(/fill="#(?:000|000000|black)"/gi, 'fill="{{ink}}"')
@@ -84,11 +66,9 @@ const build = async function () {
 
     const { data } = optimize(await response.text(), {
       multipass: true,
-      // One decimal place: indistinguishable at phone sizes, a quarter of the
-      // original weight. Whole numbers visibly roughened faces.
+      // Whole numbers visibly roughen faces.
       floatPrecision: 1,
-      // svgo 4 keeps viewBox by default; 3.x crashed in convertPathData on
-      // peep-standing-17, which 4 handles.
+      // Needs svgo 4: 3.x crashes in convertPathData on peep-standing-17.
       plugins: [
         "preset-default",
         "removeDimensions",

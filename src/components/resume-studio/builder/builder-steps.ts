@@ -9,15 +9,8 @@ export interface BuilderStep {
   optional: boolean;
 }
 
-/*
-  Optional steps are genuinely optional: they start with no entries at all.
-
-  The builder used to seed one blank item into every array, which meant a user
-  who filled in only their experience still failed validation on References,
-  Projects, Certifications and Languages — each item schema requires its fields,
-  so a blank row is an invalid row. Worse, those errors landed on steps the user
-  had never opened, so the save button just silently did nothing.
-*/
+// Optional steps start with no entries: a blank row fails its item schema and
+// silently blocks Save on steps the user never opened.
 export const BUILDER_STEPS: BuilderStep[] = [
   { id: "personalInfo", label: "Personal details", short: "About", icon: "person-outline", optional: false },
   { id: "experience", label: "Work experience", short: "Experience", icon: "briefcase-outline", optional: false },

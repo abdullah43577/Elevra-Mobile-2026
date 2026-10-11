@@ -16,8 +16,6 @@ const PARTS = [
   { key: "result", label: "Result" },
 ] as const;
 
-// Only shown for questions that call for a story; a "why this company" answer
-// has no situation or result to miss.
 export const FeedbackStructure = function ({ structure, accent }: Props) {
   const { foregroundSubtle } = useThemeColors();
   if (!structure.applies) return null;

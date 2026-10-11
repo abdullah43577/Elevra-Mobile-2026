@@ -16,9 +16,7 @@ export const useGetTemplateById = function ({
     APIResponse<AnyTemplate>
   >({
     url: API_ENDPOINTS.resume.templateDetail(templateId),
-    // An empty id resolves to `/resume/templates/`, which Express matches to
-    // the *list* route — so the query resolves with an array where a template
-    // is expected, and every `template.x` read comes back undefined.
+    // An empty id resolves to `/resume/templates/`, which Express matches to the list route.
     shouldFetch: shouldFetch ?? !!templateId,
   });
 

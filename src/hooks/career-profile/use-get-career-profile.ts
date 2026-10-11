@@ -21,17 +21,8 @@ export const useGetCareerProfile = function (
 
   return {
     careerProfile,
-    /*
-      Whether the first fetch has landed. `careerProfile` cannot answer this on
-      its own: the server returns `data: null` for an account that has not
-      built one, which is indistinguishable from "still loading" — and the
-      editor must not seed its form from an empty profile before the real one
-      arrives.
-    */
+    // The server returns `data: null` for an unbuilt profile, which looks like loading.
     hasLoadedCareerProfile: data !== undefined,
-    // A row exists as soon as the user saves anything, so `careerProfile` alone
-    // is not "they have filled it in". Prefill and the save-back prompt both
-    // need to know whether there is anything worth copying.
     hasCareerProfile: !!careerProfile && hasAnyContent(careerProfile),
     isFetchingCareerProfile: isFetching,
     errorCareerProfile: error,

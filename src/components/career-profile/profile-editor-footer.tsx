@@ -12,11 +12,6 @@ interface Props {
   onSave: () => void;
 }
 
-/*
-  Save sits on every section rather than only the last one. Unlike the resume
-  builder, this editor is usually entered from the overview to change one
-  section — making someone page to the end to commit that would be absurd.
-*/
 export const ProfileEditorFooter = function ({
   isFirst,
   isLast,

@@ -28,7 +28,7 @@ export const useLinkRecording = function ({
   >({
     url: ({ recordingId }) =>
       API_ENDPOINTS.jobApplications.unlinkRecording(applicationId, recordingId),
-    // See use-link-note — a delete body would be read as the axios config.
+    // axios delete is (url, config), so a body would be read as config.
     getBody: () => undefined,
     method: "delete",
     onSuccessMessage: "Recording unlinked",

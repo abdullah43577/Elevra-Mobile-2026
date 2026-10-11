@@ -33,13 +33,6 @@ const asFormValues = function (draft: JobDraft): Partial<Record<TextField, strin
   };
 };
 
-/*
-  Reads a pasted link or posting into the new-application form. Fills only
-  fields the user has left empty, so nothing they already typed is overwritten,
-  and saves nothing — the form's own Save does that. A link the server could
-  not read still lands in the Job URL field, so it is not lost while they paste
-  the posting text instead.
-*/
 export const useJobPostingImport = function ({ getValues, setValue }: UseJobPostingImportOptions) {
   const handleErrors = useHandleErrors();
   const lastLink = useRef<string | null>(null);

@@ -113,12 +113,7 @@ export default function Profile() {
     logout();
   };
 
-  /*
-    Deletion signs the user out through the same path as Log out. The tokens are
-    now attached to a row that no longer exists, so the next authenticated call
-    would 401 into the session-expired handler — and logout() is also what wipes
-    the persisted cache, which still holds everything that was just deleted.
-  */
+  // Through logout(), which also wipes the persisted cache of the deleted data.
   const { deleteAccount, isDeletingAccount } = useDeleteAccount({
     onSuccess: () => {
       setDeleteDialogVisible(false);
@@ -202,10 +197,6 @@ export default function Profile() {
             />
           </View>
 
-          {/*
-            Its own card, below Log out, so the two destructive rows are never
-            adjacent inside one container — a mis-tap here has no undo.
-          */}
           <View className="overflow-hidden rounded-3xl border-hairline border-line bg-surface">
             <SettingsRow
               label="Delete account"

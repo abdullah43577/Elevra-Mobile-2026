@@ -1,7 +1,3 @@
-// ============================================
-// Base Types
-// ============================================
-
 export interface Folder {
   id: string;
   name: string;
@@ -48,10 +44,6 @@ export interface Note {
   updatedAt: string;
 }
 
-// ============================================
-// Request Types
-// ============================================
-
 export interface CreateNoteRequest {
   title: string;
   content?: string;
@@ -85,45 +77,6 @@ export interface UpdateFolderRequest {
 export interface CreateTagRequest {
   name: string;
 }
-
-// ============================================
-// Response Types (Wrapped in APIResponse)
-// ============================================
-
-// These will be used with the generic APIResponse<T> type
-// Example: APIResponse<Note[]> for list of notes
-
-// For the API response structure, we already have:
-// export interface APIResponse<T> {
-//   message: string;
-//   data: T;
-//   status?: number;
-// }
-
-// For endpoints that return just data without nested structure:
-// - GET /notes -> APIResponse<Note[]>
-// - GET /notes/archived -> APIResponse<Note[]>
-// - GET /notes/:id -> APIResponse<Note>
-// - POST /notes -> APIResponse<Note>
-// - PUT /notes/:id -> APIResponse<Note>
-// - DELETE /notes/:id -> APIResponse<null> (204 No Content)
-// - POST /notes/:id/archive -> APIResponse<Note>
-// - POST /notes/:id/pin -> APIResponse<Note>
-// - POST /notes/:id/summary -> APIResponse<{ summary: string; noteId: string; generatedAt: string }>
-// - GET /folders -> APIResponse<Folder[]>
-// - GET /folders/:id -> APIResponse<Folder>
-// - POST /folders -> APIResponse<Folder>
-// - PUT /folders/:id -> APIResponse<Folder>
-// - DELETE /folders/:id -> APIResponse<null>
-// - GET /folders/:id/notes-count -> APIResponse<{ count: number }>
-// - GET /tags -> APIResponse<Tag[]>
-// - GET /tags/:id -> APIResponse<Tag>
-// - POST /tags -> APIResponse<Tag>
-// - DELETE /tags/:id -> APIResponse<null>
-
-// ============================================
-// Hook Return Types
-// ============================================
 
 export interface UseNotesReturn {
   notes: Note[];
@@ -175,10 +128,6 @@ export interface UseGenerateSummaryReturn {
   generateSummary: (id: string) => void;
   isGenerating: boolean;
 }
-
-// ============================================
-// Component Props Types
-// ============================================
 
 export interface NoteCardProps {
   note: Note;

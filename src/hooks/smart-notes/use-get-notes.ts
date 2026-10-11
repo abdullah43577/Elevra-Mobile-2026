@@ -6,19 +6,12 @@ import { API_ENDPOINTS } from "@/provider/endpoints";
 interface UseGetNotesOptions {
   folderId?: string;
   search?: string;
-  /*
-    Global search's offline fallback passes false: it wants whatever the cache
-    already holds without firing a request, since the network path is the
-    server's /search endpoint. useGetData leaves the query enabled when this is
-    undefined, so every existing caller is unaffected.
-  */
   shouldFetch?: boolean;
 }
 
 export const useGetNotes = function (options?: UseGetNotesOptions) {
   const { folderId, search, shouldFetch } = options || {};
 
-  // Build query params
   const queryParams = new URLSearchParams();
   if (folderId) queryParams.append("folderId", folderId);
   if (search) queryParams.append("search", search);

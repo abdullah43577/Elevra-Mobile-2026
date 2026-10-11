@@ -85,7 +85,6 @@ export function Languages({
               errors={errors}
             />
 
-            {/* Proficiency - Bottom Sheet Picker */}
             <TouchableOpacity
               onPress={() => setProficiencyPickerIndex(index)}
               className="rounded-xl border border-line bg-surface px-4 py-3"
@@ -114,7 +113,6 @@ export function Languages({
         <AppText className="text-accent">Add Language</AppText>
       </TouchableOpacity>
 
-      {/* Proficiency Picker */}
       {proficiencyPickerIndex !== null && (
         <BottomSheetPicker
           visible={proficiencyPickerIndex !== null}

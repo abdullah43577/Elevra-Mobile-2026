@@ -4,13 +4,8 @@ import { showToast } from "@/utils/show-toast";
 import { useState } from "react";
 import { refreshQuestionQueries } from "./refresh-question-queries";
 
-/*
-  Pins a question to one application, for rehearsing before a specific
-  interview. Written against api directly rather than useSubmitData because both
-  ids live in the path and the delete carries no body — the same shape that
-  makes useSubmitData's `api[method](url, body, config)` misfire on axios's
-  two-argument delete.
-*/
+// Uses api directly: useSubmitData's api[method](url, body, config) misfires on axios's
+// two-argument delete.
 export const usePinQuestion = function (applicationId: string) {
   const [isPinning, setIsPinning] = useState(false);
 

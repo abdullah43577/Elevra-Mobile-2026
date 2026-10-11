@@ -15,18 +15,6 @@ import {
   toParagraphs,
 } from "@/utils/cover-letter";
 
-/*
-  The printable HTML for a cover letter. Same pipeline as the resume — handed to
-  expo-print, rendered by the OS to real selectable text — and deliberately
-  built on the same document shell, so a letter and the resume sent with it
-  share their header, margins, type scale and colour exactly.
-
-  Nothing here is decorative. A cover letter is read by the same parsers and
-  printed by the same strangers as the resume.
-*/
-
-// The template is required, not optional: every renderer reads template.theme,
-// so a letter without one cannot be drawn at all. Callers guard before calling.
 type PrintableLetter = CoverLetter & { template: AnyTemplate };
 
 const buildLetterCss = function (letter: PrintableLetter) {

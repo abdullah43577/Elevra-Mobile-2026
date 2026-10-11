@@ -41,11 +41,6 @@ const SocialButton = function ({
   );
 };
 
-/*
-  Shared by sign-in and sign-up because the two are the same request: neither
-  the app nor the user knows whether this Google account has been here before,
-  so the server decides and both screens land in the same place.
-*/
 export const SocialAuthButtons = function () {
   const {
     continueWithGoogle,
@@ -66,12 +61,7 @@ export const SocialAuthButtons = function () {
         onPress={continueWithGoogle}
       />
 
-      {/*
-        Rendered only where it can work. expo-apple-authentication is iOS-only
-        and isAvailableAsync() is false below iOS 13, so an Apple button on
-        Android would be a control that cannot ever succeed — §13's "gates are
-        visible" argument does not apply to a platform that has no flow at all.
-      */}
+      {/* Apple sign-in exists only on iOS 13+, so the button renders only where it can work. */}
       {isAppleAvailable && (
         <SocialButton
           label="Apple"

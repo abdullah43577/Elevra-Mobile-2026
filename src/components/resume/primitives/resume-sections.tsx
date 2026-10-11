@@ -22,29 +22,14 @@ const toBullets = function (description?: string, achievements?: string[]) {
   const fromAchievements = (achievements ?? []).map((a) => a.trim()).filter(Boolean);
   if (fromAchievements.length > 0) return fromAchievements;
 
-  // A multi-line description is already a bullet list in spirit.
   return (description ?? "")
     .split(/\n+/)
     .map((line) => line.replace(/^[-•*]\s*/, "").trim())
     .filter(Boolean);
 };
 
-/*
-  Every layout renders its body through this. Section wording and ordering are
-  the conventional ones parsers expect, and no layout is allowed to reorder or
-  rename them — the visual difference between templates lives in the header and
-  the section-title treatment, never in the content structure.
-
-  Empty sections are dropped entirely rather than rendered as a bare heading.
-
-  Every entry renders, always. This used to slice five sections to the first two
-  whenever `limit` was set, which every layout wired to `isThumbnail` — and
-  `TemplatePreview` sets that unconditionally, including for the builder's live
-  preview of real data. So a third job silently vanished from the preview while
-  exporting correctly, because `resume-html.ts` never had the cap. The number
-  two was not a template's capacity; it is how many experience entries the one
-  shared sample dataset happens to carry.
-*/
+// Renders every entry: this is also the builder's live preview, and the export
+// never caps entries either.
 export const ResumeBody = function ({
   data,
   style,

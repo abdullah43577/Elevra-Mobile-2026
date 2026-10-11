@@ -8,11 +8,6 @@ import {
 } from "../primitives/resume-primitives";
 import { contactItems, fullName, ResumeBody } from "../primitives/resume-sections";
 
-/*
-  A vertical accent rule runs down the content column. It is decoration on the
-  page margin only — the content itself stays a single uninterrupted column, so
-  reading order is unaffected.
-*/
 export function TimelineAccentLayout({ theme, data, isThumbnail }: ResumeLayoutProps) {
   const style = buildResumeStyle(theme, isThumbnail);
 

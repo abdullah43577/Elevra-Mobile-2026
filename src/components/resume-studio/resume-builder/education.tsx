@@ -82,7 +82,6 @@ export function Education({
               errors={errors}
             />
 
-            {/* Degree - Bottom Sheet Picker */}
             <TouchableOpacity
               onPress={() => setDegreePickerIndex(index)}
               className="rounded-xl border border-line bg-surface px-4 py-3"
@@ -97,7 +96,6 @@ export function Education({
               </AppText>
             </TouchableOpacity>
 
-            {/* Field - Bottom Sheet Picker */}
             <TouchableOpacity
               onPress={() => setFieldPickerIndex(index)}
               className="rounded-xl border border-line bg-surface px-4 py-3"
@@ -156,7 +154,6 @@ export function Education({
         <AppText className="text-accent">Add Education</AppText>
       </TouchableOpacity>
 
-      {/* Degree Picker */}
       {degreePickerIndex !== null && (
         <BottomSheetPicker
           visible={degreePickerIndex !== null}
@@ -174,7 +171,6 @@ export function Education({
         />
       )}
 
-      {/* Field Picker */}
       {fieldPickerIndex !== null && (
         <BottomSheetPicker
           visible={fieldPickerIndex !== null}

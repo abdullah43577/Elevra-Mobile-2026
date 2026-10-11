@@ -12,16 +12,7 @@ interface UseLocalSearchOptions {
   query: string;
 }
 
-/*
-  Search over the cache, for when the device is offline.
-
-  Every list hook is called with `shouldFetch: false` — deliberately, and this is
-  the whole reason the flag was added. Opening search must not fire six list
-  requests behind the one the user actually asked for; a disabled useQuery still
-  returns whatever is cached, which is exactly what this needs. The urls carry no
-  query params so they hit the same cache keys the workspace screens and Home
-  already populate.
-*/
+// shouldFetch: false reads the cache without firing six list requests.
 export const useLocalSearch = function (options: UseLocalSearchOptions) {
   const term = options.query.trim();
   const isSearchable = term.length >= MIN_SEARCH_LENGTH;

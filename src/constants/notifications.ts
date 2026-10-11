@@ -7,12 +7,6 @@ interface NotificationMeta {
   color: string;
 }
 
-/*
-  Per-type icon and colour, owned here so a notification looks the same in the
-  list, the empty state, and anywhere else it surfaces. Colours reuse
-  CONTENT_COLORS so a note summary reads as Smart Notes and an application
-  update reads as the Job Tracker.
-*/
 export const NOTIFICATION_META = {
   SYSTEM: { icon: "sparkles-outline", color: CONTENT_COLORS.note },
   APPLICATION_STATUS: {
@@ -27,8 +21,6 @@ export const NOTIFICATION_META = {
   VOICE_TRANSCRIPTION: { icon: "mic-outline", color: CONTENT_COLORS.recording },
 } as const satisfies Record<NotificationType, NotificationMeta>;
 
-// Where tapping a notification should take the user. Anything without a
-// mapping simply does not navigate.
 export const NOTIFICATION_ROUTES: Record<NotificationEntity, string> = {
   application: "/(dashboard)/(tabs)/applications/application-detail",
   note: "/(dashboard)/(tabs)/workspaces/smart-notes/note-editor",
@@ -36,10 +28,6 @@ export const NOTIFICATION_ROUTES: Record<NotificationEntity, string> = {
   resume: "/(dashboard)/(tabs)/workspaces/resume-studio/resume-builder",
 };
 
-/*
-  A reminder fires because an application has gone quiet, so it opens straight
-  onto the follow-up draft rather than leaving the user to find it.
-*/
 export const notificationTarget = function (notification: {
   type?: string;
   entityType?: string | null;

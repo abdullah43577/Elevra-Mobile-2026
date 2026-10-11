@@ -12,8 +12,6 @@ const plural = function (count: number, one: string, many: string) {
   return count === 1 ? one : `${count} ${many}`;
 };
 
-// Stays up for the whole review, because nothing is saved until the user taps
-// Save — a toast would be gone before they reached the second section.
 export const ImportNotice = function ({ report }: Props) {
   const { contentTint } = useThemeColors();
   const tint = contentTint("profile");

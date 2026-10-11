@@ -29,7 +29,6 @@ export const API_ENDPOINTS = {
   },
 
   notes: {
-    // Notes
     list: "/notes",
     archived: "/notes/archived",
     detail: (id: string) => `/notes/${id}`,
@@ -38,10 +37,8 @@ export const API_ENDPOINTS = {
     delete: (id: string) => `/notes/${id}`,
     toggleArchive: (id: string) => `/notes/${id}/archive`,
     togglePin: (id: string) => `/notes/${id}/pin`,
-    // generateSummary: (id: string) => `/notes/${id}/summary`,
     generateSummaryStream: (id: string) => `notes/${id}/summary/stream`,
 
-    // Folders
     foldersList: "/notes/folders",
     folderDetail: (id: string) => `/notes/folders/${id}`,
     folderNotesCount: (id: string) => `/notes/folders/${id}/notes-count`,
@@ -49,7 +46,6 @@ export const API_ENDPOINTS = {
     updateFolder: (id: string) => `/notes/folders/${id}`,
     deleteFolder: (id: string) => `/notes/folders/${id}`,
 
-    // Tags
     tagsList: "/notes/tags",
     tagDetail: (id: string) => `/notes/tags/${id}`,
     createTag: "/notes/tags",
@@ -98,9 +94,7 @@ export const API_ENDPOINTS = {
   },
 
   careerProfile: {
-    // One row per user, so there is no id in the path. The save URL matching
-    // the fetch URL is deliberate: useSubmitData refetches the resolved URL
-    // key, which is exactly the key useGetData reads from.
+    // Same URL for fetch and save, so useSubmitData's refetch hits useGetData's key.
     detail: "/career-profile",
     save: "/career-profile",
     delete: "/career-profile",
@@ -137,11 +131,9 @@ export const API_ENDPOINTS = {
   },
 
   resume: {
-    // Templates
     templatesList: "/resume/templates",
     templateDetail: (id: string) => `/resume/templates/${id}`,
 
-    // Resumes
     list: "/resume",
     detail: (id: string) => `/resume/${id}`,
     create: "/resume",

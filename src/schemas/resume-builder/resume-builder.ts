@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Personal Info
 export const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
@@ -11,7 +10,6 @@ export const personalInfoSchema = z.object({
   summary: z.string().optional(),
 });
 
-// Experience
 export const experienceSchema = z.object({
   company: z.string().min(1, "Company is required"),
   position: z.string().min(1, "Position is required"),
@@ -22,7 +20,6 @@ export const experienceSchema = z.object({
   achievements: z.array(z.string()).optional(),
 });
 
-// Education
 export const educationSchema = z.object({
   school: z.string().min(1, "School is required"),
   degree: z.string().min(1, "Degree is required"),
@@ -33,13 +30,11 @@ export const educationSchema = z.object({
   gpa: z.string().optional(),
 });
 
-// Skills
 export const skillSchema = z.object({
   name: z.string().min(1, "Skill name is required"),
   level: z.enum(["beginner", "intermediate", "advanced", "expert"]).optional(),
 });
 
-// Languages
 export const languageSchema = z.object({
   name: z.string().min(1, "Language name is required"),
   proficiency: z
@@ -47,7 +42,6 @@ export const languageSchema = z.object({
     .optional(),
 });
 
-// Certifications
 export const certificationSchema = z.object({
   name: z.string().min(1, "Certification name is required"),
   issuer: z.string().min(1, "Issuer is required"),
@@ -55,7 +49,6 @@ export const certificationSchema = z.object({
   expiry: z.string().optional(),
 });
 
-// Projects
 export const projectSchema = z.object({
   name: z.string().min(1, "Project name is required"),
   description: z.string().optional(),
@@ -63,7 +56,6 @@ export const projectSchema = z.object({
   technologies: z.array(z.string()).optional(),
 });
 
-// References
 export const referenceSchema = z.object({
   name: z.string().min(1, "Reference name is required"),
   position: z.string().optional(),
@@ -72,7 +64,6 @@ export const referenceSchema = z.object({
   phone: z.string().optional(),
 });
 
-// Complete Resume Schema
 export const resumeBuilderSchema = z.object({
   personalInfo: personalInfoSchema.optional(),
   experience: z.array(experienceSchema).optional(),
@@ -86,7 +77,6 @@ export const resumeBuilderSchema = z.object({
 
 export type ResumeBuilderFormValues = z.infer<typeof resumeBuilderSchema>;
 
-// Default values
 export const DEFAULT_EXPERIENCE = {
   company: "",
   position: "",

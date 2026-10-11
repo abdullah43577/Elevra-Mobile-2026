@@ -25,8 +25,7 @@ const api = axios.create({
   withCredentials: false,
 });
 
-// Shared refresh-in-flight state, so concurrent requests hitting an
-// expiring/expired token don't each kick off their own refresh call.
+// Shared so concurrent requests on an expiring token reuse one refresh call.
 let globalRetryCount = 0;
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string | null) => void> = [];
@@ -43,16 +42,13 @@ function onRefreshed(token: string | null) {
 const handleSessionExpired = async () => {
   await tokenStorage.clearTokens();
 
-  // queryClient.clear() only empties memory — the persisted copy on disk has to
-  // go too, or it rehydrates on next launch.
+  // clear() only empties memory; the persisted copy would rehydrate on next launch.
   queryClient.clear();
   await clearPersistedCache();
 
   router.replace("/(auth)/sign-in");
 };
 
-// Actually calls the refresh endpoint. Only ever invoked by
-// refreshAccessToken() below, which guards against concurrent calls.
 const handleGetNewToken = async (): Promise<string | null> => {
   try {
     const refreshToken = await tokenStorage.getRefreshToken();
@@ -81,11 +77,6 @@ const handleGetNewToken = async (): Promise<string | null> => {
   }
 };
 
-// Shared entry point for refreshing — used by both the proactive
-// (pre-request, expiring-soon) path and the reactive (401) path.
-// Concurrent callers all subscribe to the same in-flight refresh
-// instead of racing each other, and a cap prevents infinite retry
-// loops if the refresh token itself is bad.
 const refreshAccessToken = async (): Promise<string | null> => {
   if (isRefreshing) {
     return new Promise((resolve) => {

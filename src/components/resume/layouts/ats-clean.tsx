@@ -9,11 +9,6 @@ import {
 } from "../primitives/resume-primitives";
 import { contactItems, fullName, ResumeBody } from "../primitives/resume-sections";
 
-/*
-  The safest template in the set: no colour blocks, no rules that could be read
-  as table borders, centred header, conventional headings. When in doubt about a
-  particular employer's parser, this is the one to recommend.
-*/
 export function AtsCleanLayout({ theme, data, isThumbnail }: ResumeLayoutProps) {
   const style = buildResumeStyle(theme, isThumbnail);
 

@@ -14,7 +14,7 @@ export const OnboardingSlide = function ({ slide, width }: Props) {
 
   return (
     <View style={{ width }} className="flex-1 justify-center px-8">
-      {/* self-start: a column parent stretches its children to full width (§5). */}
+      {/* self-start: a column parent stretches its children to full width. */}
       <View className="self-start">
         <Illustration name={slide.illustration} color={contentColor(slide.accent)} size={232} />
       </View>

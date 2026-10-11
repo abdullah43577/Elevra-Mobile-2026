@@ -29,8 +29,6 @@ export const useSaveApplication = function (
     onSuccessMessage: isUpdate
       ? "Application updated"
       : "Application added",
-    // The list and the pipeline summary are separate queries, so neither is
-    // covered by the mutation's own URL key.
     additionalQueryKeys: [
       [API_ENDPOINTS.jobApplications.list],
       [API_ENDPOINTS.jobApplications.stats],

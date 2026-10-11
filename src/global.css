@@ -3,18 +3,8 @@
 @tailwind utilities;
 
 /*
-  Semantic theme variables. Values are RGB triplets so Tailwind's
-  <alpha-value> works (bg-surface/50).
-
-  Keep these in sync with THEME in src/constants/theme.ts — that file is the
-  source of truth for the same palette in JS, needed for the icon `color` and
-  inline tint props that never pass through a className. CSS cannot import TS,
-  so the two lists are duplicated by necessity.
-
-  These blocks must stay OUTSIDE @layer base. Inside it, Tailwind tree-shakes
-  `.dark:root` away entirely — the `dark` class never appears in the scanned
-  content, so the rule looks unused — and dark mode then silently resolves to
-  the light values with no error anywhere.
+  Must stay outside @layer base: Tailwind tree-shakes `.dark:root` there because
+  the dark class never appears in scanned content. Mirror changes in theme.ts.
 */
 :root {
   --canvas: 250 250 251;
@@ -47,10 +37,6 @@
   --accent-muted: 36 31 69;
   --danger: 224 138 131;
   --danger-muted: 58 26 24;
-  /*
-    Not lightened like --danger. That token is for destructive *text*, which
-    must lift off a dark background. This one is a destructive *fill* carrying
-    white text, so it has to stay dark enough for that text to read.
-  */
+  /* Stays dark in both schemes: a fill carrying white text, unlike --danger. */
   --danger-solid: 185 58 50;
 }

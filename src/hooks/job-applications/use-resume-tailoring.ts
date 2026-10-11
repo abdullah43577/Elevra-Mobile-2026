@@ -1,7 +1,7 @@
 import { useProAction } from "@/components/shared/pro-gate";
 import { formatRelativeDate } from "@/constants/dashboard";
 import { PRO_FEATURES } from "@/constants/entitlements";
-import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profile";
+import { useCandidateBackground } from "@/hooks/career-profile/use-candidate-background";
 import { useGetResumes } from "@/hooks/resume/use-get-resumes";
 import { showToast } from "@/utils/show-toast";
 import { useRouter } from "expo-router";
@@ -32,7 +32,7 @@ export const useResumeTailoring = function ({
     shouldFetch: hasJobDescription,
   });
   const { resumes } = useGetResumes();
-  const { hasCareerProfile } = useGetCareerProfile();
+  const { hasProfileExperience, requireBackground } = useCandidateBackground();
 
   const { tailorResume, isTailoring } = useTailorResume({
     applicationId,
@@ -40,7 +40,7 @@ export const useResumeTailoring = function ({
   });
 
   const baseOptions = [
-    ...(hasCareerProfile
+    ...(hasProfileExperience
       ? [{ label: "Career profile", value: PROFILE_BASE, description: "Your full work history" }]
       : []),
     ...resumes.map((resume) => ({
@@ -50,12 +50,9 @@ export const useResumeTailoring = function ({
     })),
   ];
 
-  /*
-    Gated before the picker opens, not after: a free user should meet the offer
-    at the moment they reach for the feature, not after choosing a base for a
-    request that was always going to be refused.
-  */
   const handleStart = function () {
+    if (!requireBackground()) return;
+
     if (!allowed) {
       showToast("warning", copy.blurb);
       router.push("/(dashboard)/paywall");

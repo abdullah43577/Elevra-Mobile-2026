@@ -7,12 +7,6 @@ interface Props {
   onPress: () => void;
 }
 
-/*
-  Points at where the two AI features live, since neither is on this screen:
-  job-specific questions are generated from an application's posting, and
-  feedback comes from recording a take on any question. It replaced an inert
-  "Soon" card once both shipped.
-*/
 export const AiQuestionsCard = function ({ onPress }: Props) {
   const { contentTint } = useThemeColors();
   const tint = contentTint("interview");

@@ -63,8 +63,7 @@ export default function Playback() {
     router.back();
   };
 
-  // First load only — a spinner on background refetches would tear down the
-  // player mid-playback.
+  // First load only: a spinner on background refetches would tear down the player.
   if (isFetchingRecording && !recording) {
     return (
       <View className="flex-1 items-center justify-center bg-canvas">

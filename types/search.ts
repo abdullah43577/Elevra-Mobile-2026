@@ -1,9 +1,4 @@
-/*
-  Mirrors the server's SEARCH_RESULT_TYPES, which are themselves the keys of
-  CONTENT_META — a result carries its own icon, colour and label with no
-  translation table in between. `satisfies Record<SearchResultType, ...>` in
-  src/constants/search.ts is what fails the build if the two ever drift.
-*/
+// Mirrors the server's SEARCH_RESULT_TYPES.
 export type SearchResultType =
   | "Note"
   | "Recording"

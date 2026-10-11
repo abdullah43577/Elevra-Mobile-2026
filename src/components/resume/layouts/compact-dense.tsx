@@ -9,7 +9,6 @@ import {
 } from "../primitives/resume-primitives";
 import { contactItems, fullName, ResumeBody } from "../primitives/resume-sections";
 
-// Tight spacing for people with enough history to fill two pages otherwise.
 export function CompactDenseLayout({ theme, data, isThumbnail }: ResumeLayoutProps) {
   const style = buildResumeStyle(theme, isThumbnail);
 

@@ -43,8 +43,6 @@ export default function Recorder() {
 
   const player = useAudioPlayer(playableUri);
 
-  // Recording is the whole point of this screen, so a refusal sends the user
-  // back rather than leaving them on a screen whose main control cannot work.
   useEffect(() => {
     if (hasPermission === false) {
       showToast("error", "Microphone access is required to record voice notes.");
@@ -57,12 +55,11 @@ export default function Recorder() {
       try {
         player.pause();
       } catch {
-        // Player may already be released by the hook itself; safe to ignore.
+        // The hook may already have released the player.
       }
     };
   }, [player]);
 
-  // Keep isPlaying in sync with the player's actual status
   useEffect(() => {
     const subscription = player.addListener(
       "playbackStatusUpdate",
@@ -93,7 +90,6 @@ export default function Recorder() {
   const handleRecord = async function () {
     if (isRecording) return;
 
-    // Clear out any previous playable source before starting a new take.
     setPlayableUri(null);
     setRecordedUri(null);
     setIsPlaying(false);
@@ -110,8 +106,7 @@ export default function Recorder() {
     setRecordedUri(take.uri);
     setTotalDuration(take.duration);
 
-    // Wait a moment for the file to be ready before binding the player. The
-    // query-string suffix forces a fresh load even if the path is reused.
+    // The delay lets the file finish writing; the query suffix forces a fresh load.
     setTimeout(() => setPlayableUri(`${take.uri}?t=${Date.now()}`), 100);
   };
 
@@ -192,7 +187,6 @@ export default function Recorder() {
       return;
     }
 
-    // Ensure duration is at least 1 second
     if (durationInSeconds === 0) {
       durationInSeconds = 1;
       showToast("warning", "Recording duration was 0, set to 1 second");
@@ -246,8 +240,6 @@ export default function Recorder() {
   const isUploadedFile = !!selectedFile;
   const hasRecording = !!recordedUri && !isRecording;
 
-  // Live tick while recording, playhead while playing, otherwise the take's
-  // finished length.
   const displayTime = isRecording
     ? elapsed
     : isPlaying

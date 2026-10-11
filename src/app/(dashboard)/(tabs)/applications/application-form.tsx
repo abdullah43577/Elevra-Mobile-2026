@@ -46,7 +46,6 @@ const numeric = function (value?: string) {
 
 export default function ApplicationForm() {
   const router = useRouter();
-  // `shared`: a link or posting handed over by the share sheet.
   const { id, shared } = useLocalSearchParams<{ id?: string; shared?: string }>();
   const { contentColor } = useThemeColors();
   const accent = contentColor("application");
@@ -96,7 +95,7 @@ export default function ApplicationForm() {
   });
 
   // Guarded by id: the query object changes identity on every background
-  // refetch, and re-running this would wipe whatever the user has typed.
+  // refetch, and re-hydrating would wipe the user's edits.
   const hydratedId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -147,13 +146,8 @@ export default function ApplicationForm() {
       company: values.company.trim(),
       role: values.role.trim(),
       status: values.status,
-      /*
-        Every optional field sends an explicit null on update rather than
-        being omitted. Omitting is how a field says "unchanged", which meant
-        emptying any of these saved nothing and the old value came straight
-        back on the next fetch. Create cannot send null — the server's create
-        schema rejects it — so the two paths differ.
-      */
+      // Optional fields send null on update, since an omitted key means
+      // "unchanged"; the server's create schema rejects null.
       ...(isUpdate
         ? {
             location: trimmed(values.location) ?? null,

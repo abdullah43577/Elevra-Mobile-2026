@@ -28,11 +28,6 @@ export default function Resumes() {
     resumeId: deleteTarget?.id ?? "",
   });
 
-  /*
-    Duplicating opens the copy in the builder rather than dropping the user back
-    on the list. Nobody duplicates a resume to admire it — they do it to tailor
-    it for one more role, so the next step is always editing.
-  */
   const { duplicateResume } = useDuplicateResume({
     onSuccess: (response) => {
       setDuplicatingId(null);

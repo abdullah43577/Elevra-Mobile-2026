@@ -1,15 +1,6 @@
 import { ResumeData } from "./resume/data";
 import { AnyTemplate } from "./resume/template";
 
-/*
-  A cover letter reuses the resume Template catalogue rather than owning one, so
-  a letter and the resume sent with it read as a matched set. `personalInfo` is
-  the sender block and holds the same shape as Resume.personalInfo, so it
-  prefills from the career profile as a direct copy.
-
-  `body` is one string with blank lines between paragraphs — see §19 for why it
-  is not rich text.
-*/
 export interface CoverLetter {
   id: string;
   title: string;
@@ -45,14 +36,8 @@ export interface SaveCoverLetterRequest {
   applicationId?: string;
 }
 
-/*
-  The optional recipient fields are nullable here and not on create, for the same
-  reason UpdateApplicationRequest splits them out: JSON.stringify drops undefined
-  keys, so an omitted key reads as "unchanged" and there is no way to say "I
-  cleared this". A letter addressed to a named person could not be un-addressed.
-
-  Create has nothing to clear, and the server's create schema rejects null.
-*/
+// Nullable on update only: JSON.stringify drops undefined keys, so clearing must
+// send null, and the server's create schema rejects null.
 export interface UpdateCoverLetterRequest
   extends Partial<
     Omit<
@@ -75,7 +60,6 @@ export interface DraftCoverLetterRequest {
 
 export interface CoverLetterDraft {
   body: string;
-  // Sentences dropped because they claimed something the resume doesn't say.
   removedSentences: number;
   addedTerms: { term: string; evidence: string }[];
   source: { kind: "resume" | "profile"; title: string };

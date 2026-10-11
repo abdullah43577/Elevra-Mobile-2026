@@ -1,18 +1,6 @@
 import { ResumeData } from "../../../../types/resume/data";
 import { AnyTemplate } from "../../../../types/resume/template";
 
-/*
-  The parts of a printable document that a resume and a cover letter must share.
-
-  A letter and the resume sent with it are read side by side, so their header,
-  page margins, type scale and colour have to be identical — not merely similar.
-  Keeping one copy here is what guarantees that; two copies would drift the
-  first time either was touched.
-
-  Everything below the header differs per document and lives in resume-html.ts
-  and cover-letter-html.ts respectively.
-*/
-
 export const escape = function (value: unknown): string {
   return String(value ?? "")
     .replace(/&/g, "&amp;")

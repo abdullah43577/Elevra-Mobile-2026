@@ -44,11 +44,6 @@ export default function ProfileEditor() {
     onSuccess: () => router.back(),
   });
 
-  /*
-    The career profile form is the resume builder's form. Both hold the same
-    section shapes, which is what lets a resume prefill from a profile as a
-    straight copy — and lets every section component be shared unchanged.
-  */
   const {
     control,
     handleSubmit,
@@ -63,9 +58,8 @@ export default function ProfileEditor() {
   const takeImportDraft = useProfileImportStore((state) => state.takeDraft);
   const [importReport, setImportReport] = useState<ImportedProfile["report"] | null>(null);
 
-  // Hydrate once. The query object changes identity on every background
-  // refetch, and re-running this would wipe whatever the user has typed.
-  // A pending PDF import wins over the saved profile, and is taken exactly once.
+  // Hydrate once: the query object changes identity on every refetch. A pending
+  // PDF import wins over the saved profile and is taken exactly once.
   const hasHydrated = useRef(false);
 
   useEffect(() => {
@@ -104,8 +98,6 @@ export default function ProfileEditor() {
     });
   };
 
-  // Jump to the first section that actually has an error, rather than leaving
-  // the save button looking like it did nothing.
   const handleInvalid = function () {
     const firstBad = PROFILE_SECTIONS.findIndex((item) => !!errors[item.id]);
     if (firstBad >= 0) {
@@ -134,11 +126,6 @@ export default function ProfileEditor() {
       {importReport && <ImportNotice report={importReport} />}
 
       <View className="py-4">
-        {/*
-          Every section is reachable from the start. This is a record the user
-          returns to and edits a piece of, not a wizard they complete once, so
-          gating later sections behind earlier ones would only be in the way.
-        */}
         <StepNav
           steps={PROFILE_SECTIONS}
           activeIndex={activeIndex}

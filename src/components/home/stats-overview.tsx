@@ -7,11 +7,6 @@ interface Props {
   counts: Partial<Record<ContentCategory, number>>;
 }
 
-/*
-  A wrapping grid rather than a single row. Four content types fitted across one
-  row; six do not — the captions wrap and the tiles fall out of alignment. Three
-  per row keeps every caption on one line whatever the count.
-*/
 export const StatsOverview = function ({ counts }: Props) {
   const CATEGORIES = (Object.keys(CONTENT_META) as ContentCategory[]).filter(
     (key) => counts[key] !== undefined,

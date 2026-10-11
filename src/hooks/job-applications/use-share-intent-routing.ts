@@ -3,12 +3,7 @@ import { useRootNavigationState, useRouter } from "expo-router";
 import { useShareIntentContext } from "expo-share-intent";
 import { useEffect } from "react";
 
-/*
-  A job shared into Elevra from another app opens a new application that reads
-  it straight away. Held until the user is signed in — a share received on the
-  sign-in screen waits rather than being dropped — and until the root navigator
-  has mounted, since expo-router throws on a push before that.
-*/
+// Waits for sign-in and for the root navigator to mount: expo-router throws on a push before that.
 export const useShareIntentRouting = function (isAuthenticated: boolean) {
   const router = useRouter();
   const navigationState = useRootNavigationState();

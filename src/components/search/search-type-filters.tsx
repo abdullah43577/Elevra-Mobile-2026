@@ -29,11 +29,6 @@ export const SearchTypeFilters = function ({
 }: Props) {
   const { contentColor, foreground } = useThemeColors();
 
-  /*
-    A type with nothing to show is hidden rather than disabled. Six always-on
-    chips push the interesting ones off-screen on a phone, and a chip reading
-    "Letters 0" is a dead end the user has to read before dismissing.
-  */
   const visible = SEARCH_FILTERS.filter(
     (type) => !counts || counts[type] > 0 || selectedType === type,
   );

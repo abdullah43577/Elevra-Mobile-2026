@@ -6,19 +6,9 @@ import { InterviewAnswer } from "../../../types/interview-prep";
 import { APIResponse } from "../../../types/response";
 import { refreshQuestionQueries } from "./refresh-question-queries";
 
-/*
-  Posts the FormData through api directly to manage its own loading and error
-  states. (useSubmitData passes a FormData through untouched as well — voice
-  notes and the resume PDF import upload that way — so either works.)
-
-  A rehearsal take is stored on the answer itself rather than as a VoiceRecording
-  row: it is not a voice memo, and filing every take into the Voice Notes list
-  would bury the user's actual recordings.
-*/
 export const useSaveAnswerAudio = function () {
   const [isUploading, setIsUploading] = useState(false);
 
-  // Covers the question's own detail and every filtered list, not just the bank.
   const invalidate = refreshQuestionQueries;
 
   const saveAnswerAudio = async function ({

@@ -8,7 +8,6 @@ import { AppText } from "./app-text";
 
 interface Props {
   icon?: keyof typeof Ionicons.glyphMap;
-  /** Shown instead of the icon. Reserve for screens a user meets with nothing in them yet. */
   illustration?: PeepName;
   title: string;
   subtitle: string;

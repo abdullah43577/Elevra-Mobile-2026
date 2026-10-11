@@ -9,11 +9,9 @@ interface Props {
   onPress: () => void;
   isLoading?: boolean;
   loadingLabel?: string;
-  /** Marks a Pro action for free users, so the paywall is not a surprise. */
   showProTag?: boolean;
 }
 
-// A quiet secondary action under a linked-items section on application detail.
 export const InlineActionLink = function ({ icon, label, color, onPress, isLoading, loadingLabel, showProTag }: Props) {
   return (
     <Pressable

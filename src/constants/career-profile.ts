@@ -6,23 +6,13 @@ export type ProfileSectionId = keyof ResumeBuilderFormValues;
 export interface ProfileSection {
   id: ProfileSectionId;
   label: string;
-  /** Chip label in the editor's section nav. */
   short: string;
   hint: string;
   icon: keyof typeof Ionicons.glyphMap;
-  /** Plural noun for the row summary — "3 roles", "12 skills". */
   unit: string;
 }
 
-/*
-  Same ids, same order as BUILDER_STEPS in the resume builder, because the
-  career profile and a resume store the identical section shapes. Add a section
-  to one and it has to be added to the other, or prefill quietly skips it.
-
-  There is no `optional` flag here: on a profile every section is optional by
-  definition — someone fills in their contact details today and their work
-  history next week.
-*/
+// Same ids and order as BUILDER_STEPS, or prefill quietly skips a section.
 export const PROFILE_SECTIONS: ProfileSection[] = [
   {
     id: "personalInfo",

@@ -38,13 +38,11 @@ export default function ResetPassword() {
       extraScrollHeight={20}
     >
       <View className="flex-1 justify-center px-6 py-10">
-        {/* Header */}
         <AppText type="title">Reset password</AppText>
         <AppText type="subtitle" className="mt-1 text-foreground-muted">
           Enter the code we sent you and choose a new password
         </AppText>
 
-        {/* Form */}
         <View className="mt-8 gap-4">
           <FormInput<ResetPasswordFormValues>
             control={control}
@@ -79,7 +77,6 @@ export default function ResetPassword() {
             errors={errors}
           />
 
-          {/* Submit */}
           <AppButton
             type="submit"
             disabled={isPending}
@@ -91,7 +88,6 @@ export default function ResetPassword() {
           </AppButton>
         </View>
 
-        {/* Resend code */}
         <View className="mt-8 flex-row justify-center gap-1">
           <AppText type="subtitle" className="text-foreground-muted">
             Didn't receive a code?
@@ -101,7 +97,6 @@ export default function ResetPassword() {
           </Pressable>
         </View>
 
-        {/* Footer */}
         <AppText type="subtitle" className="mt-6 text-center text-foreground-subtle">
           Elevra Workspace Environment V1.0
         </AppText>

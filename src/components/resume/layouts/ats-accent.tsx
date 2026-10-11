@@ -8,7 +8,6 @@ import {
 } from "../primitives/resume-primitives";
 import { contactItems, fullName, ResumeBody } from "../primitives/resume-sections";
 
-// Left-aligned header with an accent rule under each section title.
 export function AtsAccentLayout({ theme, data, isThumbnail }: ResumeLayoutProps) {
   const style = buildResumeStyle(theme, isThumbnail);
 

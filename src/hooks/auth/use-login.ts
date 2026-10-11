@@ -15,9 +15,6 @@ export const useLogin = function () {
   const { setAuthenticated } = useAuthStore();
   const handleErrors = useHandleErrors();
 
-  // Captured on submit so the verify screen can be told which account the code
-  // belongs to. Same reason useForgotPassword keeps one: the OTP form asks for
-  // the code and nothing else.
   const emailRef = useRef("");
 
   const { mutate, isPending } = useSubmitData<
@@ -39,12 +36,6 @@ export const useLogin = function () {
 
       setAuthenticated(true);
     },
-    /*
-      An unverified account is not a dead end. The server has already issued a
-      fresh code by the time this lands, so the only sensible response is to put
-      the user on the screen that consumes it rather than toast an error at them
-      and leave them on a form they cannot get past.
-    */
     onError: (error) => {
       if (
         error.response?.status === 403 &&

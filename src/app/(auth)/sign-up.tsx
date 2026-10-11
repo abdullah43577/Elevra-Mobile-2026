@@ -47,13 +47,11 @@ export default function SignUp() {
           <AppLogo />
         </View>
 
-        {/* Header */}
         <AppText type="display">Create your account</AppText>
         <AppText type="subtitle" className="mt-1.5">
           Join Elevra today
         </AppText>
 
-        {/* Form */}
         <View className="mt-8 gap-4">
           <View className="flex-row gap-3">
             <View className="flex-1">
@@ -99,7 +97,6 @@ export default function SignUp() {
             errors={errors}
           />
 
-          {/* Terms */}
           <AppText type="caption" className="leading-[18px]">
             By creating an account, you agree to our{" "}
             <AppText type="link" className="text-xs">
@@ -112,7 +109,6 @@ export default function SignUp() {
             .
           </AppText>
 
-          {/* Submit */}
           <AppButton
             type="submit"
             isLoading={isPending}
@@ -130,7 +126,6 @@ export default function SignUp() {
 
         <SocialAuthButtons />
 
-        {/* Sign in link */}
         <View className="mt-8 flex-row justify-center gap-1">
           <AppText type="subtitle">Already have an account?</AppText>
           <Pressable onPress={() => router.push("/(auth)/sign-in")}>

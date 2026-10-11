@@ -12,11 +12,7 @@ import { KeyboardAvoidingView, Platform, View } from "react-native";
 
 interface Props {
   onChange: (value: string) => void;
-  /**
-   * Seeds the document ONCE — tentap reads it at bridge-construction time and
-   * the webview owns the document afterwards. Do not mount this component
-   * until the content you want to show is resolved.
-   */
+  // Read once, at bridge construction: mount only after the content is resolved.
   initialContent?: string;
   autofocus?: boolean;
 }
@@ -34,11 +30,6 @@ export const RichTextEditor = function ({
     autofocus,
     avoidIosKeyboard: true,
     initialContent,
-    /*
-      Covers the React Native side only — the toolbar and the webview's own
-      container. The document inside the webview is a separate world with its
-      own stylesheet, which is what injectCSS below is for.
-    */
     theme: {
       ...(isDark ? darkEditorTheme : defaultEditorTheme),
       webview: { backgroundColor: surface },
@@ -62,16 +53,8 @@ export const RichTextEditor = function ({
     isHydrated.current = true;
   }, [isReady, initialContent, editor]);
 
-  /*
-    The editor body is a webview document, so no Tailwind class and no RN style
-    reaches it — left alone it stays on the browser default white and a note
-    reads as a white slab in an otherwise dark app.
-
-    Injected rather than passed at construction because the user can change
-    scheme while a note is open, and the bridge only reads its options once.
-    The "theme" tag makes each injection replace the previous style element
-    instead of stacking a new one per toggle.
-  */
+  // The webview document ignores RN styles, so theme it by injection (the bridge reads
+  // options once); the "theme" tag replaces the previous style instead of stacking.
   useEffect(() => {
     if (!isReady) return;
 

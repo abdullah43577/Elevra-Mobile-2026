@@ -1,15 +1,7 @@
 import { ContentCategory } from "./content-colors";
 
-/*
-  Where each content type opens, and — the part that bites — under which param
-  name. The detail screens do not agree: the resume builder reads `resumeId`,
-  the letter editor `coverLetterId`, question detail `questionId`, everything
-  else `id`. Home's recent activity shipped that knowledge inline and opened the
-  resume builder with nothing in it, rendering "Template not found".
-
-  One map, two consumers (recent activity and global search), so the next
-  content type cannot ship the same bug a third time.
-*/
+// Detail screens disagree on the param name (resumeId, coverLetterId, questionId,
+// id), so every navigation to content goes through this map.
 export const CONTENT_ROUTES = {
   Note: {
     route: "/(dashboard)/(tabs)/workspaces/smart-notes/note-editor",

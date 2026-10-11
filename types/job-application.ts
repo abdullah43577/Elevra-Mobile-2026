@@ -65,8 +65,6 @@ export interface JobApplication {
   status: ApplicationStatus;
   appliedAt?: string | null;
   notes?: string | null;
-  // The posting, pasted in. Ads get taken down or rewritten between applying
-  // and interviewing, so keeping a copy is the only way to still have it later.
   jobDescription?: string | null;
   isArchived: boolean;
   userId: string;
@@ -80,7 +78,7 @@ export interface JobApplication {
     linkedNotes: number;
     linkedRecordings: number;
   };
-  // List rows only: pinned questions, and how many of them have been rehearsed.
+  // Present on list rows only.
   prep?: { pinned: number; rehearsed: number };
   createdAt: string;
   updatedAt: string;
@@ -126,12 +124,8 @@ export interface UpdateApplicationRequest
       | "salaryCurrency"
     >
   > {
-  /*
-    Nullable, not just optional: JSON.stringify drops undefined keys, so
-    detaching a resume, or clearing out notes you have emptied, has to send an
-    explicit null for the server to act on it. Omitting the key means "leave it
-    alone", which is indistinguishable from "I deleted this text".
-  */
+  // Nullable: JSON.stringify drops undefined keys, so clearing a field must
+  // send an explicit null.
   resumeId?: string | null;
   coverLetterId?: string | null;
   notes?: string | null;
@@ -151,8 +145,6 @@ export interface JobKeyword {
   required: boolean;
 }
 
-// Computed on the server from extracted keywords, never generated — the same
-// resume against the same posting always scores the same.
 export interface KeywordCoverage {
   score: number;
   total: number;
@@ -170,8 +162,7 @@ export interface TailorReport {
   after: KeywordCoverage;
   changes: string[];
   addedTerms: { term: string; evidence: string }[];
-  // Sections the server reverted to the original because the rewrite added
-  // something the resume does not say.
+  // Sections reverted because the rewrite added something the resume does not say.
   keptOriginal: number;
 }
 
@@ -185,7 +176,6 @@ export interface TailorResumeRequest {
   baseResumeId?: string;
 }
 
-// Fields read from a job posting, for the new-application form to review.
 export interface JobDraft {
   company?: string;
   role?: string;
@@ -218,11 +208,9 @@ export type MessageKind =
 export interface DraftMessageRequest {
   kind: MessageKind;
   interviewerName?: string;
-  // Anything the user wants mentioned: what was discussed, a figure to ask about.
   points?: string;
 }
 
-// A draft only — the app never sends it; the user shares it or opens their mail app.
 export interface ApplicationMessage {
   kind: MessageKind;
   subject: string;

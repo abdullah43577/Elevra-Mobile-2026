@@ -19,14 +19,12 @@ export function useHandleErrors() {
     let errorMessage = "An unexpected error occurred. Please try again later.";
 
     if (error instanceof ZodError) {
-      // ✅ client-side schema validation failures (e.g. RHF/Zod form parsing)
       errorMessage = formatZodError(error);
     } else if (error instanceof AxiosError) {
       if (error.response) {
         const data = error.response.data;
 
         if (Array.isArray(data?.errors) && data.errors.length > 0) {
-          // ✅ backend field-level validation errors
           errorMessage = data.errors
             .map(
               (e: { field: string; message: string }) =>
@@ -34,7 +32,6 @@ export function useHandleErrors() {
             )
             .join("\n");
         } else {
-          // ✅ use the message from the backend API if available
           errorMessage =
             data?.message ||
             data?.error ||

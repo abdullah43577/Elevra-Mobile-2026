@@ -54,8 +54,8 @@ export default function NoteEditor() {
   });
 
   useEffect(() => {
-    // Once per note only — `note` changes identity on every background refetch,
-    // and re-running this would discard the user's unsaved edits.
+    // Once per note: `note` changes identity on every background refetch, and
+    // re-running this would discard unsaved edits.
     if (!note || hydratedNoteId.current === note.id) return;
 
     hydratedNoteId.current = note.id;
@@ -93,13 +93,8 @@ export default function NoteEditor() {
     if (!content || content === "<p></p>")
       return showToast("error", "Add some content to summarize first");
 
-    /*
-      The server refuses this with a 402 either way — it is the actual boundary,
-      and the SSE stream would surface the refusal as a bare error toast. Asking
-      first turns that into the paywall, which is the same trade resume export
-      makes: someone who has written a note and reached for a summary is at the
-      point of highest intent, so refusal is the wrong last word.
-    */
+    // The server also answers 402, but through the SSE stream that surfaces as a
+    // bare error toast instead of the paywall.
     if (!canSummarize) {
       showToast("warning", summaryCopy.blurb);
       router.push("/(dashboard)/paywall");
@@ -146,8 +141,7 @@ export default function NoteEditor() {
     setSelectedTags(selectedTags.filter((t) => t !== tagName));
   };
 
-  // First load only — a spinner on background refetches would unmount the
-  // editor mid-edit.
+  // First load only: a spinner on background refetches would unmount the editor mid-edit.
   if (isFetchingNote && !note) {
     return (
       <View className="flex-1 items-center justify-center bg-surface">
@@ -182,8 +176,7 @@ export default function NoteEditor() {
         <View className="my-5 h-px bg-line" />
 
         <View className="min-h-[200px]">
-          {/* Mounted only once `content` holds the real note body — see
-              RichTextEditor's `initialContent`. */}
+          {/* tentap reads initialContent once, so mount only after hydration. */}
           {isHydrated ? (
             <RichTextEditor
               key={noteId ?? "new-note"}

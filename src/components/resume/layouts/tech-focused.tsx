@@ -10,12 +10,6 @@ import {
 } from "../primitives/resume-primitives";
 import { contactItems, fullName, ResumeBody } from "../primitives/resume-sections";
 
-/*
-  Skills surface immediately under the header, because keyword matching is what
-  a technical screen runs first. The skills block is repeated in ResumeBody's
-  normal position too — parsers read the whole document, and a recruiter
-  skimming expects to find it in the usual place as well.
-*/
 export function TechFocusedLayout({ theme, data, isThumbnail }: ResumeLayoutProps) {
   const style = buildResumeStyle(theme, isThumbnail);
   const skills = (data.skills ?? []).map((s) => s.name).filter(Boolean);

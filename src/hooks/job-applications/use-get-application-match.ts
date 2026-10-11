@@ -8,8 +8,6 @@ interface UseGetApplicationMatchOptions {
   shouldFetch?: boolean;
 }
 
-// Null until a tailoring has extracted keywords for the current posting and a
-// resume is attached. Free to fetch: it is scoring, not a model call.
 export const useGetApplicationMatch = function (
   options: UseGetApplicationMatchOptions,
 ) {

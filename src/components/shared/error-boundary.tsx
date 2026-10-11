@@ -10,7 +10,7 @@ interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ComponentType<{
     error: Error | string;
-    onRetry: () => void; // Changed from resetError to onRetry
+    onRetry: () => void;
   }>;
 }
 
@@ -29,7 +29,6 @@ export class ErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Error Boundary caught an error:", error, errorInfo);
-    // You can also log to crash analytics here (Sentry, Crashlytics, etc.)
   }
 
   resetError = () => {
@@ -42,7 +41,7 @@ export class ErrorBoundary extends React.Component<
       return (
         <FallbackComponent
           error={this.state.error || "An Unknown error occurred"}
-          onRetry={this.resetError} // Changed from resetError to onRetry
+          onRetry={this.resetError}
         />
       );
     }

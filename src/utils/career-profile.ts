@@ -22,17 +22,6 @@ interface AccountDefaults {
   email?: string | null;
 }
 
-/*
-  A CareerProfile and the resume builder's form values hold the same shapes, so
-  this is a null-flattening pass rather than a mapping layer: the server stores
-  unfilled sections as null and react-hook-form needs arrays and strings.
-
-  `account` seeds the name and email of a profile that has never been saved —
-  the user already gave us those at sign-up, so asking again is busywork.
-
-  Takes the sections only, so an imported profile (which has no id or
-  timestamps yet) hydrates the editor the same way a saved one does.
-*/
 export const toProfileFormValues = function (
   profile?: Omit<CareerProfile, "id" | "userId" | "createdAt" | "updatedAt">,
   account?: AccountDefaults,
@@ -58,7 +47,6 @@ export const toProfileFormValues = function (
   };
 };
 
-/** How many entries a section holds. Personal details count as 0 or 1. */
 export const countProfileSection = function (
   profile: CareerProfile | undefined,
   sectionId: ProfileSectionId,
@@ -74,14 +62,8 @@ export const countProfileSection = function (
   return profile[sectionId]?.length ?? 0;
 };
 
-/*
-  The same copy, adjusted for the resume builder rather than the profile editor.
-
-  A profile may legitimately have no experience yet; a resume form cannot show
-  an empty required section, so those three fall back to the builder's blank
-  row. The optional sections stay empty — seeding a blank row into them is what
-  used to make saving impossible, since a blank row fails its item schema.
-*/
+// Required sections fall back to the builder's blank row; optional ones stay
+// empty, since a blank row fails its item schema.
 export const toResumeFormValues = function (
   profile: CareerProfile,
 ): ResumeBuilderFormValues {

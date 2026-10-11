@@ -10,9 +10,7 @@ export const useDeleteCoverLetter = function ({
   const { mutateAsync, isPending } = useSubmitData<void, APIResponse<null>>({
     url: API_ENDPOINTS.coverLetters.delete(coverLetterId),
     method: "delete",
-    // axios's delete signature is (url, config), so useSubmitData's body
-    // argument would be read as the request config. Send nothing and keep the
-    // id in the URL — same trap the application unlink hooks hit.
+    // axios delete is (url, config), so a body would be read as config; the id goes in the URL.
     getBody: () => undefined,
     onSuccessMessage: "Cover letter deleted",
     additionalQueryKeys: [[API_ENDPOINTS.coverLetters.list]],

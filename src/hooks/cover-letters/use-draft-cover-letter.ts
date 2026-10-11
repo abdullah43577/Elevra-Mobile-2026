@@ -25,10 +25,8 @@ export const useDraftCoverLetter = function (
   >({
     url: API_ENDPOINTS.coverLetters.draft,
     method: "post",
-    // The caller reports how the draft was written; a generic toast would compete.
     silent: true,
-    // Drafting for an application can extract its posting's keywords, which is
-    // what the tailoring match score reads.
+    // Drafting can extract the posting's keywords, which the match score reads.
     ...(options.applicationId && {
       additionalQueryKeys: [
         [API_ENDPOINTS.jobApplications.match(options.applicationId)],

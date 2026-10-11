@@ -36,13 +36,11 @@ export default function ForgotPassword() {
       extraScrollHeight={20}
     >
       <View className="flex-1 justify-center px-6 py-10">
-        {/* Header */}
         <AppText type="title">Forgot password?</AppText>
         <AppText type="subtitle" className="mt-1 text-foreground-muted">
           Enter your email and we'll send you a code to reset your password
         </AppText>
 
-        {/* Form */}
         <View className="mt-8 gap-4">
           <FormInput<ForgotPasswordFormValues>
             control={control}
@@ -55,7 +53,6 @@ export default function ForgotPassword() {
             errors={errors}
           />
 
-          {/* Submit */}
           <AppButton
             type="submit"
             disabled={isPending}
@@ -67,7 +64,6 @@ export default function ForgotPassword() {
           </AppButton>
         </View>
 
-        {/* Back to sign in */}
         <View className="mt-8 flex-row justify-center gap-1">
           <AppText type="subtitle" className="text-foreground-muted">
             Remembered your password?
@@ -77,7 +73,6 @@ export default function ForgotPassword() {
           </Pressable>
         </View>
 
-        {/* Footer */}
         <AppText type="subtitle" className="mt-6 text-center text-foreground-subtle">
           Elevra Workspace Environment V1.0
         </AppText>

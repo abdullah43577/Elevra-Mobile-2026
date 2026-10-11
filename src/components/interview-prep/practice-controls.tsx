@@ -15,12 +15,6 @@ interface Props {
   onRate: (status: "NEEDS_WORK" | "READY") => void;
 }
 
-/*
-  Rating is the step that makes the next session smarter: "needs work" pushes a
-  question back to the front of the queue, "got it" lets it fall behind the ones
-  you are avoiding. Skipping the rating is allowed — the runner still records
-  that the question was rehearsed.
-*/
 export const PracticeControls = function ({
   isRecording,
   isUploading,

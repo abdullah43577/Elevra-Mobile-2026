@@ -84,13 +84,8 @@ const WarningToast = makeToast("warning");
 const InfoToast = makeToast("info");
 const LoadingToast = makeToast("loading");
 
-/*
-  Each entry returns an element, never the component itself. The library calls
-  these as plain functions inside its own render, and React Compiler gives each
-  toast component a memo cache — called directly, every type shared one cache
-  slot, so whichever type rendered first painted all later toasts (a wrong
-  password came up green).
-*/
+// Return elements, never components: the library calls these as functions, and
+// React Compiler would then share one memo slot across every toast type.
 export const toastConfig = {
   success: (props: BaseToastProps) => <SuccessToast {...props} />,
   error: (props: BaseToastProps) => <ErrorToast {...props} />,

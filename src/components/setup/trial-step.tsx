@@ -6,7 +6,6 @@ import { useThemeColors } from "@/hooks/use-theme-colors";
 import { View } from "react-native";
 
 interface Props {
-  /** e.g. "7 days free", read from the store product; null when unknown. */
   trial: string | null;
 }
 

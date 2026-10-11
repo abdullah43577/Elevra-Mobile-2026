@@ -10,10 +10,6 @@ interface UseGetQuestionsOptions {
   shouldFetch?: boolean;
 }
 
-/*
-  `options` is separate from `filters` because QuestionFilters mirrors the
-  server's query params one for one — a client-only flag does not belong in it.
-*/
 export const useGetQuestions = function (
   filters: QuestionFilters = {},
   options: UseGetQuestionsOptions = {},

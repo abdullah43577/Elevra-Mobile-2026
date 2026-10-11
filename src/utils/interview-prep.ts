@@ -3,11 +3,6 @@ import {
   InterviewQuestion,
 } from "../../types/interview-prep";
 
-/*
-  Prisma returns the current user's answer as a filtered relation, so it arrives
-  as an array of at most one. Read it through here rather than indexing at call
-  sites.
-*/
 export const answerOf = function (
   question: InterviewQuestion,
 ): InterviewAnswer | undefined {
@@ -18,16 +13,6 @@ export const hasWrittenAnswer = function (question: InterviewQuestion) {
   return !!answerOf(question)?.text?.trim();
 };
 
-/*
-  The order the practice runner uses, and the reason this feature is a tool
-  rather than a list.
-
-  Questions you have never touched come first, then the ones you flagged as
-  needing work, then whatever you have rehearsed least recently. The effect is
-  that the questions you keep avoiding are exactly the ones it puts in front of
-  you — the opposite of a browsable bank, where you re-read the answers you are
-  already comfortable with.
-*/
 const focusRank = function (question: InterviewQuestion) {
   const answer = answerOf(question);
 
@@ -47,7 +32,6 @@ export const byFocus = function (
   const aPractised = answerOf(a)?.lastPracticedAt;
   const bPractised = answerOf(b)?.lastPracticedAt;
 
-  // Never rehearsed sorts ahead of anything that has been.
   if (!aPractised && bPractised) return -1;
   if (aPractised && !bPractised) return 1;
   if (aPractised && bPractised) {
@@ -71,7 +55,6 @@ export const formatDuration = function (totalSeconds: number) {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 };
 
-/** Seeded questions belong to the catalogue and are read-only for everyone. */
 export const isCustomQuestion = function (question: InterviewQuestion) {
   return !!question.userId;
 };

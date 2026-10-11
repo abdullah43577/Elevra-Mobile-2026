@@ -1,6 +1,7 @@
 import { useProAction } from "@/components/shared/pro-gate";
 import { isAiErrorCode } from "@/constants/ai";
 import { PRO_FEATURES } from "@/constants/entitlements";
+import { useCandidateBackground } from "@/hooks/career-profile/use-candidate-background";
 import { API_ENDPOINTS } from "@/provider/endpoints";
 import { showToast } from "@/utils/show-toast";
 import { useRouter } from "expo-router";
@@ -10,15 +11,13 @@ import { APIResponse } from "../../../types/response";
 import { useHandleErrors } from "../use-handle-errors";
 import { useSubmitData } from "../use-submit-data";
 
-/*
-  The state of the message sheet on application detail: which kind is open,
-  and the draft once written. Gated when a kind is opened rather than when the
-  draft is requested, so a free user meets the offer before filling anything in.
-*/
+const WRITES_FROM_BACKGROUND: MessageKind[] = ["FOLLOW_UP", "THANK_YOU"];
+
 export const useMessageDrafting = function (applicationId: string) {
   const router = useRouter();
   const handleErrors = useHandleErrors();
   const { allowed, copy } = useProAction(PRO_FEATURES.AI_MESSAGE_DRAFTS);
+  const { requireBackground } = useCandidateBackground();
 
   const [kind, setKind] = useState<MessageKind | null>(null);
   const [message, setMessage] = useState<ApplicationMessage | null>(null);
@@ -36,6 +35,8 @@ export const useMessageDrafting = function (applicationId: string) {
   });
 
   const handleOpen = function (next: MessageKind) {
+    if (WRITES_FROM_BACKGROUND.includes(next) && !requireBackground()) return;
+
     if (!allowed) {
       showToast("warning", copy.blurb);
       router.push("/(dashboard)/paywall");

@@ -18,12 +18,6 @@ export interface WorkspaceItem {
   color: string;
 }
 
-/*
-  The tools an application draws on. Applications themselves are a tab, not a
-  card here: they are the hub everything below attaches to. Notes and voice
-  notes come last and are described by what they attach to, not as headline
-  tools of their own.
-*/
 export const WORKSPACE_ITEMS: WorkspaceItem[] = [
   {
     id: "resume-studio",

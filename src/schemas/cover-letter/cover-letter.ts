@@ -8,8 +8,7 @@ export const coverLetterSchema = z.object({
   companyAddress: z.string().optional(),
   body: z.string().min(1, "Write your letter before saving"),
   closing: z.string().optional(),
-  // The sender block. Name and email are what actually appear on the letter, so
-  // they are required here even though the server accepts a partial.
+  // Required here, though the server accepts a partial: these print on the letter.
   personalInfo: z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),

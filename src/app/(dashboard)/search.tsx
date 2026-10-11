@@ -40,15 +40,8 @@ export default function Search() {
 
   const { localResults } = useLocalSearch({ query: debouncedQuery });
 
-  /*
-    Server when there is a connection, cache when there is not — never a merge of
-    the two. Merging means deduping rows that differ in field coverage, and a
-    result list that reshuffles as the request lands reads as a bug.
-  */
   const activeResults = isOnline ? searchResults : localResults;
 
-  // Counts stay whole while the list narrows, so the chips keep working as a
-  // map of what was found rather than collapsing to the one type in view.
   const visibleResults = selectedType
     ? (activeResults?.results.filter((result) => result.type === selectedType) ??
       [])

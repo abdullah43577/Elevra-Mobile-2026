@@ -14,9 +14,6 @@ export interface AppButtonProps extends PressableProps {
   type?: "default" | "submit" | "secondary" | "delete";
   isLoading?: boolean;
   disabled?: boolean;
-  // Preferred over passing raw `children` for text-only buttons — renders
-  // through AppText with the correct foreground color for `type` baked in,
-  // so a dark background can never end up with dark (unreadable) text.
   label?: string;
 }
 
@@ -36,9 +33,8 @@ const typeStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
   delete: "bg-danger-solid",
 };
 
-// `default` is the inverted button — near-black on light, near-white on dark —
-// so its label has to be the canvas, not a fixed white. The filled colour
-// variants keep white in both schemes because their fills stay saturated.
+// `default` is the inverted button, so its label is the canvas colour; filled
+// variants keep white because their fills stay saturated in both schemes.
 const textStyles: Record<NonNullable<AppButtonProps["type"]>, string> = {
   default: "text-canvas",
   submit: "text-white",

@@ -21,12 +21,8 @@ const LAYOUTS = {
   TIMELINE_ACCENT: TimelineAccentLayout,
   TECH_FOCUSED: TechFocusedLayout,
 
-  /*
-    The four originals were retired for being hard to maintain and, in the case
-    of CREATIVE_SPLIT, actively ATS-hostile (a sidebar breaks reading order for
-    most parsers). Existing Resume rows may still point at them, so they resolve
-    to the closest surviving equivalent rather than rendering nothing.
-  */
+  // Retired layouts: existing resumes may still point at them, so each maps to the
+  // closest surviving equivalent.
   PROFESSIONAL_CLASSIC: AtsCleanLayout,
   PROFESSIONAL_SLEEK: AtsAccentLayout,
   CREATIVE_SPLIT: TimelineAccentLayout,

@@ -19,12 +19,6 @@ const LOSSES = [
   "Your interview answers and practice history",
 ];
 
-/*
-  Not a ConfirmDialog: this needs a password field, and it needs to spell out
-  what is being destroyed. Deleting an account is the one action in the app with
-  no undo and no export to fall back on, so the confirmation earns more weight
-  than a two-line "are you sure".
-*/
 export const DeleteAccountDialog = function ({
   visible,
   isDeleting,

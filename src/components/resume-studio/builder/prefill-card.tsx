@@ -9,10 +9,6 @@ interface Props {
   onSetUpProfile: () => void;
 }
 
-/*
-  Sits on the first step because that is where a from-scratch retype begins,
-  but it fills every section, not just this one.
-*/
 export const PrefillCard = function ({
   hasProfile,
   onPrefill,

@@ -5,9 +5,7 @@ import { LetterPage, LetterPageContent } from "./letter-page";
 
 const A4_RATIO = 1.414;
 
-// Laid out at a fixed width then scaled, so proportions match the exported PDF
-// instead of reflowing at whatever the device width happens to be. Same
-// approach as TemplatePreview.
+// Laid out at a fixed width then scaled, so proportions match the exported PDF.
 const LAYOUT_WIDTH = 420;
 
 interface Props {
@@ -15,10 +13,7 @@ interface Props {
   template: AnyTemplate;
 }
 
-/*
-  Renders on an explicit white sheet, never the app surface — a letter is a
-  printed document and must look identical in either colour scheme.
-*/
+// Explicit white, never the app surface: a printed letter looks the same in both schemes.
 export const LetterPreview = function ({ letter, template }: Props) {
   const { width } = useWindowDimensions();
 

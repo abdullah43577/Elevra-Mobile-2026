@@ -8,11 +8,6 @@ interface StatusMeta {
   icon: keyof typeof Ionicons.glyphMap;
 }
 
-/*
-  Owns every per-status label, colour, and icon. Never inline these at a call
-  site — the pipeline summary, filter chips, status pill, and picker all read
-  from here so a status looks identical everywhere it appears.
-*/
 export const APPLICATION_STATUS_META = {
   SAVED: {
     label: "Saved",
@@ -52,7 +47,6 @@ export const APPLICATION_STATUS_META = {
   },
 } as const satisfies Record<ApplicationStatus, StatusMeta>;
 
-// Pipeline order, used by the filter chips and the status picker.
 export const APPLICATION_STATUSES: ApplicationStatus[] = [
   "SAVED",
   "APPLIED",
@@ -62,7 +56,6 @@ export const APPLICATION_STATUSES: ApplicationStatus[] = [
   "WITHDRAWN",
 ];
 
-// The four the summary row surfaces — the closed states are noise at a glance.
 export const PIPELINE_STATUSES: ApplicationStatus[] = [
   "SAVED",
   "APPLIED",

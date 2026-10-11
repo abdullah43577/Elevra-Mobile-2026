@@ -17,15 +17,6 @@ interface Props {
   onDismiss: () => void;
 }
 
-/*
-  What setup did not finish. It replaces the standalone career-profile prompt
-  rather than sitting beside it — two cards on the front door both saying "set up
-  your career profile" is worse than one list that happens to have a single row.
-
-  It renders only while something is outstanding, and can be dismissed outright:
-  a checklist that cannot be silenced becomes a permanent accusation on the
-  screen someone opens every day.
-*/
 export const SetupChecklist = function ({ tasks, onDismiss }: Props) {
   const { contentTint, foregroundSubtle } = useThemeColors();
   const { color, holder } = contentTint("profile");

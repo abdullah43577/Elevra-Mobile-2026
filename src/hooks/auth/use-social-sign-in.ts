@@ -23,12 +23,6 @@ import { useSubmitData } from "../use-submit-data";
 
 type ExchangePayload = SocialAuthRequest & { provider: SocialProvider };
 
-/*
-  One hook for both providers rather than one per provider. The two differ only
-  in which native sheet opens and which url the token goes to; everything after
-  that — storing tokens, flipping the session, the cancelled-sheet rule — is
-  identical, and duplicating it is how the two would drift.
-*/
 export const useSocialSignIn = function () {
   const { setAuthenticated, expoPushToken } = useAuthStore();
   const handleErrors = useHandleErrors();
@@ -54,8 +48,6 @@ export const useSocialSignIn = function () {
     ExchangePayload,
     APIResponse<AuthSession>
   >({
-    // Resolved from the payload so a single mutation serves both routes — the
-    // function form of `url`, same as useDuplicateResume.
     url: (data) =>
       data.provider === "GOOGLE"
         ? API_ENDPOINTS.auth.google
@@ -72,8 +64,6 @@ export const useSocialSignIn = function () {
 
       setAuthenticated(true);
     },
-    // Overridden only to release the spinner; the shared handler still shapes
-    // the message, including the offline case.
     onError: (error) => {
       setPendingProvider(null);
       handleErrors(error);
@@ -91,10 +81,7 @@ export const useSocialSignIn = function () {
           ? await signInWithGoogle()
           : await signInWithApple();
 
-      /*
-        null means the user dismissed the sheet. Not an error, and not worth a
-        toast — they know what they just did.
-      */
+      // null means the user dismissed the sheet: not an error.
       if (!credential) {
         setPendingProvider(null);
         return;

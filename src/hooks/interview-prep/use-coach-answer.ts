@@ -10,12 +10,6 @@ import { useHandleErrors } from "../use-handle-errors";
 import { useSubmitData } from "../use-submit-data";
 import { refreshQuestionQueries } from "./refresh-question-queries";
 
-/*
-  Transcribes and critiques the current take. Pro-gated before the request, so
-  a free user meets the paywall at the moment they reach for feedback rather
-  than after a refused upload. Asking again for the same take is free on the
-  server — it returns what is stored.
-*/
 export const useCoachAnswer = function (questionId: string) {
   const router = useRouter();
   const handleErrors = useHandleErrors();
@@ -25,7 +19,6 @@ export const useCoachAnswer = function (questionId: string) {
     url: API_ENDPOINTS.interviewPrep.coachAnswer(questionId),
     method: "post",
     getBody: () => undefined,
-    // The feedback appearing is the confirmation.
     silent: true,
     onSuccess: () => {
       refreshQuestionQueries();

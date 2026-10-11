@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 
 export const CONTENT_COLORS = {
-  note: "#5B47E8", // matches secondary-500 — the app's core brand color
+  note: "#5B47E8",
   recording: "#D6653D",
   resume: "#0F9B7A",
   application: "#2E6FD1",
@@ -41,8 +41,7 @@ export const CONTENT_META = {
     color: CONTENT_COLORS.letter,
     label: "Cover letter",
     icon: "mail-outline",
-    // "Letters", not "Cover letters" — this is a tile caption sharing a row
-    // with four others, and the long form wraps.
+    // Short form: this caption shares a row with four others and the long one wraps.
     plural: "Letters",
   },
   InterviewQuestion: {
@@ -55,8 +54,6 @@ export const CONTENT_META = {
   string,
   {
     color: string;
-    // Singular, for a row that names one item. The key is not usable as copy —
-    // "CoverLetter" is not something to show a user.
     label: string;
     icon: keyof typeof Ionicons.glyphMap;
     plural: string;
@@ -65,13 +62,8 @@ export const CONTENT_META = {
 
 export type ContentCategory = keyof typeof CONTENT_META;
 
-/*
-  The bridge between the two vocabularies: CONTENT_META is keyed by the model
-  name a result or activity row carries, while the theme's per-scheme colours are
-  keyed by the accent name. Anything that needs a *scheme-aware* colour —
-  useThemeColors().contentTint — has to cross from one to the other, since
-  CONTENT_META.color is the light-mode hex only.
-*/
+// CONTENT_META.color is the light-mode hex only; scheme-aware colours go through
+// contentTint, which is keyed by accent name.
 export const CONTENT_TYPE_BY_CATEGORY = {
   Note: "note",
   Recording: "recording",

@@ -10,11 +10,6 @@ interface Props {
   tint: string;
 }
 
-/*
-  Readiness, not completion. The number that matters before an interview is how
-  many answers you would be happy to give out loud tomorrow — not how many boxes
-  you have filled in.
-*/
 export const ReadinessSummary = function ({ stats, accent, tint }: Props) {
   const ready = stats?.byStatus.READY ?? 0;
   const needsWork = stats?.byStatus.NEEDS_WORK ?? 0;

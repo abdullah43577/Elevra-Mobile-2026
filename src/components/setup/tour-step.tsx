@@ -9,11 +9,6 @@ import { useThemeColors } from "@/hooks/use-theme-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 
-/*
-  Named after what each thing is *for*, not what it is called in the nav. Someone
-  who has just signed up does not yet know what "Workspaces" contains, and a
-  tour that lists feature names teaches nothing.
-*/
 const HIGHLIGHTS: { type: ContentCategory; title: string; body: string }[] = [
   {
     type: "Application",

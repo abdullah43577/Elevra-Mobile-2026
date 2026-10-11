@@ -44,11 +44,8 @@ export default function Practice() {
   const [isExitVisible, setIsExitVisible] = useState(false);
   const [ratings, setRatings] = useState<Record<string, AnswerStatus>>({});
 
-  /*
-    The set is frozen on first load. Recomputing it as answers change would
-    reorder the queue under the user mid-session — the ordering is a starting
-    condition, not a live view.
-  */
+  // Frozen on first load: recomputing as answers change would reorder the queue
+  // mid-session.
   const [frozenIds, setFrozenIds] = useState<string[] | null>(null);
 
   useEffect(() => {
@@ -66,7 +63,6 @@ export default function Practice() {
 
   const current = set[index];
 
-  // Answer timer, restarted for each question.
   useEffect(() => {
     if (isFinished || !current) return;
 
@@ -83,8 +79,8 @@ export default function Practice() {
     silent: true,
   });
 
-  // Fired once, when the run ends. Reporting per question would leave a session
-  // half recorded on a bad connection.
+  // Reported once at the end: per-question requests would half-record a run on a
+  // bad connection.
   const hasReported = useRef(false);
 
   const finish = async function (rehearsedIds: string[]) {
@@ -117,7 +113,6 @@ export default function Practice() {
   const handleRate = async function (status: "NEEDS_WORK" | "READY") {
     if (!current) return;
 
-    // Stop a take still running rather than losing it silently on advance.
     if (recorder.isRecording) {
       const take = await recorder.stopRecording();
       if (take) {

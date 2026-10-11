@@ -18,8 +18,6 @@ export const useTranscribeRecording = function (recordingId: string) {
     url: API_ENDPOINTS.voiceNotes.transcribe(recordingId),
     method: "post",
     getBody: () => undefined,
-    // The transcript appearing is the confirmation; the server also sends a
-    // "Transcription ready" notification for anyone who left the screen.
     silent: true,
     additionalQueryKeys: [[API_ENDPOINTS.voiceNotes.detail(recordingId)], [API_ENDPOINTS.voiceNotes.list]],
     onError: (error) => {

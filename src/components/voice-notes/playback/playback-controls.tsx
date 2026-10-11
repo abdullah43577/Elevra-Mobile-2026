@@ -6,9 +6,7 @@ import { Pressable, View } from "react-native";
 
 interface PlaybackControlsProps {
   isPlaying: boolean;
-  /** Track has reached the end — the button becomes a replay affordance. */
   isFinished?: boolean;
-  /** Source is still loading, so seeking is not meaningful yet. */
   isLoading?: boolean;
   progress: number;
   currentTime: number;

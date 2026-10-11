@@ -16,7 +16,6 @@ export interface InterviewAnswer {
   text?: string | null;
   audioUrl?: string | null;
   audioDuration?: number | null;
-  // Both belong to the current take; recording a new one clears them.
   transcript?: string | null;
   feedback?: AnswerFeedback | null;
   status: AnswerStatus;
@@ -26,14 +25,8 @@ export interface InterviewAnswer {
   updatedAt: string;
 }
 
-/*
-  `userId` is null for the seeded catalogue and set for a question the user wrote
-  themselves — which is also the only kind they may edit or delete.
-
-  `answers` is the current user's answer joined on, as an array of at most one
-  because that is the shape Prisma returns for a filtered relation. Read it
-  through `answerOf()` rather than indexing at call sites.
-*/
+// `answers` is Prisma's filtered-relation shape: at most one, the current user's.
+// Read it through answerOf().
 export interface InterviewQuestion {
   id: string;
   text: string;
@@ -57,8 +50,7 @@ export interface InterviewPrepStats {
 }
 
 export interface SaveAnswerRequest {
-  // Nullable, not just optional: JSON.stringify drops undefined keys, so
-  // clearing a written answer has to send an explicit null.
+  // Nullable: JSON.stringify drops undefined keys, so clearing must send null.
   text?: string | null;
   status?: AnswerStatus;
 }
@@ -78,19 +70,13 @@ export interface QuestionFilters {
 }
 
 export interface GenerateQuestionsResult {
-  // Newly written and pinned to the application.
   questions: InterviewQuestion[];
-  // Generated questions that matched ones already in the bank, pinned instead of duplicated.
+  // Matched existing bank questions, pinned instead of duplicated.
   pinnedExisting: number;
-  // Dropped because they could not be traced to the posting or the resume.
   dropped: number;
 }
 
-/*
-  Coaching on one recorded take. `metrics` is counted on the server, never
-  generated, so the same take always scores the same. `tighterVersion` is
-  absent when the model's rewrite added something the candidate did not say.
-*/
+// `tighterVersion` is absent when the rewrite added something the candidate did not say.
 export interface AnswerFeedback {
   metrics: {
     wordCount: number;

@@ -32,12 +32,6 @@ export interface ExecutiveFormalLayoutProps {
 }
 
 
-/*
-  Every layout added from the ATS rebuild onward takes this shape. The older
-  per-layout prop interfaces above exist only for the four original templates
-  and should not be extended — new layouts differ in chrome, not in the data
-  they accept.
-*/
 export interface ResumeLayoutProps {
   theme: BaseTheme & { accentColor?: string };
   data: ResumeData;

@@ -15,15 +15,8 @@ interface Props {
   onDeleteTake: () => void;
 }
 
-/*
-  Record a take, play it back, replace it. One take per answer — the point is
-  your current best version, not an archive of attempts.
-
-  Reading player.currentTime during render gives stale values because the native
-  object mutates without telling React; status comes from useAudioPlayerStatus.
-  status.duration is 0 until the source loads, hence the fallback to the stored
-  duration.
-*/
+// player.currentTime is stale during render, so status comes from useAudioPlayerStatus;
+// status.duration is 0 until the source loads, hence the stored-duration fallback.
 export const AnswerRecorder = function ({
   audioUrl,
   audioDuration,

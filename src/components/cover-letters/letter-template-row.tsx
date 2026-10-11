@@ -11,10 +11,6 @@ interface Props {
   onPress: () => void;
 }
 
-/*
-  Cover letters reuse the resume template catalogue rather than owning one, so
-  a letter and the resume sent with it share their header, colour and type.
-*/
 export const LetterTemplateRow = function ({
   template,
   accent,

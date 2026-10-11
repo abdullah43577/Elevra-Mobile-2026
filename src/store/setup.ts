@@ -15,17 +15,6 @@ interface SetupState extends PersistedSetup {
   dismissChecklist: () => Promise<void>;
 }
 
-/*
-  First-run setup, tracked per device rather than on the server.
-
-  "Has this person been offered setup yet" is a UI fact, not account data — and
-  the things it leads to (a career profile, a notification permission) are each
-  already knowable from the server or the OS. Storing a flag beside them would
-  give two sources of truth for the same question.
-
-  The key is wiped on sign-out alongside the query cache, so the next account to
-  sign in on this device gets its own run through setup.
-*/
 export const useSetupStore = create<SetupState>((set, get) => {
   const persist = async function (next: PersistedSetup) {
     set(next);

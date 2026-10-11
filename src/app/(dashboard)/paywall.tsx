@@ -30,8 +30,7 @@ export default function Paywall() {
 
   const { packages, isFetchingOfferings, errorOfferings } = useOfferings();
 
-  // Only on the Pro screen: a free user has no subscription to describe, and
-  // this endpoint re-pulls from RevenueCat when its copy is stale.
+  // Pro screen only: this endpoint re-pulls from RevenueCat when its copy is stale.
   const { subscription } = useGetSubscription({ shouldFetch: isPro });
   const { purchase, restore, isPurchasing, isRestoring } = usePurchasePro({
     onEntitled: () => router.back(),
@@ -41,8 +40,6 @@ export default function Paywall() {
 
   const plans = toPlanPresentations(packages);
 
-  // The first plan is annual (toPlanPresentations orders it that way), and a
-  // paywall with nothing selected costs the user a tap for no reason.
   useEffect(() => {
     if (!selectedId && plans.length) setSelectedId(plans[0]!.id);
   }, [plans, selectedId]);
@@ -122,12 +119,6 @@ export default function Paywall() {
               <ActivityIndicator color={accent} />
             </View>
           ) : errorOfferings ? (
-            /*
-              The failure is stated rather than hidden behind a dead Continue
-              button. Most often this is a build without the native module —
-              the SDK is only present in a dev client compiled since it was
-              added.
-            */
             <View className="rounded-2xl border-hairline border-line bg-surface px-4 py-5">
               <AppText type="label" className="text-center">
                 {errorOfferings}
@@ -174,12 +165,7 @@ export default function Paywall() {
           </AppText>
         </Pressable>
 
-        {/*
-          Both stores require the offer to be stated in full before purchase —
-          trial length, what it becomes, the price and that it auto-renews. This
-          is a common rejection, and it is also simply the honest thing to put
-          next to a button that starts a recurring charge.
-        */}
+        {/* Both stores reject a paywall that does not state the full trial offer. */}
         <AppText type="caption" className="mt-5 text-center">
           {selectedPlan?.trial
             ? `Your ${selectedPlan.trial.replace(" free", "")} free trial converts to ${selectedPlan.price} ${selectedPlan.period} unless cancelled before it ends. `

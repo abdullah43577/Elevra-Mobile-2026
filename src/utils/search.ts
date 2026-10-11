@@ -7,25 +7,8 @@ import { SearchResponse, SearchResult, SearchResultType } from "../../types/sear
 import { VoiceRecording } from "../../types/voice-notes";
 import { answerOf } from "./interview-prep";
 
-/*
-  The offline half of global search. It runs over the lists React Query already
-  holds — the same cache the workspace screens read, persisted to AsyncStorage —
-  so search keeps working on a train, which is exactly where someone reaches for
-  their interview notes.
-
-  It deliberately mirrors the server's search.service.ts: same fields, same
-  snippet shape, same two-tier ranking. **Change one and change the other**, or
-  the same query returns different results depending on connectivity, which
-  reads as data loss rather than as a fallback.
-
-  Two differences are structural rather than accidental, and are the reason this
-  is a fallback and not the primary path:
-
-  - it can only see what has been fetched, so a note written on another device
-    and never opened here is invisible;
-  - archived notes are missing entirely, because /notes excludes them and the
-    archive is a separate query the cache may not hold.
-*/
+// Mirrors the server's search.service.ts: fields, snippets and ranking. Change
+// both together, or results differ depending on connectivity.
 
 const SNIPPET_LEAD = 32;
 const SNIPPET_TRAIL = 96;
@@ -198,8 +181,6 @@ export const searchLocally = function (input: LocalSearchInput): SearchResponse 
   input.questions.forEach((question) => {
     const answer = answerOf(question);
 
-    // Same scoping as the server: your own questions and the ones you have
-    // answered, never the whole seeded bank.
     if (!answer && !question.userId) return;
 
     const titleMatch = matches(question.text, term);

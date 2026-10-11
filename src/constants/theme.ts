@@ -1,13 +1,8 @@
 export type ColorScheme = "light" | "dark";
 export type ThemePreference = "SYSTEM" | "LIGHT" | "DARK";
 
-/*
-  The same palette as the CSS variables in src/global.css, as hex, for the
-  places a className cannot reach: Ionicons/lucide `color` props, ActivityIndicator,
-  RefreshControl tints, StatusBar, and computed inline backgrounds.
-
-  Edit both files together.
-*/
+// The palette in src/global.css, as hex, for `color` props a className cannot
+// reach. CSS cannot import TS, so edit both.
 export const THEME = {
   light: {
     canvas: "#FAFAFB",
@@ -43,11 +38,6 @@ export const THEME = {
 
 export type ThemeColors = (typeof THEME)[ColorScheme];
 
-/*
-  Per-content-type accents, lightened for dark so they clear contrast on a dark
-  surface. CONTENT_COLORS in content-colors.ts holds the light values and stays
-  the call-site-facing constant; this is what useThemeColors resolves against.
-*/
 export const CONTENT_COLORS_BY_SCHEME = {
   light: {
     note: "#5B47E8",
@@ -69,10 +59,6 @@ export const CONTENT_COLORS_BY_SCHEME = {
   },
 } as const;
 
-/*
-  Alpha suffixes for the soft tints on action tiles. A 7% wash reads on white
-  but disappears on a dark surface, so dark gets roughly double.
-*/
 export const TINT_ALPHA = {
   light: { surface: "12", holder: "26" },
   dark: { surface: "26", holder: "3D" },

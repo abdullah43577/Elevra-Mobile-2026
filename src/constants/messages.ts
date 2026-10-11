@@ -13,10 +13,6 @@ export const MESSAGE_KIND_META: Record<
   REJECTION_REPLY: { label: "Reply to the rejection", hint: "Thank them and ask for feedback", icon: "mail-outline" },
 };
 
-/*
-  The messages worth suggesting at each stage. Saved and withdrawn applications
-  have no one to write to yet, or any more.
-*/
 export const MESSAGES_FOR_STATUS: Record<ApplicationStatus, MessageKind[]> = {
   SAVED: [],
   APPLIED: ["FOLLOW_UP"],

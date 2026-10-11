@@ -1,14 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { PurchasesPackage } from "react-native-purchases";
 
-/*
-  Presentation only. Prices, periods and product ids all come from RevenueCat at
-  runtime — both stores require the localised price for the user's region, and a
-  hardcoded "$6.99" is wrong in most countries and a review rejection.
-
-  What stays hardcoded is the copy that is *ours*: which package reads as the
-  headline, and what the caption says.
-*/
 export interface PlanPresentation {
   id: string;
   label: string;
@@ -16,7 +8,6 @@ export interface PlanPresentation {
   period: string;
   caption?: string;
   badge?: string;
-  /** e.g. "7 days free" — absent when the product has no introductory offer. */
   trial?: string;
 }
 
@@ -29,8 +20,6 @@ const PACKAGE_META: Record<string, { label: string; period: string; caption?: st
   LIFETIME: { label: "Lifetime", period: "one payment" },
 };
 
-// Annual first — it is the one worth defaulting to, and a list that opens on the
-// most expensive per-month option reads as a worse offer than it is.
 const ORDER = ["ANNUAL", "SIX_MONTH", "THREE_MONTH", "MONTHLY", "WEEKLY", "LIFETIME"];
 
 const pluralise = function (value: number, unit: string) {
@@ -38,18 +27,8 @@ const pluralise = function (value: number, unit: string) {
   return `${value} ${name}${value === 1 ? "" : "s"}`;
 };
 
-/*
-  A free trial reaches us in two different shapes and both have to be read, or
-  the offer silently disappears on one platform:
-
-  - Google Play Billing 5+ models it as a free pricing *phase* on the default
-    subscription option;
-  - StoreKit — and the Test Store — model it as an introductory price of zero.
-
-  Reading it from the product rather than hardcoding "7 days" means changing the
-  trial in the RevenueCat dashboard does not need an app update, which is the
-  same reason prices are not written down here.
-*/
+// Play Billing 5+ models a trial as a free pricing phase; StoreKit and the Test
+// Store as a zero intro price. Both must be read or the trial vanishes on one.
 export const trialLabel = function (pack: PurchasesPackage): string | null {
   const freePhase = pack.product.defaultOption?.freePhase;
 
@@ -83,12 +62,6 @@ const monthlyEquivalent = function (pack: PurchasesPackage) {
   }
 };
 
-/*
-  The saving is computed against the monthly package rather than written down.
-  A hardcoded "Save 40%" becomes a lie the first time either price moves, and
-  price changes are exactly the thing RevenueCat exists to let you make without
-  shipping an app update.
-*/
 export const toPlanPresentations = function (
   packages: PurchasesPackage[],
 ): PlanPresentation[] {
@@ -137,12 +110,7 @@ interface Benefit {
   description: string;
 }
 
-/*
-  Written as outcomes rather than feature names, and in the order of an
-  application: tailor, write, interview. Mirrors what src/constants/entitlements.ts
-  gates — add a PRO_FEATURE and it belongs here too, or the paywall sells an
-  incomplete list. The first three also make up setup's trial step.
-*/
+// Keep in step with PRO_FEATURES, or the paywall sells an incomplete list.
 export const PRO_BENEFITS: Benefit[] = [
   {
     icon: "sparkles-outline",

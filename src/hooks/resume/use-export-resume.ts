@@ -19,17 +19,6 @@ const safeFileName = function (value: string) {
   return cleaned || "resume";
 };
 
-/*
-  The PDF is produced on-device: buildResumeHtml -> expo-print -> share sheet.
-
-  Deliberately not react-native-view-shot. That captures the rendered layout as
-  an image, and an image-based PDF is unreadable to every applicant tracking
-  system — which would undo the entire point of the ATS template work. The OS
-  HTML renderer emits real, selectable text.
-
-  Deliberately not server-side Puppeteer either: that means shipping Chromium
-  alongside the API for something the phone can already do.
-*/
 export const useExportResume = function () {
   const [isExporting, setIsExporting] = useState(false);
 
@@ -39,8 +28,6 @@ export const useExportResume = function () {
     data,
     title,
   }: {
-    // Passed per call, not per hook: one screen exports many different resumes
-    // from a single hook instance.
     resumeId?: string;
     template: AnyTemplate;
     data: ResumeData;
@@ -53,12 +40,6 @@ export const useExportResume = function () {
       const html = buildResumeHtml(template, data);
       const { uri } = await Print.printToFileAsync({ html, base64: false });
 
-      /*
-        printToFileAsync names the file with a random uuid. Rename it so what
-        lands in a recruiter's inbox is "amara-okonkwo-resume.pdf" rather than
-        "a3f2b1c4-....pdf". If the rename fails the export is still perfectly
-        valid, so fall back to the original path rather than losing the file.
-      */
       let finalUri = uri;
 
       try {
@@ -84,7 +65,7 @@ export const useExportResume = function () {
         return;
       }
 
-      // Only stamps lastExportedAt, so it runs after the share and never blocks it.
+      // Best-effort and after the share, so it can never block the export.
       if (resumeId) api.post(API_ENDPOINTS.resume.export(resumeId)).catch(() => {});
     } catch (error) {
       showToast("error", "Could not export this resume");

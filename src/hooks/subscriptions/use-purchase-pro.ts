@@ -8,14 +8,6 @@ interface UsePurchaseProOptions {
   onEntitled?: () => void;
 }
 
-/*
-  Buying and restoring, both of which end the same way: ask the server to pull
-  the entitlement from RevenueCat.
-
-  The SDK's own customerInfo is deliberately ignored as an authority. It is
-  correct, but it reaches us through the client, and the whole point of the
-  server pull is that entitlement is derived somewhere the user cannot reach.
-*/
 export const usePurchasePro = function (options: UsePurchaseProOptions = {}) {
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
@@ -27,15 +19,9 @@ export const usePurchasePro = function (options: UsePurchaseProOptions = {}) {
     try {
       const { cancelled } = await purchasePackage(pack);
 
-      // Closing the sheet is an ordinary outcome, not a failure. No toast.
       if (cancelled) return false;
 
-      /*
-        The purchase has already gone through by this point — money has moved.
-        A failed sync must therefore never be reported as a failed purchase,
-        which is what letting it reach the catch below would do. The entitlement
-        is safe either way: it lives in RevenueCat, and the next launch pulls it.
-      */
+      // Money has moved by now; a failed sync must never read as a failed purchase.
       try {
         await syncSubscription();
         showToast("success", "You are on Pro");
@@ -65,12 +51,7 @@ export const usePurchasePro = function (options: UsePurchaseProOptions = {}) {
     try {
       await restorePurchases();
 
-      /*
-        The sync decides whether anything was actually restored. Reading the
-        SDK's customerInfo here would mean two different answers to "is this
-        user Pro" — the client's and the server's — and only one of them is the
-        one the gates obey.
-      */
+      // The server sync is the authority; the SDK's customerInfo is deliberately ignored.
       const response = await syncSubscription();
 
       if (response.data.isActive) {

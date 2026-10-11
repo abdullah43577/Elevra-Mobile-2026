@@ -5,22 +5,20 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useImportResumePdf } from "./use-import-resume-pdf";
 
-// Mirrors MAX_PDF_BYTES on the server; checked here so an oversized file is
-// refused before it is uploaded rather than after.
+// Mirrors MAX_PDF_BYTES on the server.
 const MAX_PDF_BYTES = 5 * 1024 * 1024;
 
 interface UseResumeImportFlowOptions {
-  /** Asks before importing, since saving the import replaces what is there. */
   hasExistingProfile: boolean;
   onImported?: () => void;
+  overCurrentTab?: boolean;
 }
 
-/*
-  Pick a PDF, read it on the server, and open the editor holding the result.
-  Nothing is saved here: the import is handed over through the profile-import
-  store, and only the editor's Save button persists it.
-*/
-export const useResumeImportFlow = function ({ hasExistingProfile, onImported }: UseResumeImportFlowOptions) {
+export const useResumeImportFlow = function ({
+  hasExistingProfile,
+  onImported,
+  overCurrentTab,
+}: UseResumeImportFlowOptions) {
   const router = useRouter();
   const setDraft = useProfileImportStore((state) => state.setDraft);
   const [isConfirmingReplace, setIsConfirmingReplace] = useState(false);
@@ -30,7 +28,9 @@ export const useResumeImportFlow = function ({ hasExistingProfile, onImported }:
       setDraft(response.data);
       onImported?.();
       router.push({
-        pathname: "/(dashboard)/(tabs)/workspaces/career-profile/profile-editor",
+        pathname: overCurrentTab
+          ? "/(dashboard)/profile-editor"
+          : "/(dashboard)/(tabs)/workspaces/career-profile/profile-editor",
         params: { section: "personalInfo" },
       });
     },

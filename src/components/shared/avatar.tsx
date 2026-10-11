@@ -8,20 +8,12 @@ interface Props {
   uri?: string | null;
   initials: string;
   size: number;
-  /** Container classes — border, background, press state. */
   className?: string;
   textType?: TextType;
 }
 
-/*
-  A remote avatar has two ways of not showing up, and only one of them is the
-  absent url. A Cloudinary blip, an expired link, or a cold start with no
-  connection all leave <Image> rendering an empty circle with nothing to say
-  what happened, which is why the picture "sometimes" appeared.
-
-  The failed url is remembered rather than a boolean, so a new url is always
-  given a fresh attempt without an effect to reset the flag.
-*/
+// The failed url is remembered, not a boolean, so a new url always gets a fresh
+// attempt without an effect to reset it.
 export const Avatar = function ({
   uri,
   initials,
@@ -36,8 +28,8 @@ export const Avatar = function ({
   return (
     <View
       className={`items-center justify-center overflow-hidden rounded-full ${className}`}
-      // Fixed sizes go in style, not w-*/h-*: a child of a column parent
-      // stretches and the circle becomes a full-width bar. See CLAUDE.md §5.
+      // Fixed sizes in style, not w-*/h-*: a column parent would stretch the circle
+      // into a full-width bar.
       style={{ width: size, height: size }}
     >
       {showImage ? (

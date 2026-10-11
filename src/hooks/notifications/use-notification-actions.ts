@@ -3,8 +3,6 @@ import { AppNotification } from "../../../types/notification";
 import { APIResponse } from "../../../types/response";
 import { useSubmitData } from "../use-submit-data";
 
-// Both the list and the badge count are separate queries, so every mutation
-// has to refetch them explicitly.
 const NOTIFICATION_KEYS = [
   [API_ENDPOINTS.notifications.list],
   [API_ENDPOINTS.notifications.unreadCount],

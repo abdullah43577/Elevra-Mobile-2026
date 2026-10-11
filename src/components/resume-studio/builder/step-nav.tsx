@@ -3,8 +3,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { Pressable, ScrollView, View } from "react-native";
 
-// Structural rather than BuilderStep, so the career profile editor can drive
-// the same nav from PROFILE_SECTIONS without inventing builder steps.
 export interface StepNavItem {
   id: string;
   short: string;
@@ -19,11 +17,6 @@ interface Props {
   onSelectStep: (index: number) => void;
 }
 
-/*
-  Tappable rather than linear-only. Steps up to the furthest one reached stay
-  navigable so a user can jump back and fix something without pressing Previous
-  eight times.
-*/
 export const StepNav = function ({
   steps,
   activeIndex,

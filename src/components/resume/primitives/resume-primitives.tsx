@@ -2,15 +2,8 @@ import { ReactNode } from "react";
 import { Text, TextProps, View } from "react-native";
 import { BaseTheme } from "../../../../types/resume/theme";
 
-/*
-  A resume is a printed document, not app chrome. Every colour here is explicit
-  and every text node goes through RText rather than AppText — AppText resolves
-  to the theme-adaptive `text-foreground`, which would turn a resume's body copy
-  white the moment the user switched the app to dark mode.
-
-  Sizing is driven by a single `scale` instead of the isThumbnail ternaries that
-  used to be repeated on every element.
-*/
+// Never AppText in a resume: it is theme-adaptive and would turn body copy white in
+// dark mode. RText takes an explicit colour.
 
 export const PAGE = { width: 794, aspect: 1.414 }; // A4 at 96dpi
 
@@ -108,11 +101,7 @@ export const ResumePage = function ({
   );
 };
 
-/*
-  Section headings are plain uppercase text with conventional wording
-  (Experience, Education, Skills). Parsers key off these exact words — do not
-  get creative with them.
-*/
+// Parsers key off these exact conventional headings; do not rename them.
 export const SectionTitle = function ({
   label,
   style,
@@ -179,10 +168,7 @@ export const Section = function ({
   );
 };
 
-/*
-  Title and dates on one line, organisation beneath. Keeping the date on the
-  same row as the role is the layout parsers handle most reliably.
-*/
+// Dates stay on the role's row: the layout parsers handle most reliably.
 export const Entry = function ({
   title,
   organisation,
@@ -231,10 +217,7 @@ export const Paragraph = function ({ text, style }: { text: string; style: Resum
   );
 };
 
-/*
-  Real bullet characters in real text nodes. Never an icon font or an image —
-  a parser cannot read those.
-*/
+// Real bullet characters in text nodes; parsers cannot read icon fonts or images.
 export const Bullets = function ({ items, style }: { items: string[]; style: ResumeStyle }) {
   if (items.length === 0) return null;
 
@@ -254,8 +237,7 @@ export const Bullets = function ({ items, style }: { items: string[]; style: Res
   );
 };
 
-// Skills as a comma-joined run of text, not chips. Chips read as separate
-// fragments to a parser; a comma list reads as one clean field.
+// A comma-joined run, not chips: parsers read chips as separate fragments.
 export const InlineList = function ({ items, style }: { items: string[]; style: ResumeStyle }) {
   if (items.length === 0) return null;
 

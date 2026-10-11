@@ -70,7 +70,6 @@ export default function ApplicationDetail() {
     applicationId: id,
   });
 
-  // Every question, for the picker; and just the pinned ones, for the section.
   const { questions } = useGetQuestions();
   const { questions: pinnedQuestions } = useGetQuestions({ applicationId: id });
   const { pinQuestion, unpinQuestion, isPinning } = usePinQuestion(id);
@@ -83,9 +82,8 @@ export default function ApplicationDetail() {
   const questionGeneration = useQuestionGeneration({ applicationId: id, hasJobDescription });
   const messageDrafting = useMessageDrafting(id);
 
-  // A reminder notification lands here with ?draft; open it once, and only if
-  // the application is still at a stage where that message makes sense. Free
-  // users see the section instead of being dropped onto the paywall from a reminder.
+  // A reminder's ?draft opens once, only for Pro users and only while the status
+  // still offers that message.
   const openedDraft = useRef(false);
   useEffect(() => {
     if (openedDraft.current || !draft || !application) return;

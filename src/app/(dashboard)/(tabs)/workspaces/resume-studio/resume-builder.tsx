@@ -57,13 +57,7 @@ export default function ResumeBuilder() {
     resumeId: resumeId || "",
   });
 
-  /*
-    Editing arrives with a resumeId and no templateId, so there is nothing to
-    fetch a template by — the resume carries its own (theme nested), which is
-    the same shape the template endpoint returns.
-  */
   const template = fetchedTemplate ?? resume?.template;
-  // Opened from an application (a tailored resume): saving returns there.
   const { saveResume, isSaving } = useSaveResume({ resumeId, shouldRedirect: !applicationId });
 
   const { careerProfile, hasCareerProfile } = useGetCareerProfile();
@@ -93,14 +87,10 @@ export default function ResumeBuilder() {
       },
       experience: [DEFAULT_EXPERIENCE],
       education: [DEFAULT_EDUCATION],
-      // Skills starts empty even though it is a required-ish section, because
-      // it is the one chip-based step: you type into a separate input and press
-      // add, so there is no blank row to fill in. A seeded entry renders as an
-      // empty chip and fails skillSchema's min(1) on save.
+      // Skills is chip-based: a seeded entry renders as an empty chip and fails
+      // skillSchema's min(1) on save.
       skills: [],
-      // Optional sections start empty. A blank row is an invalid row — each
-      // item schema requires its fields, so seeding one blank entry per
-      // optional section made saving impossible until every section was filled.
+      // A seeded blank row fails its item schema and blocks saving.
       languages: [],
       certifications: [],
       projects: [],
@@ -109,7 +99,7 @@ export default function ResumeBuilder() {
   });
 
   // Guarded by id: the query object changes identity on every background
-  // refetch, and re-running this would wipe whatever the user has typed.
+  // refetch, and re-hydrating would wipe the user's edits.
   const hydratedId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -155,11 +145,6 @@ export default function ResumeBuilder() {
     setFurthestStep((previous) => Math.max(previous, index));
   };
 
-  /*
-    Validate only the current step before advancing. Without this a user could
-    walk through every step with an empty form and only discover the problem at
-    Save, with the errors sitting on steps they had already left behind.
-  */
   const handleNext = async function () {
     const step = BUILDER_STEPS[activeStep];
     const isValid = await trigger(step.id);
@@ -227,12 +212,7 @@ export default function ResumeBuilder() {
     if (applicationId) router.back();
   };
 
-  /*
-    Someone building their first resume has just typed out their whole history.
-    Offering to keep it as their career profile means the next one starts
-    filled in — and the offer has to come before the save, not after, because a
-    successful create redirects off this screen.
-  */
+  // Offered before saving, because a successful create redirects off this screen.
   const handleSave = async function (data: ResumeBuilderFormValues) {
     if (!isEditing && !hasCareerProfile) {
       setPendingResume(data);
@@ -271,8 +251,6 @@ export default function ResumeBuilder() {
     await persistResume(data);
   };
 
-  // Jump to the first step that actually has an error, rather than leaving the
-  // save button looking like it did nothing.
   const handleInvalid = function () {
     const firstBad = BUILDER_STEPS.findIndex((step) => !!errors[step.id]);
     if (firstBad >= 0) {

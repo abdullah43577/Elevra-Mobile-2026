@@ -60,8 +60,7 @@ export const ProfileSectionRow = function ({
   );
 };
 
-// "roles" -> "role", "certifications" -> "certification". Every unit in
-// PROFILE_SECTIONS is a regular plural, so trimming the s is enough.
+// Every PROFILE_SECTIONS unit is a regular plural, so trimming the s singularises it.
 const singular = function (unit: string) {
   return unit.endsWith("s") ? unit.slice(0, -1) : unit;
 };

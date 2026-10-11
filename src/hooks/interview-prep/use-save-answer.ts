@@ -21,8 +21,6 @@ export const useSaveAnswer = function (options: Options) {
     method: "put",
     onSuccessMessage: "Answer saved",
     silent: options.silent ?? false,
-    // The list and the stats are separate query keys and both change shape when
-    // an answer is saved.
     additionalQueryKeys: [
       [API_ENDPOINTS.interviewPrep.questions],
       [API_ENDPOINTS.interviewPrep.stats],

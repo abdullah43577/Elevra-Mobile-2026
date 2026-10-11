@@ -57,7 +57,6 @@ export default function VerifyEmail() {
       extraScrollHeight={20}
     >
       <View className="flex-1 justify-center px-6 py-10">
-        {/* Header */}
         <AppText type="title">Verify your email</AppText>
         <AppText type="subtitle" className="mt-1 text-foreground-muted">
           Enter the 6-digit code sent to{" "}
@@ -66,7 +65,6 @@ export default function VerifyEmail() {
           </AppText>
         </AppText>
 
-        {/* Form */}
         <View className="mt-8 gap-4">
           <FormInput<VerifyEmailFormValues>
             control={control}
@@ -80,7 +78,6 @@ export default function VerifyEmail() {
             errors={errors}
           />
 
-          {/* Submit */}
           <AppButton
             type="submit"
             disabled={isPending}
@@ -92,7 +89,6 @@ export default function VerifyEmail() {
           </AppButton>
         </View>
 
-        {/* Resend */}
         <View className="mt-8 flex-row justify-center gap-1">
           <AppText type="subtitle" className="text-foreground-muted">
             Didn't receive the code?
@@ -110,7 +106,6 @@ export default function VerifyEmail() {
           </Pressable>
         </View>
 
-        {/* Footer */}
         <AppText type="subtitle" className="mt-6 text-center text-foreground-subtle">
           Elevra Workspace Environment V1.0
         </AppText>

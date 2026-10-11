@@ -12,12 +12,6 @@ interface Props {
   onStartOver: () => void;
 }
 
-/*
-  Never sent by the app. Share covers copying it or sending through any app;
-  "Open in mail" hands subject and body to the user's own mail app with no
-  recipient, since we do not know their address — and the user's own client is
-  where a reply will come back to.
-*/
 export const MessageResult = function ({ message, accent, onStartOver }: Props) {
   const [body, setBody] = useState(message.body);
 

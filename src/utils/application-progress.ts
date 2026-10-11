@@ -19,12 +19,6 @@ export const isActiveApplication = function (status: ApplicationStatus) {
   return ACTIVE_STATUSES.includes(status);
 };
 
-/*
-  Every step is read from the application itself, never from a stored flag —
-  the SetupChecklist rule — so the list cannot disagree with what is attached.
-  Sending a follow-up is deliberately not a step: drafts are never stored, so
-  there is nothing to read it from.
-*/
 export const applicationSteps = function (
   application: JobApplication,
   prep: PrepProgress,

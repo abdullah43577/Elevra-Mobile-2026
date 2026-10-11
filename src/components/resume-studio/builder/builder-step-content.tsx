@@ -31,18 +31,11 @@ interface Props {
   certifications: Arr<"certifications">;
   languages: Arr<"languages">;
   references: Arr<"references">;
-  /** Rendered above the first step. The career profile prefill lives here. */
   prefill?: ReactNode;
 }
 
-/*
-  Kept out of the screen so the screen stays an orchestrator rather than a
-  400-line switch. Each field array is passed with its own concrete key — a
-  generic Record<string, ...> erases the per-field typing and forces `any`.
-
-  Takes the step id rather than a whole BuilderStep so the career profile
-  editor can reuse it without inventing builder steps it has no use for.
-*/
+// Each field array is passed with its own key: a generic Record would erase the
+// per-field typing and force `any`.
 export const BuilderStepContent = function ({
   stepId,
   control,

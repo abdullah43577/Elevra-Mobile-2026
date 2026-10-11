@@ -5,13 +5,6 @@ import { Pressable, View } from "react-native";
 
 const PER_ROW = 3;
 
-/*
-  Chunked into rows of three rather than one flex row. Six actions across a
-  phone leaves about fifty points each, which is narrower than the icon holder.
-
-  Rows of `flex-1` children, not a wrapping grid, so a final short row still
-  aligns with the one above it.
-*/
 const chunk = function <T>(items: T[], size: number) {
   const rows: T[][] = [];
   for (let index = 0; index < items.length; index += size) {
@@ -34,8 +27,7 @@ export const QuickActions = function () {
               className="flex-1 items-center rounded-2xl px-3 py-4 active:opacity-70"
               style={{ backgroundColor: `${action.color}12` }}
             >
-              {/* Dimensions live in `style`: this is a child of a column parent,
-                  so RN's default align-items:stretch beats width utilities. */}
+              {/* Size in style: a column parent's default stretch beats width utilities. */}
               <View
                 className="mb-2.5 items-center justify-center rounded-full"
                 style={{

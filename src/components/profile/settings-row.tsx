@@ -8,7 +8,6 @@ import { Pressable, View } from "react-native";
 interface Props {
   label: string;
   value?: string;
-  /** Replaces the value text — use for a Badge, ToggleSwitch, or similar. */
   right?: ReactNode;
   onPress?: () => void;
   destructive?: boolean;

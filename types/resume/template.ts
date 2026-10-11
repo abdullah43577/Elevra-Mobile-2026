@@ -15,8 +15,6 @@ export interface Template<K extends LayoutKey = LayoutKey> {
   updatedAt: string;
 }
 
-// The type your API actually returns: a template that could be any one of the 5,
-// with layoutKey and theme correctly paired per-variant.
 export type AnyTemplate = Template<LayoutKey>;
 
 export interface TemplateFilters {

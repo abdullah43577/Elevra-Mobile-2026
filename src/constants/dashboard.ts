@@ -17,7 +17,7 @@ export interface RecentItem {
   type: ContentCategory;
   date: string;
   route: string;
-  // Carried per item rather than assumed to be `{ id }` — see CONTENT_ROUTES.
+  // Detail screens disagree on param names, so params travel with the item.
   params: Record<string, string>;
 }
 
@@ -48,11 +48,6 @@ export const formatRelativeDate = function (date: string) {
   return formatDistanceToNow(new Date(date), { addSuffix: true });
 };
 
-/*
-  Two rows of three. Application leads: it is where the journey starts and what
-  every other action attaches to. Rehearse is an action rather than a create,
-  but it is the one most likely to change an outcome, so it earns a slot.
-*/
 export const quickActions = [
   {
     id: "application",
@@ -138,7 +133,6 @@ export const getRecentItems = function ({
     });
   });
 
-  // Add recent notes
   notes.slice(0, 3).forEach((note) => {
     items.push({
       id: note.id,
@@ -149,7 +143,6 @@ export const getRecentItems = function ({
     });
   });
 
-  // Add recent resumes
   resumes.slice(0, 2).forEach((resume) => {
     items.push({
       id: resume.id,
@@ -160,7 +153,6 @@ export const getRecentItems = function ({
     });
   });
 
-  // Add recent recordings
   recordings.slice(0, 2).forEach((recording) => {
     items.push({
       id: recording.id,
@@ -181,11 +173,7 @@ export const getRecentItems = function ({
     });
   });
 
-  /*
-    Only questions the user has actually answered, dated by the answer rather
-    than the question — the seeded catalogue never changes, so question.updatedAt
-    would put fifty identical timestamps at the top of this list.
-  */
+  // Dated by the answer: seeded questions never change, so their updatedAt is identical.
   questions
     .filter((question) => !!question.answers?.[0])
     .sort(
@@ -204,7 +192,6 @@ export const getRecentItems = function ({
       });
     });
 
-  // Sort by date (newest first) and limit to 5
   return items
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5);

@@ -18,11 +18,8 @@ SplashScreen.setOptions({ duration: 3000, fade: true });
 export default function RootLayout() {
   useOnlineManager();
 
-  /*
-    Outermost, as expo-share-intent requires. resetOnBackground is off so a job
-    shared while signed out survives the trip through sign-in; the router hook
-    clears it once it has been handed to the form.
-  */
+  // Outermost, as expo-share-intent requires. resetOnBackground is off so a share
+  // received while signed out survives sign-in.
   return (
     <ShareIntentProvider
       options={{ disabled: !isShareIntentAvailable, resetOnBackground: false }}
@@ -32,24 +29,13 @@ export default function RootLayout() {
           client={queryClient}
           persistOptions={{
             persister: queryPersister,
-            maxAge: 1000 * 60 * 60 * 24, // discard anything older than a day
+            maxAge: 1000 * 60 * 60 * 24,
             buster: CACHE_BUSTER,
             dehydrateOptions: {
-              // Persisting a failed query would restore an error state on next
-              // launch and show a broken screen instead of simply refetching.
               shouldDehydrateQuery: (query) => query.state.status === "success",
 
-              /*
-            Paused mutations are deliberately NOT persisted. useSubmitData
-            builds its mutationFn inline with no mutationKey, and a function
-            cannot be serialised — so a restored mutation would have nothing to
-            run and would sit paused forever.
-
-            Offline writes still pause and resume within a session (React Query
-            replays them via onlineManager on reconnect). What is not supported
-            is a write surviving a full app restart while still offline; that
-            needs mutationKey + setMutationDefaults across useSubmitData.
-          */
+              // useSubmitData's inline mutationFn has no mutationKey and cannot be
+              // serialised, so a restored mutation would stay paused forever.
               shouldDehydrateMutation: () => false,
             },
           }}

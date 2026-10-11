@@ -19,11 +19,6 @@ export interface Profession {
   category: string | null;
 }
 
-/*
-  The server trusts `idToken` and nothing else in this payload. The names are
-  forwarded only because Apple discloses them on the first authorization and
-  never again, so if the client drops them they are gone for good.
-*/
 export interface SocialAuthRequest {
   idToken: string;
   first_name?: string;
@@ -32,7 +27,6 @@ export interface SocialAuthRequest {
   deviceType?: string;
 }
 
-/** Both /auth/signin and the social routes answer with this shape. */
 export interface AuthSession {
   user: User;
   token: {

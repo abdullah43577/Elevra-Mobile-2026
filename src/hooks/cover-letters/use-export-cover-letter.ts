@@ -18,10 +18,6 @@ const safeFileName = function (value: string) {
   return cleaned || "cover-letter";
 };
 
-/*
-  Mirrors useExportResume exactly, including why: the PDF is built on-device by
-  the OS HTML renderer so the text stays real and selectable.
-*/
 export const useExportCoverLetter = function () {
   const [isExporting, setIsExporting] = useState(false);
 
@@ -54,7 +50,7 @@ export const useExportCoverLetter = function () {
         new File(uri).move(target);
         finalUri = target.uri;
       } catch {
-        // keep the original uri — a cosmetic filename is not worth the document
+        // keep the original uri
       }
 
       if (await Sharing.isAvailableAsync()) {

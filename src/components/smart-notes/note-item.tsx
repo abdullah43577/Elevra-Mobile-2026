@@ -6,7 +6,6 @@ import { NoteCard } from "./note-card";
 import { router } from "expo-router";
 
 export const NoteItem = function ({ item }: { item: Note }) {
-  // Each note gets its own hook instance with its specific noteId
   const { deleteNote, isDeleting } = useDeleteNote({
     noteId: item.id,
   });

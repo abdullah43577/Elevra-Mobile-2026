@@ -33,7 +33,6 @@ export default function useNotifications() {
     },
   });
 
-  //* Dismiss all notifications
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       appStateRef.current = nextAppState;
@@ -62,8 +61,7 @@ export default function useNotifications() {
   };
 
   useEffect(() => {
-    // Silent: picks the token up if permission was already granted, and asks
-    // for nothing if it was not. The ask belongs to the setup flow.
+    // Never prompts here; the ask belongs to the setup flow.
     handleRegisterForPushNotification();
 
     notificationListener.current =
@@ -77,8 +75,6 @@ export default function useNotifications() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        // The server puts entityType/entityId in the push payload so a tap can
-        // open the thing the notification is actually about.
         const data = response.notification.request.content.data as {
           type?: string;
           entityType?: NotificationEntity;
@@ -92,12 +88,6 @@ export default function useNotifications() {
     return () => {
       (notificationListener.current && notificationListener.current.remove(),
         responseListener.current && responseListener.current.remove());
-      //   notificationListener.current &&
-      //     Notifications.removeNotificationSubscription(
-      //       notificationListener.current,
-      //     );
-      //   responseListener.current &&
-      //     Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 

@@ -23,7 +23,6 @@ export const useTailorResume = function (options: UseTailorResumeOptions) {
   >({
     url: API_ENDPOINTS.jobApplications.tailor(options.applicationId),
     method: "post",
-    // The report the caller shows is the confirmation; a toast would sit on top of it.
     silent: true,
     additionalQueryKeys: [
       [API_ENDPOINTS.jobApplications.detail(options.applicationId)],

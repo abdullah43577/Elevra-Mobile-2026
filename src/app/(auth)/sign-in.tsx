@@ -39,13 +39,11 @@ export default function SignIn() {
           <AppLogo />
         </View>
 
-        {/* Header */}
         <AppText type="display">Welcome back</AppText>
         <AppText type="subtitle" className="mt-1.5">
           Sign in to your Elevra account
         </AppText>
 
-        {/* Form */}
         <View className="mt-8 gap-4">
           <FormInput<SignInFormValues>
             control={control}
@@ -93,7 +91,6 @@ export default function SignIn() {
 
         <SocialAuthButtons />
 
-        {/* Sign up link */}
         <View className="mt-8 flex-row justify-center gap-1">
           <AppText type="subtitle">Don’t have an account?</AppText>
           <Pressable onPress={() => router.push("/(auth)/sign-up")}>

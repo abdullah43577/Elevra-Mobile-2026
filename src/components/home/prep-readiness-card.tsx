@@ -10,14 +10,6 @@ interface Props {
   onPress: () => void;
 }
 
-/*
-  The one thing on Home that says what to do next rather than how much exists.
-  A count cannot answer "am I ready for Thursday"; a readiness figure and a
-  number of weak answers can.
-
-  Deliberately compact — Home already carries a stats grid and six actions, and
-  the full three-column breakdown lives on the prep screen itself.
-*/
 export const PrepReadinessCard = function ({ stats, onPress }: Props) {
   const { contentTint } = useThemeColors();
   const { color: accent, surface: tint } = contentTint("interview");

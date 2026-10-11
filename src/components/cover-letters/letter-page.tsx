@@ -18,10 +18,6 @@ import { View } from "react-native";
 import { CoverLetter } from "../../../types/cover-letter";
 import { AnyTemplate } from "../../../types/resume/template";
 
-/*
-  Only the fields that appear on the page. Typed as a slice of CoverLetter so
-  the editor can render an unsaved draft straight from its form values.
-*/
 export type LetterPageContent = Pick<
   CoverLetter,
   | "personalInfo"
@@ -41,15 +37,8 @@ interface Props {
   isThumbnail?: boolean;
 }
 
-/*
-  The letter as a printed page. Never AppText — that resolves to the
-  theme-adaptive text-foreground and would turn the body copy white the moment
-  the app switched to dark mode. RText takes an explicit colour, and the page
-  paints its own white background.
-
-  Header treatments mirror buildDocumentHeader in the HTML builder, which is
-  what makes a letter and its resume look like a pair.
-*/
+// Never AppText: it is theme-adaptive and would turn the printed body copy white
+// in dark mode. RText takes an explicit colour.
 export const LetterPage = function ({ letter, template, isThumbnail }: Props) {
   const style = buildResumeStyle(template.theme, isThumbnail);
   const resumeShapedData = { personalInfo: letter.personalInfo ?? undefined };

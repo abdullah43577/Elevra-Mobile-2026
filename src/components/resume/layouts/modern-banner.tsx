@@ -8,10 +8,6 @@ import {
 } from "../primitives/resume-primitives";
 import { contactItems, fullName, ResumeBody } from "../primitives/resume-sections";
 
-/*
-  Full-width tinted header. The band is a background fill behind real text, not
-  an image, so the name and contact details still extract cleanly.
-*/
 export function ModernBannerLayout({ theme, data, isThumbnail }: ResumeLayoutProps) {
   const style = buildResumeStyle(theme, isThumbnail);
 

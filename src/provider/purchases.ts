@@ -5,17 +5,8 @@ import type {
   PurchasesPackage,
 } from "react-native-purchases";
 
-/*
-  react-native-purchases is a native module, so it only exists in a dev client or
-  a store build that has been compiled since it was added. Every call goes
-  through here and every one of them degrades to a no-op when the native side is
-  missing.
-
-  That is not defensiveness for its own sake: without it, adding this dependency
-  bricks the currently-installed dev client on launch until someone runs a new
-  build. The paywall would rather say "not available on this build" than take the
-  whole app down with it.
-*/
+// Native module: every call degrades to a no-op when it is missing, so a dev
+// client built before it was added does not crash on launch.
 let Purchases: typeof import("react-native-purchases").default | null = null;
 
 try {
@@ -33,20 +24,13 @@ export const configurePurchases = function () {
   if (isConfigured) return true;
   if (!Purchases || !API_KEY) return false;
 
-  // Test Store keys only work in Debug/dev-client builds. In preview and
-  // production (release-type) builds, RevenueCat's native SDK hard-crashes
-  // on Purchases.configure() rather than throwing a catchable JS error — so
-  // this has to be blocked before configure() is ever called, not caught
-  // after the fact.
+  // A Test Store key hard-crashes RevenueCat natively on configure() in release
+  // builds, so it must be blocked before configure(), not caught after.
   if (!__DEV__ && API_KEY.startsWith("test_")) {
     return false;
   }
 
   try {
-    /*
-      Configured anonymously. The user is not authenticated yet at launch, and
-      identifying them is a separate call once they are — see identifyPurchaser.
-    */
     Purchases.configure({ apiKey: API_KEY });
     isConfigured = true;
     return true;
@@ -60,11 +44,8 @@ export const isPurchasesAvailable = function () {
   return !!Purchases && !!API_KEY;
 };
 
-/*
-  Ties the RevenueCat customer to our own user id, which is what makes the
-  server's pull work at all: it looks the customer up by that id. Without this
-  every purchase would land on an anonymous customer the API could not find.
-*/
+// The server finds the RevenueCat customer by our user id; a purchase on an
+// anonymous customer would be invisible to it.
 export const identifyPurchaser = async function (userId: string) {
   if (!configurePurchases() || !Purchases) return;
 
@@ -106,11 +87,7 @@ export const purchasePackage = async function (
     const { customerInfo } = await Purchases.purchasePackage(pack);
     return { customerInfo, cancelled: false };
   } catch (error) {
-    /*
-      A cancelled purchase arrives as a thrown error with userCancelled set.
-      It is an ordinary outcome, not a failure, and must not raise an error
-      toast — the user just closed the sheet.
-    */
+    // A dismissed sheet throws with userCancelled set; that is not an error.
     if ((error as { userCancelled?: boolean })?.userCancelled) {
       return { customerInfo: null as unknown as CustomerInfo, cancelled: true };
     }

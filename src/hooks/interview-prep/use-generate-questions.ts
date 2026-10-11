@@ -17,7 +17,6 @@ export const useGenerateQuestions = function (options: UseGenerateQuestionsOptio
   const { mutate, isPending } = useSubmitData<{ applicationId: string }, APIResponse<GenerateQuestionsResult>>({
     url: API_ENDPOINTS.interviewPrep.generate,
     method: "post",
-    // The caller reports how many were added, which a generic toast cannot.
     silent: true,
     onSuccess: (response) => {
       refreshQuestionQueries();

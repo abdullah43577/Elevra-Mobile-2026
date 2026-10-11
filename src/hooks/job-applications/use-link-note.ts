@@ -26,9 +26,7 @@ export const useLinkNote = function ({ applicationId }: UseLinkNoteOptions) {
   >({
     url: ({ noteId }) =>
       API_ENDPOINTS.jobApplications.unlinkNote(applicationId, noteId),
-    // useSubmitData always calls api[method](url, body, config), but axios's
-    // delete signature is (url, config) — so a body here would be read as the
-    // request config. The id belongs in the URL; the body must be undefined.
+    // axios delete is (url, config), so a body would be read as config; the id goes in the URL.
     getBody: () => undefined,
     method: "delete",
     onSuccessMessage: "Note unlinked",

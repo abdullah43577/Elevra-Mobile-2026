@@ -62,11 +62,6 @@ export const CATEGORY_META: Record<
   },
 };
 
-/*
-  DRAFT is the state an answer lands in when it is created — including the empty
-  rows the practice runner creates for questions rehearsed out loud but never
-  written down. It reads as "started", not "finished".
-*/
 export const STATUS_META: Record<
   AnswerStatus,
   { label: string; short: string; color: string; icon: keyof typeof Ionicons.glyphMap }
@@ -91,7 +86,7 @@ export const STATUS_META: Record<
   },
 };
 
-/** Options offered when starting a run. `null` means every matching question. */
+// `null` means every matching question.
 export const PRACTICE_SIZES: { label: string; value: number | null }[] = [
   { label: "5 questions", value: 5 },
   { label: "10 questions", value: 10 },
@@ -99,10 +94,5 @@ export const PRACTICE_SIZES: { label: string; value: number | null }[] = [
   { label: "Everything", value: null },
 ];
 
-/*
-  A strong spoken answer runs about ninety seconds to two minutes. The timer is
-  not a limit — it is the single most useful piece of feedback in rehearsal,
-  because rambling is the most common way a good answer goes wrong.
-*/
 export const ANSWER_TARGET_SECONDS = 120;
 export const ANSWER_LONG_SECONDS = 180;

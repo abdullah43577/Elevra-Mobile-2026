@@ -3,31 +3,15 @@ import * as Network from "expo-network";
 import { useEffect, useState } from "react";
 import { AppState } from "react-native";
 
-/*
-  A blip is not an outage. Locking the phone powers the radio down on both
-  platforms, so expo-network reports a disconnect within a second or two and
-  reports it back on unlock — which surfaced as the offline banner appearing on
-  every single unlock and clearing itself moments later.
-
-  Going offline is therefore delayed by this grace period; coming back online is
-  applied immediately. A request fired inside the window fails and retries
-  rather than pausing, which is the cheaper of the two wrong answers: the
-  alternative is a banner that cries wolf every time the screen wakes.
-*/
+// Going offline waits out a grace period: locking the phone drops the radio for a
+// second or two, which would flash the offline banner on every unlock.
 const OFFLINE_GRACE_MS = 3000;
 
 const isReachable = function (state: Network.NetworkState) {
   return !!state.isConnected && state.isInternetReachable !== false;
 };
 
-/*
-  React Query cannot detect connectivity on its own in React Native — without
-  this, onlineManager always reports "online" and offline requests fail instead
-  of pausing. Wiring it up is what makes queries serve cache and mutations queue
-  rather than error.
-
-  Registered once from the root layout.
-*/
+// React Query cannot detect connectivity in React Native; without this it always reports online.
 export const useOnlineManager = function () {
   useEffect(() => {
     return onlineManager.setEventListener((setOnline) => {
@@ -55,16 +39,12 @@ export const useOnlineManager = function () {
         apply(isReachable(state)),
       );
 
-      /*
-        The listener can miss transitions that happen while the app is
-        backgrounded, so returning to the foreground re-reads the real state
-        rather than trusting whatever the last event left behind.
-      */
+      // The listener can miss transitions while backgrounded, so re-read on foreground.
       const appState = AppState.addEventListener("change", (next) => {
         if (next === "active") read();
       });
 
-      // Seed the initial value; the listener only fires on change.
+      // The listener only fires on change.
       read();
 
       return () => {

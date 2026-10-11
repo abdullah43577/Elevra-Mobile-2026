@@ -31,8 +31,7 @@ export function PlaybackTranscription({
             Transcription
           </AppText>
         </View>
-        {/* Capped: playback sits in a fixed layout, and a long memo would push
-            the controls off the screen. */}
+        {/* Capped: playback is a fixed layout, and a long memo would push the controls off. */}
         <ScrollView style={{ maxHeight: 220 }} showsVerticalScrollIndicator nestedScrollEnabled>
           <AppText type="default" className="text-[15px] leading-[21px]">
             {transcription}

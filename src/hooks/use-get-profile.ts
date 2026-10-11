@@ -20,20 +20,14 @@ export const useGetProfile = function () {
   const logout = async function () {
     await tokenStorage.clearTokens();
 
-    // The persisted cache is per-device, not per-account. Leaving it behind
-    // would show the next person to sign in on this device the previous user's
-    // notes, applications, and profile until the first refetch lands.
+    // The persisted cache is per-device, not per-account.
     queryClient.clear();
     await clearPersistedCache();
 
-    // The RevenueCat customer is tied to the user id that just signed out. Left
-    // identified, the next account on this device would inherit their
-    // entitlement until the next identify call.
+    // Otherwise the next account on this device inherits this RevenueCat entitlement.
     await forgetPurchaser();
 
-    // Google caches the signed-in account natively. Left in place, the next
-    // person on this device taps the Google button and is dropped straight back
-    // into the previous user's account with no chooser.
+    // Google caches the account natively; otherwise the next sign-in skips the chooser.
     await forgetSocialSession();
 
     setAuthenticated(false);

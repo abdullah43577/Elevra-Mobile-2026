@@ -24,12 +24,8 @@ export const useTheme = function () {
   return { preference, scheme, colors: THEME[scheme], setPreference };
 };
 
-/*
-  Called once from AppNavigator. The locally persisted preference is what
-  applies at launch — reading it from the profile query instead would flash the
-  light theme until that request resolves. The server value is still the
-  cross-device truth, so it is adopted once, after the first profile load.
-*/
+// The local preference applies at launch, avoiding a light flash; the server value
+// is adopted once after the first profile load.
 export const useSyncTheme = function () {
   const { setColorScheme } = useColorScheme();
   const { preference, isLoading, checkThemePreference, setThemePreference } = useThemeStore();

@@ -47,8 +47,6 @@ export default function InterviewPrep() {
 
   const { prepStats, refetchPrepStats } = useGetPrepStats();
 
-  // Least ready first, so the list opens on what actually needs work rather
-  // than on whatever happens to be first in the catalogue.
   const ordered = useMemo(() => [...questions].sort(byFocus), [questions]);
 
   const handleOpenQuestion = function (question: InterviewQuestion) {

@@ -1,5 +1,6 @@
 import { useProAction } from "@/components/shared/pro-gate";
 import { PRO_FEATURES } from "@/constants/entitlements";
+import { useCandidateBackground } from "@/hooks/career-profile/use-candidate-background";
 import { showToast } from "@/utils/show-toast";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -37,6 +38,7 @@ export const useCoverLetterDrafting = function ({
 }: UseCoverLetterDraftingOptions) {
   const router = useRouter();
   const { allowed, copy } = useProAction(PRO_FEATURES.AI_COVER_LETTER);
+  const { requireBackground } = useCandidateBackground();
   const [isConfirmingOverwrite, setIsConfirmingOverwrite] = useState(false);
 
   const { draftCoverLetter, isDrafting } = useDraftCoverLetter({
@@ -59,6 +61,8 @@ export const useCoverLetterDrafting = function ({
   };
 
   const handleDraft = function () {
+    if (!requireBackground()) return;
+
     if (!allowed) {
       showToast("warning", copy.blurb);
       router.push("/(dashboard)/paywall");
@@ -71,7 +75,6 @@ export const useCoverLetterDrafting = function ({
       return;
     }
 
-    // Never silently replace what someone has already written.
     if (body.trim()) {
       setIsConfirmingOverwrite(true);
       return;

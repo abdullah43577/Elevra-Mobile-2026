@@ -14,7 +14,7 @@ export const useGetResumeById = function ({
 }: UseGetResumeByIdOptions) {
   const { data, isFetching, error, refetch } = useGetData<APIResponse<Resume>>({
     url: API_ENDPOINTS.resume.detail(resumeId),
-    // See use-get-template-by-id: an empty id hits the list route instead.
+    // An empty id would hit the list route instead.
     shouldFetch: shouldFetch ?? !!resumeId,
   });
 

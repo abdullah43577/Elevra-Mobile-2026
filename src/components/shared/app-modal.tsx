@@ -13,9 +13,7 @@ interface AppModalProps {
   title?: string;
   children: ReactNode;
   contentClassName?: string;
-  /** Show a drag handle — only relevant for bottom-sheet and top-sheet */
   showHandle?: boolean;
-  /** Override any react-native-modal prop directly */
   modalProps?: Record<string, unknown>;
 }
 
@@ -81,14 +79,12 @@ export const AppModal = function ({
           contentClassName,
         )}
       >
-        {/* Handle */}
         {showHandle && isSheet && (
           <View className="mb-4 items-center">
             <View className="h-1 w-10 rounded-full bg-line-strong" />
           </View>
         )}
 
-        {/* Header row */}
         {title != null && (
           <View className="mb-4 flex-row items-center justify-between">
             <AppText type="title">{title}</AppText>

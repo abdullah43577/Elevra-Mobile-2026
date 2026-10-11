@@ -58,7 +58,6 @@ export default function LetterEditor() {
     applicationId?: string;
   }>();
   const isEditing = !!coverLetterId;
-  // Only a new letter is written "for" an application; editing leaves links alone.
   const forApplicationId = isEditing ? undefined : applicationId;
 
   const [templateId, setTemplateId] = useState<string | null>(null);
@@ -93,7 +92,7 @@ export default function LetterEditor() {
   });
 
   // Guarded by id: the query object changes identity on every background
-  // refetch, and re-running this would wipe whatever the user has typed.
+  // refetch, and re-hydrating would wipe the user's edits.
   const hydratedId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -143,7 +142,6 @@ export default function LetterEditor() {
     onDrafted: (body) => setValue("body", body, { shouldDirty: true, shouldValidate: true }),
   });
 
-  // A new letter needs some template chosen before it can render a preview.
   useEffect(() => {
     if (templateId || isEditing || templates.length === 0) return;
     setTemplateId(templates[0].id);
@@ -177,12 +175,8 @@ export default function LetterEditor() {
       role: data.role,
       body: data.body,
       personalInfo: data.personalInfo,
-      /*
-        On update an emptied field sends an explicit null. Omitting it is how
-        every other field says "unchanged", so clearing a recipient name saved
-        nothing and the old name came back on the next fetch — the same trap the
-        application form had. Create cannot send null; the server rejects it.
-      */
+      // An emptied field sends null on update, since an omitted key means
+      // "unchanged"; the server's create schema rejects null.
       ...(isEditing
         ? {
             recipientName: data.recipientName?.trim() || null,

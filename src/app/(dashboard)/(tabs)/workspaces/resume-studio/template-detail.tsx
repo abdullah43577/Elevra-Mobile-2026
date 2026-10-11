@@ -56,11 +56,7 @@ export default function TemplateDetail() {
         contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
       >
-        {/*
-          The preview must sit on its own white page regardless of app theme —
-          this wrapper previously had no background, so in dark mode the resume
-          rendered dark grey text straight onto the dark surface.
-        */}
+        {/* Always a white page: the resume preview must not follow the app theme. */}
         <View className="items-center px-5 pt-5">
           <View className="overflow-hidden rounded-2xl border-hairline border-line bg-white">
             <TemplatePreview template={template} width={width - 40} />

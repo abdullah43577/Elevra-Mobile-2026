@@ -39,7 +39,6 @@ export function Skills({
       return;
     }
 
-    // Check for duplicates
     const exists = fields.some(
       (field) => field.name.toLowerCase() === trimmed.toLowerCase(),
     );
@@ -62,7 +61,6 @@ export function Skills({
         Add your professional skills
       </AppText>
 
-      {/* Input Row */}
       <View className="flex-row items-center gap-2">
         <View className="flex-1 rounded-xl border border-line bg-surface px-4 py-2">
           <TextInput
@@ -83,7 +81,6 @@ export function Skills({
         </TouchableOpacity>
       </View>
 
-      {/* Skill Chips */}
       <View className="flex-row flex-wrap gap-2">
         {fields.map((field, index) => (
           <View

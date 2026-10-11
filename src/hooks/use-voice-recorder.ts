@@ -8,11 +8,6 @@ import {
 } from "expo-audio";
 import { useEffect, useRef, useState } from "react";
 
-/*
-  Record, stop, discard — the shared primitive behind both the interview-prep
-  answer recorder and the voice-notes recorder screen. It owns permissions, the
-  audio mode, an elapsed-seconds ticker, and hands back a uri and a duration.
-*/
 export const useVoiceRecorder = function () {
   const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(recorder);
@@ -21,18 +16,13 @@ export const useVoiceRecorder = function () {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  /*
-    The cleanup closes over the recorder, and it must not re-run on every render
-    or it would stop a take mid-recording. A ref keeps the unmount path reading
-    live values from an effect that only runs once.
-  */
+  // The unmount cleanup runs once, so it reads live values through a ref.
   const recorderRef = useRef(recorder);
   recorderRef.current = recorder;
   const isRecordingRef = useRef(recorderState.isRecording);
   isRecordingRef.current = recorderState.isRecording;
 
-  // Read through a ref in stopRecording: the value closed over at call time is
-  // whatever the last render saw, which is a poll interval behind the take.
+  // Read through a ref: the value closed over at call time is a poll interval behind.
   const durationMillisRef = useRef(recorderState.durationMillis);
   durationMillisRef.current = recorderState.durationMillis;
 
@@ -45,12 +35,10 @@ export const useVoiceRecorder = function () {
     return () => {
       if (tickRef.current) clearInterval(tickRef.current);
 
-      // Leaving the screen mid-take must release the microphone. Without this
-      // the recorder keeps running after the component is gone.
       try {
         if (isRecordingRef.current) recorderRef.current.stop();
       } catch {
-        // Already released by the module; nothing to recover.
+        // Already released by the module.
       }
     };
   }, []);
@@ -73,14 +61,7 @@ export const useVoiceRecorder = function () {
     }
 
     try {
-      /*
-        The mode is set per action rather than once on mount, because stopping
-        flips `allowsRecording` back off — see stopRecording. Setting it only at
-        mount leaves a second take recording in playback mode.
-
-        playsInSilentMode so a take is audible with the ringer switch off, which
-        is exactly where someone rehearses.
-      */
+      // Set per action, not on mount: stopping turns allowsRecording back off.
       await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true });
       await recorder.prepareToRecordAsync();
       recorder.record();
@@ -92,28 +73,19 @@ export const useVoiceRecorder = function () {
     }
   };
 
-  /** Returns the finished take, or undefined if nothing was captured. */
   const stopRecording = async function () {
     stopTicking();
 
     try {
       await recorder.stop();
 
-      /*
-        iOS routes playback to the *earpiece* while the session still allows
-        recording, so a take played back immediately sounds faint and far away.
-        Turning recording off routes it to the main speaker.
-      */
+      // iOS routes playback to the earpiece while recording is allowed.
       await setAudioModeAsync({ allowsRecording: false, playsInSilentMode: true });
 
       const uri = recorder.uri;
       if (!uri) return undefined;
 
-      /*
-        The native duration is authoritative; the ticker is a display counter
-        that drifts and cannot see the sub-second tail. Fall back to it only if
-        the module reports nothing.
-      */
+      // The native duration is authoritative; the ticker drifts.
       const nativeSeconds = durationMillisRef.current
         ? Math.round(durationMillisRef.current / 1000)
         : 0;

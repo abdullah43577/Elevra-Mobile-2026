@@ -9,12 +9,6 @@ interface Props {
 
 const COLLAPSED_LINES = 6;
 
-/*
-  Collapsed by default, because a pasted posting routinely runs to several
-  thousand characters and rendering it inline would push the linked resume,
-  letter, notes and recordings off the bottom of the detail screen — the parts
-  someone opens this screen to reach.
-*/
 export const JobDescriptionSection = function ({ jobDescription }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
 

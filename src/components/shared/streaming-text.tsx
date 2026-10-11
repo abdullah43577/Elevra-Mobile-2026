@@ -31,7 +31,6 @@ export function StreamingText({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const isFirstRender = useRef(true);
 
-  // Animate text appearance
   useEffect(() => {
     if (text && isFirstRender.current) {
       isFirstRender.current = false;
@@ -44,14 +43,12 @@ export function StreamingText({
     }
   }, [text]);
 
-  // Trigger completion callback
   useEffect(() => {
     if (isComplete && onStreamComplete) {
       onStreamComplete();
     }
   }, [isComplete]);
 
-  // Show nothing if no text and not streaming
   if (!text && !isStreaming) {
     return null;
   }

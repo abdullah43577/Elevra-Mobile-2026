@@ -69,7 +69,6 @@ export const AppNavigator = function () {
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
 
       <Stack screenOptions={{ contentStyle: { backgroundColor: colors.canvas } }}>
-        {/* <Stack.Screen name="(dev)/generate-thumnails" /> */}
         <Stack.Protected guard={isAuthenticated}>
           <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
         </Stack.Protected>

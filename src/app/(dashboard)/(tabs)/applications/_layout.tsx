@@ -1,11 +1,7 @@
 import { Stack } from "expo-router";
 
-/*
-  The letter editor, practice runner and resume builder are re-exported into
-  this stack rather than pushed into the Workspaces one. Pushing across tabs
-  would switch tabs, and Back would land on that tab's hub instead of the
-  application the user came from.
-*/
+// Screens are re-exported into this stack, not pushed into Workspaces: crossing
+// tabs would make Back land on that tab's hub.
 export default function ApplicationsLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>

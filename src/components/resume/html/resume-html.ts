@@ -8,20 +8,8 @@ import {
   layoutFlags,
 } from "./document-shell";
 
-/*
-  Builds the printable HTML for a resume. expo-print hands this to the OS
-  renderer (WKWebView on iOS, PdfDocument on Android), which produces a PDF with
-  real, selectable text.
-
-  This deliberately mirrors ResumeBody in primitives/resume-sections.tsx: same
-  sections, same wording, same order. If you add a section to one, add it to the
-  other — a template that previews differently from what it exports is worse
-  than one that looks plain.
-
-  Fonts are a standard system stack rather than Bricolage Grotesque. A resume
-  PDF is read by parsers and printed by strangers; a common font embeds cleanly
-  everywhere and never falls back to something unexpected.
-*/
+// Mirrors ResumeBody in primitives/resume-sections.tsx: add a section to one, add it
+// to the other, or the preview and the export disagree.
 
 const dateRange = function (start?: string, end?: string, current?: boolean) {
   if (!start) return current ? "Present" : "";
@@ -110,8 +98,7 @@ const buildBody = function (data: ResumeData) {
         .join(""),
     ),
 
-    // A comma-run, not chips. Separate visual pills read as disconnected
-    // fragments to a parser; one run of text reads as a single clean field.
+    // A comma-run, not chips: parsers read separate pills as disconnected fragments.
     skills.length > 0
       ? section("Skills", `<p class="run">${escape(skills.join("  ·  "))}</p>`)
       : "",

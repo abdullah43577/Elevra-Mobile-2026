@@ -6,7 +6,6 @@ import { useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 
 interface Props {
-  /** Prefilled when the form was opened from the share sheet. */
   initialInput?: string;
   isImporting: boolean;
   onImport: (input: string) => void;

@@ -17,7 +17,6 @@ export const useImportResumePdf = function (options: UseImportResumePdfOptions =
   const { mutate, isPending } = useSubmitData<FormData, APIResponse<ImportedProfile>>({
     url: API_ENDPOINTS.careerProfile.import,
     method: "post",
-    // Nothing is saved yet, so "success" would be the wrong word; the editor says what happened.
     silent: true,
     onError: (error) => {
       const body = error.response?.data;

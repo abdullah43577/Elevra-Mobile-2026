@@ -8,8 +8,6 @@ interface Props {
   accent: string;
 }
 
-// Folded by default: a transcript or a rewrite is worth having one tap away,
-// not pushing the feedback that matters below the fold.
 export const ExpandableText = function ({ label, text, accent }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 

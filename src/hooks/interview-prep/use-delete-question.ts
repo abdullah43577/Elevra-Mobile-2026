@@ -10,8 +10,7 @@ export const useDeleteQuestion = function ({
   const { mutateAsync, isPending } = useSubmitData<void, APIResponse<null>>({
     url: API_ENDPOINTS.interviewPrep.delete(questionId),
     method: "delete",
-    // axios's delete signature is (url, config), so a body would be read as the
-    // request config. Send nothing and keep the id in the URL.
+    // axios delete is (url, config), so a body would be read as config; the id goes in the URL.
     getBody: () => undefined,
     onSuccessMessage: "Question deleted",
     additionalQueryKeys: [

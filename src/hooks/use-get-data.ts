@@ -23,8 +23,6 @@ export const useGetData = function <T>({
   shouldFetch,
   queryKey,
 }: Props): UseGetDataResult<T> {
-  // const handleErrors = useHandleErrors
-
   const queryFn = useCallback(async () => {
     try {
       const response = await api.get(url, {
@@ -43,16 +41,13 @@ export const useGetData = function <T>({
   const { isFetching, error, data, refetch } = useQuery({
     queryKey: [url],
     queryFn,
-    // staleTime, gcTime, and retry come from the client defaults in
-    // src/utils/queryClient.ts. gcTime in particular must NOT be set here — a
-    // short value silently evicts the restored offline cache and every screen
-    // goes empty without signal.
+    // gcTime must not be set here: a short value evicts the restored offline cache.
+    // staleTime, gcTime and retry come from src/utils/queryClient.ts.
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     enabled: shouldFetch,
   });
 
-  //   handle errors outside of the render cycle
   useEffect(() => {
     if (error) console.log("errors", error);
   }, [error]);

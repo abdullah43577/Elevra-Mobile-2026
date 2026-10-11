@@ -9,8 +9,7 @@ interface SSEOptions {
   onError?: (error: string, code?: string) => void;
 }
 
-// A refusal before the stream opens (402, 429, 503) arrives as an error event
-// whose `message` is the raw JSON body the API sent.
+// A refusal before the stream opens arrives as an error event whose message is the raw JSON body.
 const parseErrorBody = function (raw: unknown): { message?: string; code?: string } {
   if (typeof raw !== "string" || !raw) return {};
   try {
@@ -36,17 +35,14 @@ export const useSSE = function () {
       setIsLoading(true);
       setIsConnected(false);
 
-      // Get the access token
       const token = await tokenStorage.getAccessToken();
 
       if (!token) {
         throw new Error("No access token found");
       }
 
-      // Build the full URL with token as query param
       const fullUrl = `${getBaseUrl()}/${url}?token=${encodeURIComponent(token)}`;
 
-      // Close any existing connection
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
         eventSourceRef.current = null;
@@ -58,12 +54,11 @@ export const useSSE = function () {
 
       let fullResponse = "";
 
-      // Use addEventListener instead of onmessage for react-native-sse
+      // react-native-sse needs addEventListener rather than onmessage.
       eventSource.addEventListener("message", (event: any) => {
         try {
           const data = JSON.parse(event.data);
 
-          // Check for error
           if (data.error) {
             if (onError) onError(data.error, data.code);
             eventSource.close();
@@ -72,7 +67,6 @@ export const useSSE = function () {
             return;
           }
 
-          // Check for completion
           if (data.done) {
             if (onComplete) onComplete(data);
             eventSource.close();
@@ -81,7 +75,6 @@ export const useSSE = function () {
             return;
           }
 
-          // Handle chunk
           if (data.chunk) {
             fullResponse += data.chunk;
             if (onChunk) onChunk(data.chunk, fullResponse);
@@ -92,8 +85,7 @@ export const useSSE = function () {
       });
 
       eventSource.addEventListener("error", (event: any) => {
-        // Without close(), react-native-sse re-polls every 5s after an error,
-        // re-sending a request the server has already refused.
+        // Without close(), react-native-sse re-polls every 5s after an error.
         eventSource.close();
         setIsConnected(false);
         setIsLoading(false);
@@ -114,9 +106,6 @@ export const useSSE = function () {
     }
   }, []);
 
-  /**
-   * Disconnect from the SSE stream
-   */
   const disconnect = useCallback(function () {
     if (eventSourceRef.current) {
       eventSourceRef.current.close();

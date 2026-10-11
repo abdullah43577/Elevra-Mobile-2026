@@ -94,8 +94,6 @@ export function ResumeItem({
           busy={isDuplicating}
           onPress={() => onDuplicate(resume)}
         />
-        {/* "Export PDF" was shortened to "Export" when Duplicate joined the
-            row — four labelled actions do not fit across a 360pt phone. */}
         <Action
           icon="download-outline"
           label="Export"

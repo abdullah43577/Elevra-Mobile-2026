@@ -39,7 +39,6 @@ export const ProfessionPicker = function ({
       title="Select profession"
       contentClassName="max-h-[75%]"
     >
-      {/* Search */}
       <View className="mb-3 flex-row items-center rounded-xl bg-surface-muted px-4 py-3">
         <TextInput
           value={query}

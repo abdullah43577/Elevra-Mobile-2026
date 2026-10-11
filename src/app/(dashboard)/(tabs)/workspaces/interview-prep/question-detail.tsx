@@ -30,8 +30,6 @@ export default function QuestionDetail() {
 
   const { questionId } = useLocalSearchParams<{ questionId: string }>();
 
-  // The list is already cached, so reading the question out of it avoids a
-  // second request and keeps this screen instant on a slow connection.
   const { questions, isFetchingQuestions } = useGetQuestions();
   const question = questions.find((item) => item.id === questionId);
   const answer = question ? answerOf(question) : undefined;
@@ -47,7 +45,7 @@ export default function QuestionDetail() {
   const coaching = useCoachAnswer(questionId ?? "");
 
   // Guarded by id: the query object changes identity on every background
-  // refetch, and re-running this would wipe whatever the user has typed.
+  // refetch, and re-hydrating would wipe the user's edits.
   const hydratedId = useRef<string | null>(null);
 
   useEffect(() => {

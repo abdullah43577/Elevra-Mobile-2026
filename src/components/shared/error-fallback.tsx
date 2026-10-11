@@ -27,14 +27,6 @@ export const ErrorFallback = ({
     "An unexpected error occurred. Please try again.";
   const { danger } = useThemeColors();
 
-  //   const handleGoBack = () => {
-  //     if (router.canGoBack()) {
-  //       router.back();
-  //     } else {
-  //       router.replace("/(tabs)/"); // Fallback to main screen
-  //     }
-  //   };
-
   return (
     <View className={containerClassName}>
       <SafeAreaView className="flex-1 items-center justify-center px-5">
@@ -43,28 +35,16 @@ export const ErrorFallback = ({
             <Illustration name="error" color={danger} size={156} />
           </View>
 
-          {/* Title */}
           <AppText className="mb-3 text-center font-bricolage-semibold text-lg text-foreground">
             {title}
           </AppText>
 
-          {/* Description */}
           <AppText className="mb-8 text-center text-sm leading-5 text-foreground-muted">
             {errorMessage}
           </AppText>
 
-          {/* Retry Button */}
           {showRetryButton && (
             <View className="flex-row gap-3">
-              {/* <TouchableOpacity
-                className="rounded-[8px] bg-foreground-muted px-6 py-3"
-                onPress={handleGoBack}
-              >
-                <Text className="text-sm font-bricolage-semibold text-white">
-                  Go Back
-                </Text>
-              </TouchableOpacity> */}
-
               <TouchableOpacity
                 className="rounded-[8px] bg-accent px-6 py-3"
                 onPress={onRetry}

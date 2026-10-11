@@ -6,19 +6,9 @@ export interface OnboardingSlide {
   title: string;
   subtitle: string;
   illustration: PeepName;
-  /** Drives the slide's accent, so each one reads as the feature it describes. */
   accent: ContentType;
 }
 
-/*
-  Told as one application's journey, in order — the product's positioning
-  (CLAUDE.md §31). Every slide describes something that ships today, and the
-  AI parts say they are Pro: a slide that promises something a new user then
-  cannot find loses trust faster than saying less.
-
-  Illustrated with Open Peeps (components/illustrations): two-colour line art
-  themed from tokens, so one file works in both schemes at about 11KB a figure.
-*/
 export const onboardingSlides: OnboardingSlide[] = [
   {
     id: "journey",

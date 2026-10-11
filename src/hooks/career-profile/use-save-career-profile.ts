@@ -20,7 +20,6 @@ export const useSaveCareerProfile = function (
     APIResponse<CareerProfile>
   >({
     url: API_ENDPOINTS.careerProfile.save,
-    // The server upserts, so there is one write path for create and update.
     method: "put",
     onSuccessMessage: options.onSuccessMessage ?? "Career profile saved",
     silent: options.silent ?? false,

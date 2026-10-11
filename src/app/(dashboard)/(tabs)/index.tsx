@@ -13,6 +13,7 @@ import {
   getRecentItems,
   RecentItem,
 } from "@/constants/dashboard";
+import { useCandidateBackground } from "@/hooks/career-profile/use-candidate-background";
 import { useGetCareerProfile } from "@/hooks/career-profile/use-get-career-profile";
 import { useGetCoverLetters } from "@/hooks/cover-letters/use-get-cover-letters";
 import { useGetPrepStats } from "@/hooks/interview-prep/use-get-prep-stats";
@@ -22,6 +23,7 @@ import { useGetResumes } from "@/hooks/resume/use-get-resumes";
 import { useGetNotes } from "@/hooks/smart-notes/use-get-notes";
 import { usePushPermission } from "@/hooks/notifications/use-push-permission";
 import { useGetProfile } from "@/hooks/use-get-profile";
+import { useProfileNeededStore } from "@/store/profile-needed";
 import { useSetupStore } from "@/store/setup";
 import { useGetRecordings } from "@/hooks/voice-notes/use-get-recordings";
 import { useRouter } from "expo-router";
@@ -41,8 +43,9 @@ export default function Home() {
   const { coverLetters, refetchCoverLetters } = useGetCoverLetters();
   const { questions, refetchQuestions } = useGetQuestions();
   const { prepStats, refetchPrepStats } = useGetPrepStats();
-  const { hasCareerProfile, hasLoadedCareerProfile, refetchCareerProfile } =
-    useGetCareerProfile();
+  const { hasLoadedCareerProfile, refetchCareerProfile } = useGetCareerProfile();
+  const { hasBackground } = useCandidateBackground();
+  const openProfileNeeded = useProfileNeededStore((state) => state.open);
 
   const { isGranted: hasPushPermission } = usePushPermission();
   const {
@@ -53,14 +56,8 @@ export default function Home() {
     dismissChecklist,
   } = useSetupStore();
 
-  /*
-    First run opens setup over Home rather than in front of it. Seeing the app
-    behind the sheet is the point — it makes setup read as an offer rather than
-    as a gate, which is what lets Skip be a real option.
-
-    The ref makes it once per mount: without it, coming back from setup would
-    re-push it, since `hasCompletedSetup` is false for anyone who skipped.
-  */
+  // Once per mount: hasCompletedSetup stays false for anyone who skipped, so
+  // returning from setup would otherwise re-push it.
   const hasOfferedSetup = useRef(false);
 
   useEffect(() => {
@@ -77,11 +74,11 @@ export default function Home() {
   const setupTasks: SetupTask[] = [
     {
       id: "career-profile",
-      title: "Set up your career profile",
-      body: "Enter your history once and every resume after it starts filled in",
+      title: "Add your work history",
+      body: "Every tailored resume, letter and interview question is written from it",
       icon: "person-outline",
-      isDone: hasCareerProfile,
-      onPress: () => router.push("/(dashboard)/(tabs)/workspaces/career-profile"),
+      isDone: hasBackground,
+      onPress: openProfileNeeded,
     },
     {
       id: "notifications",
@@ -101,8 +98,7 @@ export default function Home() {
     },
   ];
 
-  // Same "null means empty or still loading" trap the prompt had: without the
-  // loaded flag the checklist flashes on every Home load for users who are done.
+  // Without the loaded flag the checklist flashes on every load for users who are done.
   const shouldShowChecklist =
     hasLoadedCareerProfile &&
     hasPushPermission !== null &&

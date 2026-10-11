@@ -9,10 +9,7 @@ interface Props {
   data: ResumeData;
 }
 
-/*
-  The page renders on an explicit white sheet, never on the app surface — a
-  resume is a printed document and must look identical in either colour scheme.
-*/
+// Explicit white, never the app surface: a printed resume looks the same in both schemes.
 export const BuilderPreview = function ({ template, data }: Props) {
   const { width } = useWindowDimensions();
 

@@ -10,15 +10,8 @@ export const PRO_FEATURES = {
 
 export type ProFeature = (typeof PRO_FEATURES)[keyof typeof PRO_FEATURES];
 
-/*
-  Mirrors src/lib/entitlements.ts on the server. This copy exists only to shape
-  the UI — to grey out a button or show a paywall before the user taps. It is
-  NOT the security boundary. The server re-checks every gated call and answers
-  402, so a tampered client gains nothing.
-
-  Keep the two lists in sync: a feature listed here but not there is a hole; a
-  feature there but not here just means the user finds out one tap later.
-*/
+// Mirrors src/lib/entitlements.ts on the server, which is the real boundary.
+// Keep both in sync: a feature listed here but not there is a hole.
 export const PRO_FEATURE_COPY: Record<ProFeature, { title: string; blurb: string }> = {
   [PRO_FEATURES.AI_NOTE_SUMMARY]: {
     title: "AI summaries with Pro",
@@ -49,6 +42,4 @@ export const PRO_FEATURE_COPY: Record<ProFeature, { title: string; blurb: string
     blurb: "Turn any voice note into searchable text.",
   },
 };
-
-// Everything not listed above is free, deliberately: notes, voice recordings,
-// job applications, resumes, every template, PDF export, and both imports.
+
