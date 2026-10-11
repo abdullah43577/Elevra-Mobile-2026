@@ -22,7 +22,7 @@ export const MessageSheet = function ({ drafting, accent }: Props) {
       showHandle
       {...(meta && { title: meta.label })}
       // Swiping the sheet away would also swallow the drag on the long draft.
-      modalProps={{ swipeDirection: undefined, avoidKeyboard: true }}
+      modalProps={{ swipeDirection: undefined }}
     >
       <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} style={{ maxHeight: 560 }}>
         {meta && (

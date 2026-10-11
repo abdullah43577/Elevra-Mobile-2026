@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 import { type ReactNode } from "react";
 import { Pressable, View } from "react-native";
 import Modal from "react-native-modal";
+import { useKeyboardHeight } from "@/hooks/use-keyboard-height";
 import { AppText } from "./app-text";
 
 type ModalVariant = "popup" | "bottom-sheet" | "top-sheet";
@@ -49,6 +50,7 @@ export const AppModal = function ({
 }: AppModalProps) {
   const config = variantConfig[variant];
   const isSheet = variant === "bottom-sheet" || variant === "top-sheet";
+  const keyboardHeight = useKeyboardHeight();
 
   const resolvedProps = Object.assign(
     {} as any,
@@ -65,6 +67,12 @@ export const AppModal = function ({
     config,
     modalOverrides,
   );
+
+  // Edge-to-edge modal windows on Android are not resized by the keyboard, and
+  // react-native-modal's avoidKeyboard is iOS-only, so lift the content ourselves.
+  if (variant !== "top-sheet") {
+    resolvedProps.style = [resolvedProps.style, { paddingBottom: keyboardHeight }];
+  }
 
   return (
     <Modal {...resolvedProps}>

@@ -14,7 +14,8 @@ import { useSaveNote } from "@/hooks/smart-notes/use-save-notes";
 import { showToast } from "@/utils/show-toast";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, ScrollView, TextInput, View } from "react-native";
+import { ActivityIndicator, TextInput, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function NoteEditor() {
@@ -162,7 +163,12 @@ export default function NoteEditor() {
         onSave={handleSave}
       />
 
-      <ScrollView className="flex-1 px-5 pt-5">
+      <KeyboardAwareScrollView
+        className="flex-1 px-5 pt-5"
+        enableOnAndroid
+        extraScrollHeight={20}
+        keyboardShouldPersistTaps="handled"
+      >
         <TextInput
           className="font-bricolage-bold text-[26px] leading-[32px] text-foreground"
           placeholder="Note title..."
@@ -221,7 +227,7 @@ export default function NoteEditor() {
           onSummaryComplete={handleSummaryComplete}
           disabled={isSaving}
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

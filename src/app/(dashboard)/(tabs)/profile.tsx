@@ -21,12 +21,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Constants from "expo-constants";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  ActivityIndicator,
-  RefreshControl,
-  ScrollView,
-  View,
-} from "react-native";
+import { ActivityIndicator, RefreshControl, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
@@ -137,10 +133,13 @@ export default function Profile() {
 
   return (
     <SafeAreaView className="flex-1 bg-canvas">
-      <ScrollView
+      <KeyboardAwareScrollView
         className="flex-1"
         contentContainerClassName="pb-10"
         showsVerticalScrollIndicator={false}
+        enableOnAndroid
+        extraScrollHeight={20}
+        keyboardShouldPersistTaps="handled"
         refreshControl={
           <RefreshControl
             refreshing={isFetchingProfile}
@@ -209,7 +208,7 @@ export default function Profile() {
             Elevra v{Constants.expoConfig?.version ?? "1.0.0"}
           </AppText>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
       <ProfessionPicker
         visible={professionPickerVisible}
