@@ -4,13 +4,14 @@ import { AppLogo } from "@/components/shared/app-logo";
 import { AppButton } from "@/components/shared/app-button";
 import { AppText } from "@/components/shared/app-text";
 import { FormInput } from "@/components/shared/form-input";
+import { LEGAL_LINKS } from "@/constants/links";
 import { useSignup } from "@/hooks/auth/use-register";
 import { signUpSchema, type SignUpFormValues } from "@/schemas/auth/sign-up";
 import { useAuthStore } from "@/store/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useForm } from "react-hook-form";
-import { Platform, Pressable, View } from "react-native";
+import { Linking, Platform, Pressable, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function SignUp() {
@@ -99,11 +100,19 @@ export default function SignUp() {
 
           <AppText type="caption" className="leading-[18px]">
             By creating an account, you agree to our{" "}
-            <AppText type="link" className="text-xs">
+            <AppText
+              type="link"
+              className="text-xs"
+              onPress={() => Linking.openURL(LEGAL_LINKS.terms)}
+            >
               Terms and Conditions
             </AppText>{" "}
             and{" "}
-            <AppText type="link" className="text-xs">
+            <AppText
+              type="link"
+              className="text-xs"
+              onPress={() => Linking.openURL(LEGAL_LINKS.privacy)}
+            >
               Privacy Policy
             </AppText>
             .

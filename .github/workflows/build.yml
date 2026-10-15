@@ -9,7 +9,7 @@ name: Build Elevra Android APK
 # profile from the ref.
 on:
   push:
-    branches: [master, dev]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -37,8 +37,6 @@ jobs:
 
       - name: 🚀 Build Android (preview profile)
         run: eas build --platform android --profile preview --non-interactive
-        env:
-          EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
 
   build-prod:
     if: github.ref == 'refs/heads/master'
@@ -64,5 +62,3 @@ jobs:
 
       - name: 🚀 Build Android (production profile)
         run: eas build --platform android --profile production --non-interactive
-        env:
-          EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
