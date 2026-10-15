@@ -1,6 +1,7 @@
 import "@/global.css";
 import { AppNavigator } from "@/components/shared/app-navigator";
 import { OfflineBanner } from "@/components/shared/offline-banner";
+import { UpdatePrompt } from "@/components/shared/update-prompt";
 import { useOnlineManager } from "@/hooks/use-online-status";
 import { CACHE_BUSTER, queryPersister } from "@/provider/query-persister";
 import { isShareIntentAvailable } from "@/provider/share-intent";
@@ -43,6 +44,7 @@ export default function RootLayout() {
         >
           <AppNavigator />
           <OfflineBanner />
+          <UpdatePrompt />
           <Toast config={toastConfig} />
         </PersistQueryClientProvider>
       </SafeAreaProvider>

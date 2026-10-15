@@ -98,6 +98,16 @@ export default function ResumeBuilder() {
     },
   });
 
+  // Must precede the hydrate effect: on native, useFieldArray subscribes to
+  // reset() in a plain effect, so a reset fired first never reaches `fields`.
+  const experience = useFieldArray({ control, name: "experience" });
+  const education = useFieldArray({ control, name: "education" });
+  const skills = useFieldArray({ control, name: "skills" });
+  const languages = useFieldArray({ control, name: "languages" });
+  const certifications = useFieldArray({ control, name: "certifications" });
+  const projects = useFieldArray({ control, name: "projects" });
+  const references = useFieldArray({ control, name: "references" });
+
   // Guarded by id: the query object changes identity on every background
   // refetch, and re-hydrating would wipe the user's edits.
   const hydratedId = useRef<string | null>(null);
@@ -131,14 +141,6 @@ export default function ResumeBuilder() {
 
     setFurthestStep(BUILDER_STEPS.length - 1);
   }, [resume, isEditing]);
-
-  const experience = useFieldArray({ control, name: "experience" });
-  const education = useFieldArray({ control, name: "education" });
-  const skills = useFieldArray({ control, name: "skills" });
-  const languages = useFieldArray({ control, name: "languages" });
-  const certifications = useFieldArray({ control, name: "certifications" });
-  const projects = useFieldArray({ control, name: "projects" });
-  const references = useFieldArray({ control, name: "references" });
 
   const goToStep = function (index: number) {
     setActiveStep(index);

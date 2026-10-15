@@ -55,6 +55,16 @@ export default function ProfileEditor() {
     defaultValues: toProfileFormValues(),
   });
 
+  // Must precede the hydrate effect: on native, useFieldArray subscribes to
+  // reset() in a plain effect, so a reset fired first never reaches `fields`.
+  const experience = useFieldArray({ control, name: "experience" });
+  const education = useFieldArray({ control, name: "education" });
+  const skills = useFieldArray({ control, name: "skills" });
+  const languages = useFieldArray({ control, name: "languages" });
+  const certifications = useFieldArray({ control, name: "certifications" });
+  const projects = useFieldArray({ control, name: "projects" });
+  const references = useFieldArray({ control, name: "references" });
+
   const takeImportDraft = useProfileImportStore((state) => state.takeDraft);
   const [importReport, setImportReport] = useState<ImportedProfile["report"] | null>(null);
 
@@ -76,14 +86,6 @@ export default function ProfileEditor() {
     reset(toProfileFormValues(imported?.profile ?? careerProfile, account));
     if (imported) setImportReport(imported.report);
   }, [hasLoadedCareerProfile, careerProfile, profile, reset, takeImportDraft]);
-
-  const experience = useFieldArray({ control, name: "experience" });
-  const education = useFieldArray({ control, name: "education" });
-  const skills = useFieldArray({ control, name: "skills" });
-  const languages = useFieldArray({ control, name: "languages" });
-  const certifications = useFieldArray({ control, name: "certifications" });
-  const projects = useFieldArray({ control, name: "projects" });
-  const references = useFieldArray({ control, name: "references" });
 
   const handleSave = async function (data: ResumeBuilderFormValues) {
     await saveCareerProfile({
