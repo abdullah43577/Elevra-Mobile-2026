@@ -9,7 +9,7 @@ name: Build Elevra Android APK
 # profile from the ref.
 on:
   push:
-    branches: [master]
+    branches: [master, dev]
   workflow_dispatch:
 
 jobs:
